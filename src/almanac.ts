@@ -279,12 +279,12 @@ export function updateAlmanac(almanac: AlmanacWithMetadata, temperatureDay: Temp
 }
 
 function toReading(tr: TemperatureReading): Reading {
-    // We set tz here because tr.date is already in TIMEZONE as requested from the server
-    return { date: (tr.date as any).tz(TIMEZONE).format('YYYY-MM-DD HH:mm:ssZ[Z]'), value: tr.value };
+    // Convert to UTC before writing to JSON
+    return { date: tr.date.utc().format('YYYY-MM-DD HH:mm:ss[Z]'), value: tr.value };
 }
 
 function dayjsToStr(d: Dayjs) {
-    return `${d.format('YYYY-MM-DD HH:mm:ssZ[Z]')} UTC=${d.toISOString()}`;
+    return `${d.utc().format('YYYY-MM-DD HH:mm:ss[Z]')} UTC=${d.toISOString()}`;
 }
 
 /**

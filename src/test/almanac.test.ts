@@ -49,6 +49,7 @@ describe('almanac', () => {
 
         const alm = {};
         temperatureDays.forEach((td) => updateAlmanac(alm, td));
+        // await writeFile('src/test/res/almanac-4seasons-2020-1day-2021.json', JSON.stringify(alm, undefined, 2));
         const expectedAlm = await readResJson<AlmanacWithMetadata>('almanac-4seasons-2020-1day-2021.json');
         expect(alm).toEqual(expectedAlm);
     });
@@ -266,13 +267,15 @@ describe('almanac', () => {
         // Helper function to normalize dates to UTC for comparison
         function normalizeReadings(readings: Reading[]): Reading[] {
             return readings.map((reading) => {
-                // Clean up the date format - remove the trailing Z if there's already a timezone offset
+                // Parse the date string and convert to UTC, preserving the actual moment in time
+                // This handles both old format (2025-07-02 19:00:52-03:00Z) and new format (2025-07-03T01:00:52Z)
                 let cleanDate = reading.date;
-                if (cleanDate.includes('-') && cleanDate.endsWith('Z')) {
-                    cleanDate = cleanDate.slice(0, -1); // Remove trailing Z
+
+                // Remove trailing Z if there's already a timezone offset (old format)
+                if (cleanDate.includes('-') && cleanDate.endsWith('Z') && cleanDate.match(/-\d{2}:\d{2}Z$/)) {
+                    cleanDate = cleanDate.slice(0, -1);
                 }
 
-                // Parse the date string and convert to UTC, preserving the actual moment in time
                 const utcDate = dayjs(cleanDate).utc().format();
                 return {
                     ...reading,
