@@ -1,0 +1,25 @@
+{
+  "name": "mabel-almanac",
+  "version": "1.0.0",
+  "description": "## Sample Requests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickscript0/mabel-almanac.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nickscript0/mabel-almanac/issues"
+  },
+  "homepage": "https://github.com/nickscript0/mabel-almanac#readme",
+  "dependencies": {
+    "dayjs": "^1.10.6",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  }
+}

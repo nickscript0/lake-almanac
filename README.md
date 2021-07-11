@@ -1,5 +1,9 @@
 # mabel-almanac
 
+## Run Archiver
+```bash
+scripts/archiver.sh
+```
 ## Sample Requests
 
 Rest API: https://www.mathworks.com/help/thingspeak/readdata.html
