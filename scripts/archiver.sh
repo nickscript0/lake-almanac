@@ -1,3 +1,3 @@
 #!/bin/bash
 
-node_modules/.bin/ts-node src/archiver.ts
+node_modules/.bin/ts-node src/archiver.ts "$@"
