@@ -39,6 +39,9 @@ export interface FieldFeed {
 
 const THINGSPEAK_URL_START_FRAGMENT = `https://api.thingspeak.com/channels/`;
 const channelId = '581842'; // Mabel Indoor / Outdoor sensor
+const OUTDOOR_TEMP_FIELD = 'field2';
+// The earliest valid record for the Mabel Outdoor temp sensor
+const EARLIEST_RECORD = '2018-10-06';
 
 function encodeGetParams(params: { [key: string]: string | number }): string {
     return Object.entries(params)
@@ -66,18 +69,17 @@ function dateRangeToUrl(range: DateRange, channelId: string): string {
 }
 
 // day of form '2021-07-02'
-export async function fetchLakeDay(day: string) {
-    //: Promise<FieldResponse> {
+export async function fetchLakeDay(day: string): Promise<FieldResponse> {
     const startDayjs = dayjs(day);
     // Assert day is valid
     if (!startDayjs.isValid()) throw new Error(`Invalid day requested ${day}`);
-    if (startDayjs.isBefore('2018-10-01')) throw new Error(`Invalid day requested ${day}, no data before 2018-10-01`);
+    if (startDayjs.isBefore(EARLIEST_RECORD))
+        throw new Error(`Invalid day requested ${day}, no data before ${EARLIEST_RECORD}`);
 
     const endDayJs = startDayjs.add(1, 'day');
     const start = dateToThingspeakDateString(startDayjs);
     const end = dateToThingspeakDateString(endDayJs);
-    console.log('start/end', startDayjs.toDate(), endDayJs.toDate());
     const url = dateRangeToUrl({ start, end }, channelId);
     console.log(`fetch`, url);
-    // return (await fetch(url)).json();
+    return (await fetch(url)).json();
 }
