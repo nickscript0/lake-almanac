@@ -6,38 +6,17 @@
 
 import dayjs from 'dayjs';
 
-const THINGSPEAK_URL_START_FRAGMENT = `https://api.thingspeak.com/channels/`;
-
-function encodeGetParams(params: { [key: string]: string | number }): string {
-    return Object.entries(params)
-        .map((kv) => kv.map(encodeURIComponent).join('='))
-        .join('&');
-}
-
-export interface DateRange {
-    start: Date;
-    end: Date;
-}
-
-export function dateRangesToUrls(range: DateRange, channelId: string): string {
-    function dateToThingspeakDateString(d: Date) {
-        // Fix the time at 7:00:00h UTC which is 00:00 PDT
-        return dayjs(d).format('YYYY-MM-DD 7:00:00'); // Original format: 'yyyy-MM-dd hh:mm:ss'
-    }
-
-    const getParams = {
-        start: dateToThingspeakDateString(range.start),
-        end: dateToThingspeakDateString(range.end),
-    };
-    const url = `${THINGSPEAK_URL_START_FRAGMENT}${channelId}` + `/feed.json?${encodeGetParams(getParams)}`;
-    return url;
-}
+import { DateRange, fetchLakeDay } from './thingspeak-sensor-api';
 
 async function main() {
+    const range = parseArgs();
+    // console.log(`start`, range.start, `end`, range.end);
 
-    const channelId = '581842'; // Mabel Indoor / Outdoor sensor
-    const { start, end } = parseArgs();
-    console.log(`start`, start, `end`, end);
+    const numDays = range.end.diff(range.start, 'day');
+    for (let i = 0; i < numDays; i++) {
+        const curDay = range.start.add(i, 'day');
+        await fetchLakeDay(curDay.format('YYYY-MM-DD'));
+    }
 }
 
 function parseArgs() {
@@ -51,13 +30,13 @@ function parseArgs() {
     }
     const startInput = process.argv[2];
     const endInput = process.argv[3];
-    const start = new Date(startInput);
-    const end = new Date(endInput);
+    const start = dayjs(startInput);
+    const end = dayjs(endInput);
 
-    if (!dayjs(start).isValid()) {
+    if (!start.isValid()) {
         exitWithUsage(`Invalid start date: ${startInput}`);
     }
-    if (!dayjs(end).isValid()) {
+    if (!end.isValid()) {
         exitWithUsage(`Invalid end date: ${endInput}`);
     }
     return { start, end };
