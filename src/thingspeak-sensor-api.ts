@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import fetch from 'node-fetch';
 
 // Thingspeak API response
 export interface FieldResponse {

@@ -19,7 +19,11 @@
   "homepage": "https://github.com/nickscript0/mabel-almanac#readme",
   "dependencies": {
     "dayjs": "^1.10.6",
+    "node-fetch": "^2.6.1",
     "ts-node": "^10.1.0",
     "typescript": "^4.3.5"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.11"
   }
 }
