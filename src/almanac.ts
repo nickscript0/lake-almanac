@@ -1,4 +1,6 @@
-const FILENAME = 'mabel-almanac.json';
+import * as fs from 'fs';
+
+const ALMANAC_PATH = 'mabel-almanac.json';
 
 /**
  * Almanac Metrics:
@@ -34,3 +36,12 @@ interface Reading {
     date: string;
 }
 
+const fileExists = async (path: string) => !!(await fs.promises.stat(path).catch((e) => false));
+
+async function getAlmanac(): Promise<Almanac> {
+    if (fileExists(ALMANAC_PATH)) {
+        return JSON.parse(await fs.promises.readFile(ALMANAC_PATH, 'utf-8'));
+    } else {
+        return {};
+    }
+}
