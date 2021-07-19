@@ -75,8 +75,15 @@ const last = <T>(arr: T[]) => arr[arr.length - 1];
 const first = <T>(arr: T[]) => arr[0];
 const fileExists = async (path: string) => !!(await fs.promises.stat(path).catch((e) => false));
 
+export async function processDay(temperatureDay: TemperatureDay) {
+    const alm = await getAlmanac();
+    updateAlmanac(alm, temperatureDay);
+    await fs.promises.writeFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2));
+    console.log(`Wrote`, ALMANAC_PATH);
+}
+
 async function getAlmanac(): Promise<Almanac> {
-    if (fileExists(ALMANAC_PATH)) {
+    if (await fileExists(ALMANAC_PATH)) {
         return JSON.parse(await fs.promises.readFile(ALMANAC_PATH, 'utf-8'));
     } else {
         return {};
