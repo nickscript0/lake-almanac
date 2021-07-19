@@ -188,8 +188,9 @@ function firstFreeze(ascReadings: TemperatureReading[]) {
 }
 
 function getDayNightReadings(td: TemperatureDay) {
-    const DAY_START = dayjs(`${td.day} 06:00`);
-    const DAY_END = dayjs(`${td.day} 18:00`);
+    // TODO: Pacific is [utc - 7], but this will be an hour off during daylight
+    const DAY_START = dayjs(`${td.day} 06:00:00-07:00Z`);
+    const DAY_END = dayjs(`${td.day} 18:00:00-07:00Z`);
 
     const daytimeReadings: TemperatureReading[] = [];
     const nighttimeReadings: TemperatureReading[] = [];
