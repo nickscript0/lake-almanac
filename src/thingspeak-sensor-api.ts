@@ -86,10 +86,13 @@ export async function fetchLakeDay(day: string): Promise<TemperatureDay> {
     return { readings: frToOutdoorReadingDay(json), day };
 }
 
-export interface TemperatureReading {
-    date: dayjs.Dayjs;
+export interface NumericValue {
     value: number;
 }
+
+export type TemperatureReading = {
+    date: dayjs.Dayjs;
+} & NumericValue;
 
 export interface TemperatureDay {
     readings: TemperatureReading[];
