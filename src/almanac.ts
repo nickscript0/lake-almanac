@@ -111,7 +111,7 @@ async function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) {
 }
 
 function toReading(tr: TemperatureReading): Reading {
-    return { date: tr.date.toString(), value: tr.value };
+    return { date: tr.date.format('YYYY-MM-DD HH:mm:ssZ[Z]'), value: tr.value };
 }
 
 /**
