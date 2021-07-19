@@ -70,7 +70,7 @@ function dateRangeToUrl(range: DateRange, channelId: string): string {
 }
 
 // day of form '2021-07-02'
-export async function fetchLakeDay(day: string): Promise<FieldResponse> {
+export async function fetchLakeDay(day: string): Promise<TemperatureDay> {
     const startDayjs = dayjs(day);
     // Assert day is valid
     if (!startDayjs.isValid()) throw new Error(`Invalid day requested ${day}`);
@@ -82,5 +82,25 @@ export async function fetchLakeDay(day: string): Promise<FieldResponse> {
     const end = dateToThingspeakDateString(endDayJs);
     const url = dateRangeToUrl({ start, end }, channelId);
     console.log(`fetch`, url);
-    return (await fetch(url)).json();
+    const json: FieldResponse = await (await fetch(url)).json();
+    return { readings: frToOutdoorReadingDay(json), day };
+}
+
+export interface TemperatureReading {
+    date: dayjs.Dayjs;
+    value: number;
+}
+
+export interface TemperatureDay {
+    readings: TemperatureReading[];
+    // of form '2021-07-02'
+    day: string;
+}
+
+function frToOutdoorReadingDay(fr: FieldResponse): TemperatureReading[] {
+    return fr.feeds.map((f) => {
+        const v = f[OUTDOOR_TEMP_FIELD];
+        const value = v ? parseFloat(v) : NaN;
+        return { date: dayjs(f.created_at), value };
+    });
 }
