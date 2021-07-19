@@ -127,14 +127,14 @@ function updateHiLowSequence(tempReading: TemperatureReading, seq: Sequence<Read
     if (seq.length < SEQUENCE_SIZE) {
         seq.push(reading);
         seq.sort(ascValueSort);
+    } else if (type !== 'high' && type !== 'low') {
+        throw new Error(`${type} readings are not compatible with this function`);
     } else if (type === 'high' && reading.value > first(seq).value) {
         seq[0] = reading;
         seq.sort(ascValueSort);
     } else if (type === 'low' && reading.value < last(seq).value) {
         seq[seq.length - 1] = reading;
         seq.sort(ascValueSort);
-    } else {
-        throw new Error(`${type} readings are not compatible with this function`);
     }
     return seq;
 }
