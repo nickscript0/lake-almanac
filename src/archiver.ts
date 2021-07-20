@@ -6,7 +6,8 @@
 
 import dayjs from 'dayjs';
 
-import { DateRange, fetchLakeDay } from './thingspeak-sensor-api';
+import { fetchLakeDay } from './thingspeak-sensor-api';
+import { processDay } from './almanac';
 
 async function main() {
     const range = parseArgs();
@@ -15,7 +16,8 @@ async function main() {
     const numDays = range.end.diff(range.start, 'day');
     for (let i = 0; i < numDays; i++) {
         const curDay = range.start.add(i, 'day');
-        await fetchLakeDay(curDay.format('YYYY-MM-DD'));
+        const day = await fetchLakeDay(curDay.format('YYYY-MM-DD'));
+        await processDay(day);
     }
 }
 

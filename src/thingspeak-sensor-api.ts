@@ -39,9 +39,9 @@ export interface FieldFeed {
 }
 
 const THINGSPEAK_URL_START_FRAGMENT = `https://api.thingspeak.com/channels/`;
-const channelId = '581842'; // Mabel Indoor / Outdoor sensor
+const channelId = '581842'; // lake Indoor / Outdoor sensor
 const OUTDOOR_TEMP_FIELD = 'field2';
-// The earliest valid record for the Mabel Outdoor temp sensor
+// The earliest valid record for the lake Outdoor temp sensor
 const EARLIEST_RECORD = '2018-10-06';
 
 function encodeGetParams(params: { [key: string]: string | number }): string {
@@ -70,7 +70,7 @@ function dateRangeToUrl(range: DateRange, channelId: string): string {
 }
 
 // day of form '2021-07-02'
-export async function fetchLakeDay(day: string): Promise<FieldResponse> {
+export async function fetchLakeDay(day: string): Promise<TemperatureDay> {
     const startDayjs = dayjs(day);
     // Assert day is valid
     if (!startDayjs.isValid()) throw new Error(`Invalid day requested ${day}`);
@@ -82,5 +82,30 @@ export async function fetchLakeDay(day: string): Promise<FieldResponse> {
     const end = dateToThingspeakDateString(endDayJs);
     const url = dateRangeToUrl({ start, end }, channelId);
     console.log(`fetch`, url);
-    return (await fetch(url)).json();
+    const json: FieldResponse = await (await fetch(url)).json();
+    return { readings: frToOutdoorReadingDay(json), day };
+}
+
+export interface NumericValue {
+    value: number;
+}
+
+export type TemperatureReading = {
+    date: dayjs.Dayjs;
+} & NumericValue;
+
+export interface TemperatureDay {
+    readings: TemperatureReading[];
+    /**
+     * Date only string e.g. '2021-07-02'
+     */
+    day: string;
+}
+
+function frToOutdoorReadingDay(fr: FieldResponse): TemperatureReading[] {
+    return fr.feeds.map((f) => {
+        const v = f[OUTDOOR_TEMP_FIELD];
+        const value = v ? parseFloat(v) : NaN;
+        return { date: dayjs(f.created_at), value };
+    });
 }

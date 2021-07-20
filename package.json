@@ -1,5 +1,5 @@
 {
-  "name": "mabel-almanac",
+  "name": "lake-almanac",
   "version": "1.0.0",
   "description": "## Sample Requests",
   "main": "index.js",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nickscript0/mabel-almanac.git"
+    "url": "git+https://github.com/nickscript0/lake-almanac.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nickscript0/mabel-almanac/issues"
+    "url": "https://github.com/nickscript0/lake-almanac/issues"
   },
-  "homepage": "https://github.com/nickscript0/mabel-almanac#readme",
+  "homepage": "https://github.com/nickscript0/lake-almanac#readme",
   "dependencies": {
     "dayjs": "^1.10.6",
     "node-fetch": "^2.6.1",
@@ -24,6 +24,7 @@
     "typescript": "^4.3.5"
   },
   "devDependencies": {
+    "@types/node": "^16.3.1",
     "@types/node-fetch": "^2.5.11"
   }
 }
