@@ -39,9 +39,9 @@ export interface FieldFeed {
 }
 
 const THINGSPEAK_URL_START_FRAGMENT = `https://api.thingspeak.com/channels/`;
-const channelId = '581842'; // Mabel Indoor / Outdoor sensor
+const channelId = '581842'; // lake Indoor / Outdoor sensor
 const OUTDOOR_TEMP_FIELD = 'field2';
-// The earliest valid record for the Mabel Outdoor temp sensor
+// The earliest valid record for the lake Outdoor temp sensor
 const EARLIEST_RECORD = '2018-10-06';
 
 function encodeGetParams(params: { [key: string]: string | number }): string {

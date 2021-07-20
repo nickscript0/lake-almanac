@@ -1,4 +1,4 @@
-# mabel-almanac
+# lake-almanac
 
 ## Run Archiver
 ```bash

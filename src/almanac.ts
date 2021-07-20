@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { NumericValue, TemperatureDay, TemperatureReading } from './thingspeak-sensor-api';
 import dayjs from 'dayjs';
 
-const ALMANAC_PATH = 'mabel-almanac.json';
+const ALMANAC_PATH = 'lake-almanac.json';
 // The size of metric sequences to store e.g., top N coldest days
 const SEQUENCE_SIZE = 5;
 
