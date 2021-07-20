@@ -96,7 +96,9 @@ export type TemperatureReading = {
 
 export interface TemperatureDay {
     readings: TemperatureReading[];
-    // of form '2021-07-02'
+    /**
+     * Date only string e.g. '2021-07-02'
+     */
     day: string;
 }
 

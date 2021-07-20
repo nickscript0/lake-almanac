@@ -30,7 +30,8 @@ interface AlmanacYear {
     HottestDaytime: Sequence<Reading>;
     ColdestDaytime: Sequence<Reading>;
 
-    FirstFreezes: Sequence<Reading>;
+    FirstFreezesBeforeSummer: Sequence<Reading>;
+    FirstFreezesAfterSummer: Sequence<Reading>;
 
     // LargestVariationDays: Sequence<Reading>;
 }
@@ -44,7 +45,8 @@ const EmptyAlmanacYear: AlmanacYear = {
     HottestDaytime: [],
     ColdestDaytime: [],
 
-    FirstFreezes: [],
+    FirstFreezesAfterSummer: [],
+    FirstFreezesBeforeSummer: [],
 
     // LargestVariationDays: [],
 };
@@ -60,7 +62,8 @@ const AlmanacPropertyDesc: Record<keyof AlmanacYear, ReadingType> = {
     HottestDaytime: 'high',
     ColdestDaytime: 'low',
 
-    FirstFreezes: 'other',
+    FirstFreezesAfterSummer: 'other',
+    FirstFreezesBeforeSummer: 'other',
     // LargestVariationDays: 'other',
 };
 
@@ -101,7 +104,9 @@ async function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) {
         const key = k as keyof AlmanacYear;
         const metric = metrics[key];
         if (type === 'other') {
-            if (key === 'FirstFreezes') updateFirstFreezeSequence(metric, almanac[year][key]);
+            if (key === 'FirstFreezesAfterSummer' || key === 'FirstFreezesBeforeSummer') {
+                updateFirstFreezeSequence(metric, almanac[year][key]);
+            }
         } else {
             if (metric !== undefined) {
                 updateHiLowSequence(metric, almanac[year][key], type);
@@ -156,7 +161,8 @@ function updateFirstFreezeSequence(tempReading: TemperatureReading | undefined, 
 function getMetrics(temperatureDay: TemperatureDay): Record<keyof AlmanacYear, TemperatureReading | undefined> {
     const allReadings = temperatureDay.readings;
     allReadings.sort(ascValueSort);
-    const { daytimeReadings, nighttimeReadings } = getDayNightReadings(temperatureDay);
+    const { daytimeReadings, nighttimeReadings, afterSummerReadings, beforeSummerReadings } =
+        getSubsetReadings(temperatureDay);
 
     return {
         HottestDays: last(allReadings),
@@ -165,7 +171,8 @@ function getMetrics(temperatureDay: TemperatureDay): Record<keyof AlmanacYear, T
         ColdestDaytime: first(daytimeReadings),
         HottestNightime: last(nighttimeReadings),
         ColdestNighttime: first(nighttimeReadings),
-        FirstFreezes: firstFreeze(allReadings),
+        FirstFreezesAfterSummer: firstFreeze(afterSummerReadings),
+        FirstFreezesBeforeSummer: firstFreeze(beforeSummerReadings),
         // LargestVariationDays: ???
     };
 }
@@ -187,13 +194,16 @@ function firstFreeze(ascReadings: TemperatureReading[]) {
     return undefined;
 }
 
-function getDayNightReadings(td: TemperatureDay) {
+function getSubsetReadings(td: TemperatureDay) {
     // TODO: Pacific is [utc - 7], but this will be an hour off during daylight
     const DAY_START = dayjs(`${td.day} 06:00:00-07:00Z`);
     const DAY_END = dayjs(`${td.day} 18:00:00-07:00Z`);
+    const SUMMER_SPLIT = dayjs(`${td.day.split('-')[0]}-07-01`);
 
     const daytimeReadings: TemperatureReading[] = [];
     const nighttimeReadings: TemperatureReading[] = [];
+    const afterSummerReadings: TemperatureReading[] = [];
+    const beforeSummerReadings: TemperatureReading[] = [];
     for (const r of td.readings) {
         if (
             (r.date.isAfter(DAY_START) || r.date.isSame(DAY_START)) &&
@@ -203,6 +213,12 @@ function getDayNightReadings(td: TemperatureDay) {
         } else if (r.date.isAfter(DAY_END) || r.date.isBefore(DAY_START)) {
             nighttimeReadings.push(r);
         }
+
+        if (r.date.isBefore(SUMMER_SPLIT)) {
+            beforeSummerReadings.push(r);
+        } else {
+            afterSummerReadings.push(r);
+        }
     }
-    return { daytimeReadings, nighttimeReadings };
+    return { daytimeReadings, nighttimeReadings, afterSummerReadings, beforeSummerReadings };
 }
