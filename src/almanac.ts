@@ -13,8 +13,9 @@ const SEQUENCE_SIZE = 5;
  * - All dates are in sensor time, Pacific Time
  */
 
-// e.g. 2021
+// e.g. 2021 or All
 type Year = string;
+const ALL = 'All';
 type Almanac = Record<Year, AlmanacYear>;
 
 /**
@@ -96,6 +97,7 @@ async function getAlmanac(): Promise<Almanac> {
 async function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) {
     const year = dayjs(temperatureDay.day).year().toString();
     if (!almanac[year]) almanac[year] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
+    if (!almanac[ALL]) almanac[ALL] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
 
     const metrics = getMetrics(temperatureDay);
 
@@ -106,10 +108,14 @@ async function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) {
         if (type === 'other') {
             if (key === 'FirstFreezesAfterSummer' || key === 'FirstFreezesBeforeSummer') {
                 updateFirstFreezeSequence(metric, almanac[year][key]);
+                // Skip first freezes for 'ALL' as doesn't make sense
+            } else {
+                throw new Error(`No handler defined for ${key}`);
             }
         } else {
             if (metric !== undefined) {
                 updateHiLowSequence(metric, almanac[year][key], type);
+                updateHiLowSequence(metric, almanac[ALL][key], type);
             }
         }
     }
@@ -129,6 +135,11 @@ function toReading(tr: TemperatureReading): Reading {
  */
 function updateHiLowSequence(tempReading: TemperatureReading, seq: Sequence<Reading>, type: ReadingType) {
     const reading = toReading(tempReading);
+
+    // Skip if already exists
+    if (seq.some((e) => e.date === reading.date && e.value === reading.value)) {
+        return seq;
+    }
     if (seq.length < SEQUENCE_SIZE) {
         seq.push(reading);
         seq.sort(ascValueSort);
@@ -147,6 +158,11 @@ function updateHiLowSequence(tempReading: TemperatureReading, seq: Sequence<Read
 function updateFirstFreezeSequence(tempReading: TemperatureReading | undefined, seq: Sequence<Reading>) {
     if (tempReading) {
         const reading = toReading(tempReading);
+        // Skip if already exists
+        if (seq.some((e) => e.date === reading.date && e.value === reading.value)) {
+            return seq;
+        }
+
         if (seq.length < SEQUENCE_SIZE) {
             seq.push(reading);
             seq.sort(ascDateSort);
