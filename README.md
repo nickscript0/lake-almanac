@@ -2,7 +2,7 @@
 
 ## Run Archiver
 ```bash
-scripts/archiver.sh
+time ./scripts/archiver.sh 2018-10-06 2021-07-19
 ```
 ## Sample Requests
 
