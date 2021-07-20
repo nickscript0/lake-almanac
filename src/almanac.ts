@@ -196,8 +196,13 @@ function firstFreeze(ascReadings: TemperatureReading[]) {
 
 function getSubsetReadings(td: TemperatureDay) {
     // TODO: Pacific is [utc - 7], but this will be an hour off during daylight
-    const DAY_START = dayjs(`${td.day} 06:00:00-07:00Z`);
-    const DAY_END = dayjs(`${td.day} 18:00:00-07:00Z`);
+
+    // 6am Pacific
+    const DAY_START = dayjs(`${td.day} 13:00:00-00:00Z`);
+    // 6pm Pacific
+    const DAY_END = DAY_START.add(12, 'hour');
+    const PREV_DAY_END = DAY_END.subtract(1, 'day');
+    const NEXT_DAY_START = DAY_START.add(1, 'day');
     const SUMMER_SPLIT = dayjs(`${td.day.split('-')[0]}-07-01`);
 
     const daytimeReadings: TemperatureReading[] = [];
@@ -210,7 +215,10 @@ function getSubsetReadings(td: TemperatureDay) {
             (r.date.isBefore(DAY_END) || r.date.isSame(DAY_END))
         ) {
             daytimeReadings.push(r);
-        } else if (r.date.isAfter(DAY_END) || r.date.isBefore(DAY_START)) {
+        } else if (
+            (r.date.isAfter(DAY_END) && r.date.isBefore(NEXT_DAY_START)) ||
+            (r.date.isBefore(DAY_START) && r.date.isAfter(PREV_DAY_END))
+        ) {
             nighttimeReadings.push(r);
         }
 
