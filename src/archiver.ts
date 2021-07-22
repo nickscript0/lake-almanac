@@ -4,10 +4,11 @@
  * This is for days before the daily almanac cron was put into place.
  */
 
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
+import dayjs from "https://cdn.skypack.dev/dayjs@1.10.6";
 
-import { fetchLakeDay } from './thingspeak-sensor-api';
-import { processDay } from './almanac';
+import { fetchLakeDay } from './thingspeak-sensor-api.ts';
+import { processDay } from './almanac.ts';
 
 async function main() {
     const range = parseArgs();
@@ -24,14 +25,14 @@ async function main() {
 function parseArgs() {
     function exitWithUsage(errMessage: string) {
         console.log(`${errMessage}. Usage: archiver.ts <start-date> <end-date> e.g. archiver.ts 2020-05-01 2020-09-01`);
-        process.exit(1);
+        Deno.exit(1);
     }
 
-    if (process.argv.length !== 4) {
-        exitWithUsage(`Invalid number of args ${process.argv.length}`);
+    if (Deno.args.length !== 2) {
+        exitWithUsage(`Invalid number of args ${Deno.args.length}`);
     }
-    const startInput = process.argv[2];
-    const endInput = process.argv[3];
+    const startInput = Deno.args[0];
+    const endInput = Deno.args[1];
     const start = dayjs(startInput);
     const end = dayjs(endInput);
 

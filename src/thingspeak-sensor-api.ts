@@ -1,5 +1,7 @@
-import dayjs from 'dayjs';
-import fetch from 'node-fetch';
+// import dayjs from 'dayjs';
+import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
+import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
+// import fetch from 'node-fetch';
 
 // Thingspeak API response
 export interface FieldResponse {
@@ -55,7 +57,7 @@ export interface DateRange {
     end: string;
 }
 
-function dateToThingspeakDateString(d: dayjs.Dayjs) {
+function dateToThingspeakDateString(d: dayjsTypes.Dayjs) {
     return d.format('YYYY-MM-DD 00:00:00');
 }
 
@@ -91,7 +93,7 @@ export interface NumericValue {
 }
 
 export type TemperatureReading = {
-    date: dayjs.Dayjs;
+    date: dayjsTypes.Dayjs;
 } & NumericValue;
 
 export interface TemperatureDay {
