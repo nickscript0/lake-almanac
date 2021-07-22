@@ -1,7 +1,5 @@
-// import dayjs from 'dayjs';
 import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
 import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
-// import fetch from 'node-fetch';
 
 // Thingspeak API response
 export interface FieldResponse {

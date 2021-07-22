@@ -1,4 +1,3 @@
-// import * as fs from 'fs';
 import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
 import { exists } from 'https://deno.land/std/fs/mod.ts';
 
