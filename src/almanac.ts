@@ -1,5 +1,5 @@
 import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
-import { exists } from 'https://deno.land/std/fs/mod.ts';
+import { exists } from 'https://deno.land/std@0.102.0/fs/mod.ts';
 
 import { NumericValue, TemperatureDay, TemperatureReading } from './thingspeak-sensor-api.ts';
 
