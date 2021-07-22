@@ -12,6 +12,12 @@ time ./scripts/archiver.sh 2018-10-06 2021-07-19
    - Keep in mind Github's repo storage limits with https://github.com/github/git-sizer
 - Port to Deno so we can run it as an action or look into if anyone has made the flat file action compatible with https://github.com/vercel/ncc
    - See discussion with Github team on running postprocessing stage with Python (and other possibilities) instead of requiring Deno https://github.com/githubocto/flat/issues/12#issuecomment-844300624
+
+## Github Actions Links
+- https://github.com/marketplace/actions/flat-data
+   - https://github.com/githubocto/flat-postprocessing
+- https://github.com/actions/setup-node
+
 ## Sample Requests
 
 Rest API: https://www.mathworks.com/help/thingspeak/readdata.html
