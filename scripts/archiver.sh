@@ -1,3 +1,3 @@
 #!/bin/bash
 
-node_modules/.bin/ts-node src/archiver.ts "$@"
+deno run -q --allow-read --allow-write --allow-run --allow-net --allow-env --unstable src/archiver.ts "$@"
