@@ -1,11 +1,14 @@
 import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
+import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
+
 import { exists } from 'https://deno.land/std@0.102.0/fs/mod.ts';
 
-import { NumericValue, TemperatureDay, TemperatureReading } from './thingspeak-sensor-api.ts';
+import { NumericValue, FieldResponse, DayResponse } from './thingspeak-sensor-api.ts';
 
 const ALMANAC_PATH = 'lake-almanac.json';
 // The size of metric sequences to store e.g., top N coldest days
 const SEQUENCE_SIZE = 5;
+const OUTDOOR_TEMP_FIELD = 'field2';
 
 /**
  * Almanac Metrics:
@@ -36,6 +39,26 @@ interface AlmanacYear {
     FirstFreezesAfterSummer: Sequence<Reading>;
 
     // LargestVariationDays: Sequence<Reading>;
+}
+
+export type TemperatureReading = {
+    date: dayjsTypes.Dayjs;
+} & NumericValue;
+
+export interface TemperatureDay {
+    readings: TemperatureReading[];
+    /**
+     * Date only string e.g. '2021-07-02'
+     */
+    day: string;
+}
+
+export function frToOutdoorReadingDay(fr: FieldResponse): TemperatureReading[] {
+    return fr.feeds.map((f) => {
+        const v = f[OUTDOOR_TEMP_FIELD];
+        const value = v ? parseFloat(v) : NaN;
+        return { date: dayjs(f.created_at), value };
+    });
 }
 
 const EmptyAlmanacYear: AlmanacYear = {
@@ -81,8 +104,9 @@ const first = <T>(arr: T[]) => arr[0];
 // const fileExists = async (path: string) => !!(await fs.promises.stat(path).catch((e) => false));
 // const fileExists(filePath).then((result : boolean) => console.log(result))
 
-export async function processDay(temperatureDay: TemperatureDay) {
+export async function processDay(response: DayResponse) {
     const alm = await getAlmanac();
+    const temperatureDay = { readings: frToOutdoorReadingDay(response.json), day: response.day };
     updateAlmanac(alm, temperatureDay);
     await Deno.writeTextFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2));
     console.log(`Wrote`, ALMANAC_PATH);

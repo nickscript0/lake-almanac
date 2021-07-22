@@ -10,6 +10,7 @@ import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
 
 import { fetchLakeDay } from './thingspeak-sensor-api.ts';
 import { processDay } from './almanac.ts';
+import { writeZippedStringToFile } from './writer.ts';
 
 async function main() {
     const range = parseArgs();
@@ -18,12 +19,15 @@ async function main() {
     const numDays = range.end.diff(range.start, 'day');
     for (let i = 0; i < numDays; i++) {
         const curDay = range.start.add(i, 'day');
-        const day = await fetchLakeDay(curDay.format('YYYY-MM-DD'));
-        await processDay(day);
+        const response = await fetchLakeDay(curDay.format('YYYY-MM-DD'));
+        if (range.saveResponses) {
+            await writeZippedStringToFile('responses-archive', response.day, JSON.stringify(response.json));
+        }
+        await processDay(response);
     }
 }
 
-function parseArgs(): { start: dayjsTypes.Dayjs; end: dayjsTypes.Dayjs; saveJson: boolean } {
+function parseArgs(): { start: dayjsTypes.Dayjs; end: dayjsTypes.Dayjs; saveResponses: boolean } {
     function exitWithUsage(errMessage: string) {
         console.log(
             `Error: ${errMessage}.
@@ -45,7 +49,7 @@ Examples:
             // Treat yesterday as 2 days ago to eliminate any issues with running this when UTC is past midnight
             const end = dayjs(now.subtract(1, 'day').format('YYYY-MM-DD'));
             const start = dayjs(now.subtract(2, 'day').format('YYYY-MM-DD'));
-            return { start, end, saveJson: args[SAVE_RESPONSES_FLAG] };
+            return { start, end, saveResponses: args[SAVE_RESPONSES_FLAG] };
         } else {
             exitWithUsage(`Invalid single argument '${args._[0]}', the only acceptable single argument is 'yesterday'`);
         }
@@ -63,7 +67,7 @@ Examples:
     if (!end.isValid()) {
         exitWithUsage(`Invalid end date: ${endInput}`);
     }
-    return { start, end, saveJson: args[SAVE_RESPONSES_FLAG] };
+    return { start, end, saveResponses: args[SAVE_RESPONSES_FLAG] };
 }
 
 main();
