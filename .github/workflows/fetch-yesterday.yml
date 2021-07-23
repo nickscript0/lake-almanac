@@ -1,4 +1,4 @@
-name: Flat
+name: Process Lake Almanac for yesterday
 
 on:
   # push:
@@ -20,4 +20,6 @@ jobs:
       - name: Fetch data
         uses: githubocto/flat@v3
         with:
+          # This is an unused http_url (as postprocess makes all the requests it needs) but is currently required to exist by the action
+          http_url: https://cdn.skypack.dev/dayjs@1.10.6
           postprocess: src/archiver.ts
