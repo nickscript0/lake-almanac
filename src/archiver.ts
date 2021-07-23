@@ -33,9 +33,10 @@ function parseArgs(): { start: dayjsTypes.Dayjs; end: dayjsTypes.Dayjs; saveResp
             `Error: ${errMessage}.
 Usage:
  1. archiver.ts [--${SAVE_RESPONSES_FLAG}] <start-date> <end-date>
- 2. archiver.ts [--${SAVE_RESPONSES_FLAG}] yesterday
+ 2. archiver.ts (For github-actions, run with no arguments to only process yesterday and with --${SAVE_RESPONSES_FLAG} enabled)
 Examples:
  archiver.ts 2020-05-01 2020-09-01
+ archiver.ts
 `
         );
         Deno.exit(1);
@@ -43,16 +44,12 @@ Examples:
     const SAVE_RESPONSES_FLAG = 'save-responses';
     const args = parse(Deno.args, { boolean: [SAVE_RESPONSES_FLAG] });
 
-    if (args._.length === 1) {
-        if (args._[0] === 'yesterday') {
-            const now: dayjsTypes.Dayjs = dayjs();
-            // Treat yesterday as 2 days ago to eliminate any issues with running this when UTC is past midnight
-            const end = dayjs(now.subtract(1, 'day').format('YYYY-MM-DD'));
-            const start = dayjs(now.subtract(2, 'day').format('YYYY-MM-DD'));
-            return { start, end, saveResponses: args[SAVE_RESPONSES_FLAG] };
-        } else {
-            exitWithUsage(`Invalid single argument '${args._[0]}', the only acceptable single argument is 'yesterday'`);
-        }
+    if (args._.length === 0) {
+        const now: dayjsTypes.Dayjs = dayjs();
+        // Treat yesterday as 2 days ago to eliminate any issues with running this when UTC is past midnight
+        const end = dayjs(now.subtract(1, 'day').format('YYYY-MM-DD'));
+        const start = dayjs(now.subtract(2, 'day').format('YYYY-MM-DD'));
+        return { start, end, saveResponses: true };
     } else if (args._.length !== 2) {
         exitWithUsage(`Invalid number of args ${Deno.args.length}`);
     }
