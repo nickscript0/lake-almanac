@@ -5,7 +5,7 @@ import { exists } from 'https://deno.land/std@0.102.0/fs/mod.ts';
 
 import { NumericValue, FieldResponse, DayResponse } from './thingspeak-sensor-api.ts';
 
-const ALMANAC_PATH = 'lake-almanac.json';
+const ALMANAC_PATH = 'output/lake-almanac.json';
 // The size of metric sequences to store e.g., top N coldest days
 const SEQUENCE_SIZE = 5;
 const OUTDOOR_TEMP_FIELD = 'field2';

@@ -21,7 +21,7 @@ async function main() {
         const curDay = range.start.add(i, 'day');
         const response = await fetchLakeDay(curDay.format('YYYY-MM-DD'));
         if (range.saveResponses) {
-            await writeZippedStringToFile('responses-archive', response.day, JSON.stringify(response.json));
+            await writeZippedStringToFile('output/responses-archive', response.day, JSON.stringify(response.json));
         }
         await processDay(response);
     }
