@@ -1,10 +1,14 @@
-import * as fs from 'fs';
-import { NumericValue, TemperatureDay, TemperatureReading } from './thingspeak-sensor-api';
-import dayjs from 'dayjs';
+import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
+import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
+
+import { exists } from 'https://deno.land/std@0.102.0/fs/mod.ts';
+
+import { NumericValue, FieldResponse, DayResponse } from './thingspeak-sensor-api.ts';
 
 const ALMANAC_PATH = 'lake-almanac.json';
 // The size of metric sequences to store e.g., top N coldest days
 const SEQUENCE_SIZE = 5;
+const OUTDOOR_TEMP_FIELD = 'field2';
 
 /**
  * Almanac Metrics:
@@ -35,6 +39,26 @@ interface AlmanacYear {
     FirstFreezesAfterSummer: Sequence<Reading>;
 
     // LargestVariationDays: Sequence<Reading>;
+}
+
+export type TemperatureReading = {
+    date: dayjsTypes.Dayjs;
+} & NumericValue;
+
+export interface TemperatureDay {
+    readings: TemperatureReading[];
+    /**
+     * Date only string e.g. '2021-07-02'
+     */
+    day: string;
+}
+
+export function frToOutdoorReadingDay(fr: FieldResponse): TemperatureReading[] {
+    return fr.feeds.map((f) => {
+        const v = f[OUTDOOR_TEMP_FIELD];
+        const value = v ? parseFloat(v) : NaN;
+        return { date: dayjs(f.created_at), value };
+    });
 }
 
 const EmptyAlmanacYear: AlmanacYear = {
@@ -77,24 +101,26 @@ type Reading = {
 
 const last = <T>(arr: T[]) => arr[arr.length - 1];
 const first = <T>(arr: T[]) => arr[0];
-const fileExists = async (path: string) => !!(await fs.promises.stat(path).catch((e) => false));
+// const fileExists = async (path: string) => !!(await fs.promises.stat(path).catch((e) => false));
+// const fileExists(filePath).then((result : boolean) => console.log(result))
 
-export async function processDay(temperatureDay: TemperatureDay) {
+export async function processDay(response: DayResponse) {
     const alm = await getAlmanac();
+    const temperatureDay = { readings: frToOutdoorReadingDay(response.json), day: response.day };
     updateAlmanac(alm, temperatureDay);
-    await fs.promises.writeFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2));
+    await Deno.writeTextFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2));
     console.log(`Wrote`, ALMANAC_PATH);
 }
 
 async function getAlmanac(): Promise<Almanac> {
-    if (await fileExists(ALMANAC_PATH)) {
-        return JSON.parse(await fs.promises.readFile(ALMANAC_PATH, 'utf-8'));
+    if (await exists(ALMANAC_PATH)) {
+        return JSON.parse(await Deno.readTextFile(ALMANAC_PATH));
     } else {
         return {};
     }
 }
 
-async function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) {
+function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) {
     const year = dayjs(temperatureDay.day).year().toString();
     if (!almanac[year]) almanac[year] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
     if (!almanac[ALL]) almanac[ALL] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
