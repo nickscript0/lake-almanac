@@ -4,7 +4,8 @@
 ```bash
 time ./scripts/archiver.sh 2018-10-06 2021-07-19
 
-./scripts/archiver.sh --save-responses yesterday
+# Process yesterday only
+./scripts/archiver.sh
 ```
 
 ## TODOs
