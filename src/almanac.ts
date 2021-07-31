@@ -12,8 +12,8 @@ const OUTDOOR_TEMP_FIELD = 'field2';
 
 /**
  * Almanac Metrics:
- * - Sequences are in descending order with the most as the first index
- *   e.g. ColdesDays[0] is the coldest day
+ * - Sequences are always in asc order
+ *   e.g. ColdestDays[0] is the coldest day, last(HottestDays) is the hottest
  * - All dates are in sensor time, Pacific Time
  */
 
@@ -35,6 +35,7 @@ interface AlmanacYear {
     HottestDaytime: Sequence<Reading>;
     ColdestDaytime: Sequence<Reading>;
 
+    // Sorted by Date asc
     FirstFreezesBeforeSummer: Sequence<Reading>;
     FirstFreezesAfterSummer: Sequence<Reading>;
 
