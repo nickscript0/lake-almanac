@@ -4,24 +4,32 @@
 ```bash
 time ./scripts/archiver.sh 2018-10-06 2021-07-19
 
-# Process yesterday only
+# Process yesterday only (this is what the daily Github Action runs)
 ./scripts/archiver.sh
 ```
 
 ## TODOs
 - More metrics: seasonal hi/low/averages [winter,spring,summer,fall,year]
 - More metrics: largest variation days
-- Archive every day's json response in an archive folder (in addition to almanac.json)
-   - Keep in mind Github's repo storage limits with https://github.com/github/git-sizer
-- Port to Deno so we can run it as an action or look into if anyone has made the flat file action compatible with https://github.com/vercel/ncc
-   - See discussion with Github team on running postprocessing stage with Python (and other possibilities) instead of requiring Deno https://github.com/githubocto/flat/issues/12#issuecomment-844300624
 
-## Github Actions Links
+## Notes
+### Deno
+- The current version of the dayjs package does not export modules using the ESM standard deno expects (as seen if you go to `https://cdn.skypack.dev/dayjs@1.10.6`). The new version of [Dayjs 2.0 plans to support  in their roadmap here](https://github.com/iamkun/dayjs/issues/1281). Here is my current workaround:
+   ```typescript
+   import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
+   import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
+   ```
+- Deno seems to work well but there are other options:
+   - Use nodejs via https://github.com/vercel/ncc
+   - See discussion with Github team on running postprocessing stage with Python (and other possibilities) instead of requiring Deno https://github.com/githubocto/flat/issues/12#issuecomment-844300624
+### Github Repo Storage limits
+I will be well below them for the forseeable future, but can check with this handy tool https://github.com/github/git-sizer
+### Github Actions Links
 - https://github.com/marketplace/actions/flat-data
    - https://github.com/githubocto/flat-postprocessing
 - https://github.com/actions/setup-node
 
-## Sample Requests
+### Sample Requests
 
 Rest API: https://www.mathworks.com/help/thingspeak/readdata.html
 
