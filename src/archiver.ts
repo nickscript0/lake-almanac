@@ -8,7 +8,7 @@ import { parse } from 'https://deno.land/std@0.102.0/flags/mod.ts';
 import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
 import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
 
-import { fetchLakeDay } from './thingspeak-sensor-api.ts';
+import { fetchLakeDay, EARLIEST_RECORD } from './thingspeak-sensor-api.ts';
 import { processDay } from './almanac.ts';
 import { writeZippedStringToFile } from './writer.ts';
 
@@ -36,7 +36,7 @@ Usage:
  2. archiver.ts (For github-actions, run with no arguments, or 1 argument it will ignore, 
     to only process yesterday and with --${SAVE_RESPONSES_FLAG} enabled)
 Examples:
- archiver.ts 2020-05-01 2020-09-01
+ archiver.ts ${EARLIEST_RECORD} 2020-09-01
  archiver.ts
 `
         );
@@ -44,7 +44,7 @@ Examples:
     }
     const SAVE_RESPONSES_FLAG = 'save-responses';
     const args = parse(Deno.args, { boolean: [SAVE_RESPONSES_FLAG] });
-
+    if (args['h'] || args['help']) exitWithUsage('Help');
     if (args._.length === 0 || args._.length === 1) {
         const now: dayjsTypes.Dayjs = dayjs();
         // Treat yesterday as 2 days ago to eliminate any issues with running this when UTC is past midnight

@@ -41,7 +41,7 @@ export interface FieldFeed {
 const THINGSPEAK_URL_START_FRAGMENT = `https://api.thingspeak.com/channels/`;
 const channelId = '581842'; // lake Indoor / Outdoor sensor
 // The earliest valid record for the lake Outdoor temp sensor
-const EARLIEST_RECORD = '2018-10-06';
+export const EARLIEST_RECORD = '2018-10-06';
 
 function encodeGetParams(params: { [key: string]: string | number }): string {
     return Object.entries(params)
