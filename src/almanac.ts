@@ -292,12 +292,18 @@ function getDailyMetrics(
             ColdestNighttime: first(nighttimeReadings),
         },
         averages: {
-            Average: valueAverage(allReadings),
-            AverageDaytime: valueAverage(daytimeReadings),
+            Average: allReadings.length > 0 ? valueAverage(allReadings) : undefined,
+            AverageDaytime: daytimeReadings.length > 0 ? valueAverage(daytimeReadings) : undefined,
 
-            AverageNighttime: valueAverage(nighttimeReadings),
-            AverageMidnight: { average: findNearestReadingToTime(MIDNIGHT, allReadings).value, n: 1 },
-            AverageNoon: { average: findNearestReadingToTime(NOON, allReadings).value, n: 1 },
+            AverageNighttime: daytimeReadings.length > 0 ? valueAverage(nighttimeReadings) : undefined,
+            AverageMidnight:
+                allReadings.length > 0
+                    ? { average: findNearestReadingToTime(MIDNIGHT, allReadings).value, n: 1 }
+                    : undefined,
+            AverageNoon:
+                allReadings.length > 0
+                    ? { average: findNearestReadingToTime(NOON, allReadings).value, n: 1 }
+                    : undefined,
         },
     };
 }
@@ -429,10 +435,10 @@ function valueAverage(readings: TemperatureReading[]): MovingAverage {
  */
 const MIDNIGHT = dayjs('2001-01-01 00:00');
 const NOON = dayjs('2001-01-01 12:00');
-function findNearestReadingToTime(findDate: dayjsTypes.Dayjs, readings: TemperatureReading[]) {
+function findNearestReadingToTime(findDate: dayjsTypes.Dayjs, readings: TemperatureReading[]): TemperatureReading {
     const normalize = (d: dayjsTypes.Dayjs) => d.set('year', 2001).set('month', 1).date(1);
     const desiredTime = normalize(findDate);
-    let closest: TemperatureReading = readings[0];
+    let closest = readings[0];
     for (const r of readings) {
         const curTime = normalize(r.date);
         if (curTime.diff(desiredTime, 'ms') < closest.date.diff(desiredTime, 'ms')) {
