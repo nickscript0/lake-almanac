@@ -441,8 +441,8 @@ function valueAverage(readings: TemperatureReading[]): MovingAverage {
 /**
  * Finds the nearest reading to a given time, useful for finding say mindnight and noon readings
  */
-const MIDNIGHT = dayjs('2001-01-01 00:00');
-const NOON = dayjs('2001-01-01 12:00');
+const MIDNIGHT = dayjs('2001-01-01 00:00-07:00Z');
+const NOON = dayjs('2001-01-01 12:00-07:00Z');
 function findNearestReadingToTime(findDate: dayjsTypes.Dayjs, readings: TemperatureReading[]): TemperatureReading {
     const normalize = (d: dayjsTypes.Dayjs) => d.set('year', 2001).set('month', 1).date(1);
     const desiredTime = normalize(findDate);
