@@ -364,7 +364,9 @@ function getSubsetReadings(td: TemperatureDay) {
  * The equinox/solstic always fall between two days in the next 10 years so we use the equinoxes and sostices for 2021
  * for a reasonable approximation.
  */
-function getSeason(d: dayjsTypes.Dayjs): Season {
+function getSeason(origDate: dayjsTypes.Dayjs): Season {
+    // Normalize incoming date's year to the season boundaries year
+    const d = origDate.set('year', 2021);
     const MARCH_EQUINOX: dayjsTypes.Dayjs = dayjs('2021-03-20 9:37:00-00:00Z');
     const JUNE_SOLSTICE: dayjsTypes.Dayjs = dayjs('2021-06-21 3:32:00-00:00Z');
     const SEPT_EQUINOX: dayjsTypes.Dayjs = dayjs('2021-09-22 19:21:00-00:00Z');
