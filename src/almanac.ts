@@ -176,6 +176,7 @@ function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) {
     if (!almanac[year]) almanac[year] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
     if (!almanac[ALL]) almanac[ALL] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
 
+    temperatureDay.readings.sort(ascValueSort);
     const { daytimeReadings, nighttimeReadings, afterSummerReadings, beforeSummerReadings } =
         getSubsetReadings(temperatureDay);
     const dailyMetrics = getDailyMetrics(temperatureDay, daytimeReadings, nighttimeReadings);
@@ -274,13 +275,13 @@ interface DailyMetrics {
     averages: Record<keyof AlmanacAverages, MovingAverage | undefined>;
 }
 
+// Assumes ascValueSorted readings
 function getDailyMetrics(
     temperatureDay: TemperatureDay,
     daytimeReadings: TemperatureReading[],
     nighttimeReadings: TemperatureReading[]
 ): DailyMetrics {
     const allReadings = temperatureDay.readings;
-    allReadings.sort(ascValueSort);
 
     return {
         hiLows: {
@@ -325,6 +326,7 @@ function firstFreeze(ascReadings: TemperatureReading[]) {
     return undefined;
 }
 
+// Assumes sortAscValue readings
 function getSubsetReadings(td: TemperatureDay) {
     // TODO: Pacific is [utc - 7], but this will be an hour off during daylight
 

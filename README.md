@@ -2,7 +2,7 @@
 
 ## Run Archiver
 ```bash
-time ./scripts/archiver.sh 2018-10-06 2021-07-19
+scripts/archiver.sh --save-responses 2018-10-06 2021-07-31 2>&1 | tee output.log
 
 # Process yesterday only (this is what the daily Github Action runs)
 ./scripts/archiver.sh
