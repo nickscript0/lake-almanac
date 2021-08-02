@@ -302,16 +302,6 @@ function getDailyMetrics(
     };
 }
 
-function getFreezeMetrics(temperatureDay: TemperatureDay) {
-    const { daytimeReadings, nighttimeReadings, afterSummerReadings, beforeSummerReadings } =
-        getSubsetReadings(temperatureDay);
-
-    return {
-        FirstFreezesAfterSummer: firstFreeze(afterSummerReadings),
-        FirstFreezesBeforeSummer: firstFreeze(beforeSummerReadings),
-    };
-}
-
 function ascValueSort(a: NumericValue, b: NumericValue) {
     return a.value - b.value;
 }
