@@ -377,11 +377,17 @@ function getSeason(origDate: dayjsTypes.Dayjs): Season {
     const JUNE_SOLSTICE: dayjsTypes.Dayjs = dayjs('2021-06-21 3:32:00-00:00Z');
     const SEPT_EQUINOX: dayjsTypes.Dayjs = dayjs('2021-09-22 19:21:00-00:00Z');
     const DEC_SOLSTICE: dayjsTypes.Dayjs = dayjs('2021-12-21 15:59:00-00:00Z');
+    const NEXT_MARCH_EQUINOX: dayjsTypes.Dayjs = dayjs('2022-03-20 9:37:00-00:00Z');
+    const PREV_DEC_SOLSTICE: dayjsTypes.Dayjs = dayjs('2020-12-21 15:59:00-00:00Z');
 
     if (d.isAfter(MARCH_EQUINOX.subtract(1, 'second')) && d.isBefore(JUNE_SOLSTICE)) return 'Spring';
     else if (d.isAfter(JUNE_SOLSTICE.subtract(1, 'second')) && d.isBefore(SEPT_EQUINOX)) return 'Summer';
     else if (d.isAfter(SEPT_EQUINOX.subtract(1, 'second')) && d.isBefore(DEC_SOLSTICE)) return 'Fall';
-    else if (d.isAfter(DEC_SOLSTICE.subtract(1, 'second')) && d.isBefore(MARCH_EQUINOX)) return 'Winter';
+    else if (
+        (d.isAfter(DEC_SOLSTICE.subtract(1, 'second')) && d.isBefore(NEXT_MARCH_EQUINOX)) ||
+        (d.isAfter(PREV_DEC_SOLSTICE.subtract(1, 'second')) && d.isBefore(MARCH_EQUINOX))
+    )
+        return 'Winter';
     else {
         console.log(`Warning: getSeason(${d}) could not be categorized in a season`);
         return 'Spring';
