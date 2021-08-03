@@ -152,8 +152,6 @@ type Reading = {
 
 const last = <T>(arr: T[]) => arr[arr.length - 1];
 const first = <T>(arr: T[]) => arr[0];
-// const fileExists = async (path: string) => !!(await fs.promises.stat(path).catch((e) => false));
-// const fileExists(filePath).then((result : boolean) => console.log(result))
 
 export async function processDay(response: DayResponse) {
     const alm = await getAlmanac();
@@ -449,7 +447,9 @@ function findNearestReadingToTime(findDate: dayjsTypes.Dayjs, readings: Temperat
     let closest = readings[0];
     for (const r of readings) {
         const curTime = normalize(r.date);
-        if (curTime.diff(desiredTime, 'ms') < closest.date.diff(desiredTime, 'ms')) {
+        const closestTime = normalize(closest.date);
+
+        if (Math.abs(curTime.diff(desiredTime, 'ms')) < Math.abs(closestTime.diff(desiredTime, 'ms'))) {
             closest = r;
         }
     }
