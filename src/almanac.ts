@@ -1,6 +1,11 @@
 import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
 import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
 
+import utc from 'https://cdn.skypack.dev/dayjs@1.10.6/plugin/utc';
+import timezone from 'https://cdn.skypack.dev/dayjs@1.10.6/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 import { exists } from 'https://deno.land/std@0.102.0/fs/mod.ts';
 
 import { NumericValue, FieldResponse, DayResponse } from './thingspeak-sensor-api.ts';
@@ -82,7 +87,7 @@ export function frToOutdoorReadingDay(fr: FieldResponse): TemperatureReading[] {
     return fr.feeds.map((f) => {
         const v = f[OUTDOOR_TEMP_FIELD];
         const value = v ? parseFloat(v) : NaN;
-        return { date: dayjs(f.created_at), value };
+        return { date: (dayjs(f.created_at)).tz('America/Vancouver'), value };
     });
 }
 

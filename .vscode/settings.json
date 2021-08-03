@@ -2,7 +2,8 @@
     "deno.enable": true,
     "deno.lint": true,
     "deno.suggest.imports.hosts": {
-        "https://deno.land": true
+        "https://deno.land": true,
+        "https://cdn.skypack.dev": false
     },
     "deno.unstable": true
 }
