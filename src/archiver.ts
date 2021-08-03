@@ -22,7 +22,7 @@ async function main() {
         const response = await fetchLakeDay(curDay.format('YYYY-MM-DD'));
         if (range.saveResponses) {
             await writeZippedStringToFile(
-                `output/${curDay.year()}/responses-archive`,
+                `output/responses-archive/${curDay.year()}`,
                 response.day,
                 JSON.stringify(response.json)
             );
