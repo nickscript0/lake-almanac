@@ -6,6 +6,14 @@ import timezone from 'https://cdn.skypack.dev/dayjs@1.10.6/plugin/timezone';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+/**
+ * The fixed timezone to perform date logic with, this makes most sense to be the tz where.
+ * This makes most sense to be tz that the temperature readings are from.
+ */
+const TIMEZONE = 'America/Vancouver';
+// This doesn't seem to do anything???
+// dayjs.tz.setDefault(TIMEZONE);
+
 import { exists } from 'https://deno.land/std@0.102.0/fs/mod.ts';
 
 import { NumericValue, FieldResponse, DayResponse } from './thingspeak-sensor-api.ts';
@@ -87,7 +95,7 @@ export function frToOutdoorReadingDay(fr: FieldResponse): TemperatureReading[] {
     return fr.feeds.map((f) => {
         const v = f[OUTDOOR_TEMP_FIELD];
         const value = v ? parseFloat(v) : NaN;
-        return { date: dayjs(f.created_at).tz('America/Vancouver'), value };
+        return { date: dayjs(f.created_at).tz(TIMEZONE), value };
     });
 }
 
@@ -354,12 +362,13 @@ function getSubsetReadings(td: TemperatureDay) {
     // TODO: Pacific is [utc - 7], but this will be an hour off during daylight
 
     // 6am Pacific
-    const DAY_START = dayjs(`${td.day} 13:00:00-00:00Z`);
+    // const DAY_START = dayjs(`${td.day} 13:00:00-00:00Z`);
+    const DAY_START = dayjs(`${td.day} 06:00:00`).tz(TIMEZONE);
     // 6pm Pacific
     const DAY_END = DAY_START.add(12, 'hour');
     const PREV_DAY_END = DAY_END.subtract(1, 'day');
     const NEXT_DAY_START = DAY_START.add(1, 'day');
-    const SUMMER_SPLIT = dayjs(`${td.day.split('-')[0]}-07-01`);
+    const SUMMER_SPLIT = dayjs(`${td.day.split('-')[0]}-07-01`).tz(TIMEZONE);
 
     const daytimeReadings: TemperatureReading[] = [];
     const nighttimeReadings: TemperatureReading[] = [];
@@ -464,8 +473,10 @@ function valueAverage(readings: TemperatureReading[]): MovingAverage {
 /**
  * Finds the nearest reading to a given time, useful for finding say mindnight and noon readings
  */
-const MIDNIGHT = dayjs('2001-01-01 00:00-07:00Z');
-const NOON = dayjs('2001-01-01 12:00-07:00Z');
+// const MIDNIGHT = dayjs('2001-01-01 00:00-07:00Z');
+const MIDNIGHT = dayjs(`2001-01-01 00:00`).tz(TIMEZONE);
+// const NOON = dayjs('2001-01-01 12:00-07:00Z');
+const NOON = dayjs('2001-01-01 12:00').tz(TIMEZONE);
 function findNearestReadingToTime(findDate: dayjsTypes.Dayjs, readings: TemperatureReading[]): TemperatureReading {
     const normalize = (d: dayjsTypes.Dayjs) => d.set('year', 2001).set('month', 1).date(1);
     const desiredTime = normalize(findDate);

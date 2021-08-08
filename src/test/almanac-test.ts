@@ -16,6 +16,7 @@ Deno.test('benchmark: updateAlmanac should process 1 day from empty almanac', as
     const temperatureDay = { readings: frToOutdoorReadingDay(response.json), day: response.day };
     const alm = {};
     updateAlmanac(alm, temperatureDay);
+    // await Deno.writeTextFile('src/test/res/almanac-2021-01-02-to-2021-01-3.json', JSON.stringify(alm, undefined, 2));
 
     assertEquals(alm, expectedAlm);
 });
