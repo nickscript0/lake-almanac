@@ -87,7 +87,7 @@ export function frToOutdoorReadingDay(fr: FieldResponse): TemperatureReading[] {
     return fr.feeds.map((f) => {
         const v = f[OUTDOOR_TEMP_FIELD];
         const value = v ? parseFloat(v) : NaN;
-        return { date: (dayjs(f.created_at)).tz('America/Vancouver'), value };
+        return { date: dayjs(f.created_at).tz('America/Vancouver'), value };
     });
 }
 
@@ -179,7 +179,7 @@ export function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) 
     if (!almanac[year]) almanac[year] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
     if (!almanac[ALL]) almanac[ALL] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
 
-    temperatureDay.readings.sort(ascValueSort);
+    temperatureDay.readings.sort(ascValueThenDateTempReadingSort);
     const { daytimeReadings, nighttimeReadings, afterSummerReadings, beforeSummerReadings } =
         getSubsetReadings(temperatureDay);
     const dailyMetrics = getDailyMetrics(temperatureDay, daytimeReadings, nighttimeReadings);
@@ -241,15 +241,15 @@ function updateHiLowSequence(tempReading: TemperatureReading, seq: Sequence<Read
     }
     if (seq.length < SEQUENCE_SIZE) {
         seq.push(reading);
-        seq.sort(ascValueSort);
+        seq.sort(ascValueThenDateReadingSort);
     } else if (type !== 'high' && type !== 'low') {
         throw new Error(`${type} readings are not compatible with this function`);
     } else if (type === 'high' && reading.value > first(seq).value) {
         seq[0] = reading;
-        seq.sort(ascValueSort);
+        seq.sort(ascValueThenDateReadingSort);
     } else if (type === 'low' && reading.value < last(seq).value) {
         seq[seq.length - 1] = reading;
-        seq.sort(ascValueSort);
+        seq.sort(ascValueThenDateReadingSort);
     }
     return seq;
 }
@@ -310,6 +310,20 @@ function getDailyMetrics(
                     : undefined,
         },
     };
+}
+
+function ascValueThenDateTempReadingSort(a: TemperatureReading, b: TemperatureReading) {
+    if (a.value === b.value) {
+        return new Date(a.date.toDate()).getTime() - new Date(b.date.toDate()).getTime();
+    }
+    return ascValueSort(a, b);
+}
+
+function ascValueThenDateReadingSort(a: Reading, b: Reading) {
+    if (a.value === b.value) {
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+    }
+    return ascValueSort(a, b);
 }
 
 function ascValueSort(a: NumericValue, b: NumericValue) {
