@@ -28,7 +28,7 @@ const ALL = 'All';
 const seasons = ['Spring', 'Summer', 'Fall', 'Winter'] as const;
 type Season = typeof seasons[number];
 
-type Almanac = Record<Year, AlmanacYear>;
+export type Almanac = Record<Year, AlmanacYear>;
 
 /**
  * All Hottest/Coldest metrics are sorted by asc temperature
@@ -174,7 +174,7 @@ async function getAlmanac(): Promise<Almanac> {
     }
 }
 
-function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) {
+export function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) {
     const year = dayjs(temperatureDay.day).year().toString();
     if (!almanac[year]) almanac[year] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
     if (!almanac[ALL]) almanac[ALL] = JSON.parse(JSON.stringify(EmptyAlmanacYear));

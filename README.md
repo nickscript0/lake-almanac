@@ -8,6 +8,11 @@ scripts/archiver.sh --save-responses 2018-10-06 2021-07-31 2>&1 | tee output.log
 ./scripts/archiver.sh
 ```
 
+## Run Tests
+```bash
+scripts/test.sh
+```
+
 ## TODOs
 - More metrics: seasonal hi/low/averages [winter,spring,summer,fall,year]
 - More metrics: largest variation days
