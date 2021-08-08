@@ -95,7 +95,7 @@ export function frToOutdoorReadingDay(fr: FieldResponse): TemperatureReading[] {
     return fr.feeds.map((f) => {
         const v = f[OUTDOOR_TEMP_FIELD];
         const value = v ? parseFloat(v) : NaN;
-        return { date: dayjs(f.created_at).tz(TIMEZONE), value };
+        return { date: dayjs.tz(f.created_at, TIMEZONE), value };
     });
 }
 
@@ -238,6 +238,10 @@ function toReading(tr: TemperatureReading): Reading {
     return { date: tr.date.format('YYYY-MM-DD HH:mm:ssZ[Z]'), value: tr.value };
 }
 
+function dayjsToStr(d: dayjsTypes.Dayjs) {
+    return d.format('YYYY-MM-DD HH:mm:ssZ[Z]');
+}
+
 /**
  * All Sequences are assumed sorted in asc order by `value`
  * For 'high' type, add the reading if it is higher than the 1st element
@@ -363,12 +367,13 @@ function getSubsetReadings(td: TemperatureDay) {
 
     // 6am Pacific
     // const DAY_START = dayjs(`${td.day} 13:00:00-00:00Z`);
-    const DAY_START = dayjs(`${td.day} 06:00:00`).tz(TIMEZONE);
+    const DAY_START: dayjsTypes.Dayjs = dayjs.tz(`${td.day} 06:00:00`, TIMEZONE);
+    console.log(`DAY_START IS`, dayjsToStr(DAY_START));
     // 6pm Pacific
     const DAY_END = DAY_START.add(12, 'hour');
     const PREV_DAY_END = DAY_END.subtract(1, 'day');
     const NEXT_DAY_START = DAY_START.add(1, 'day');
-    const SUMMER_SPLIT = dayjs(`${td.day.split('-')[0]}-07-01`).tz(TIMEZONE);
+    const SUMMER_SPLIT: dayjsTypes.Dayjs = dayjs.tz(`${td.day.split('-')[0]}-07-01`, TIMEZONE);
 
     const daytimeReadings: TemperatureReading[] = [];
     const nighttimeReadings: TemperatureReading[] = [];
@@ -381,6 +386,14 @@ function getSubsetReadings(td: TemperatureDay) {
             (r.date.isAfter(DAY_START) || r.date.isSame(DAY_START)) &&
             (r.date.isBefore(DAY_END) || r.date.isSame(DAY_END))
         ) {
+            console.log(
+                `DAYTIME READING`,
+                toReading(r),
+                `isAfter`,
+                dayjsToStr(DAY_START),
+                `isBefore`,
+                dayjsToStr(DAY_END)
+            );
             daytimeReadings.push(r);
         } else if (
             (r.date.isAfter(DAY_END) && r.date.isBefore(NEXT_DAY_START)) ||
@@ -474,9 +487,9 @@ function valueAverage(readings: TemperatureReading[]): MovingAverage {
  * Finds the nearest reading to a given time, useful for finding say mindnight and noon readings
  */
 // const MIDNIGHT = dayjs('2001-01-01 00:00-07:00Z');
-const MIDNIGHT = dayjs(`2001-01-01 00:00`).tz(TIMEZONE);
+const MIDNIGHT = dayjs.tz(`2001-01-01 00:00`, TIMEZONE);
 // const NOON = dayjs('2001-01-01 12:00-07:00Z');
-const NOON = dayjs('2001-01-01 12:00').tz(TIMEZONE);
+const NOON = dayjs.tz('2001-01-01 12:00', TIMEZONE);
 function findNearestReadingToTime(findDate: dayjsTypes.Dayjs, readings: TemperatureReading[]): TemperatureReading {
     const normalize = (d: dayjsTypes.Dayjs) => d.set('year', 2001).set('month', 1).date(1);
     const desiredTime = normalize(findDate);
