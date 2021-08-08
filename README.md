@@ -17,6 +17,20 @@ scripts/test.sh
 - More metrics: seasonal hi/low/averages [winter,spring,summer,fall,year]
 - More metrics: largest variation days
 
+### Dayjs Bug
+This only happens in AST on my devbox and not in repl.it
+```bash
+deno
+import utc from 'https://cdn.skypack.dev/dayjs@1.10.6/plugin/utc';
+import timezone from 'https://cdn.skypack.dev/dayjs@1.10.6/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+// false as expected
+console.log(dayjs("2021-01-02 17:07:54-08:00Z").isAfter(dayjs('2021-01-02 18:00:00-08:00Z'))); 
+// true NOT as expected
+console.log(dayjs.tz("2021-01-02 17:07:54", 'America/Vancouver').isAfter(dayjs.tz('2021-01-02 18:00:00', 'America/Vancouver')));
+```
+
 ## Notes
 ### Deno
 - The current version of the dayjs package does not export modules using the ESM standard deno expects (as seen if you go to `https://cdn.skypack.dev/dayjs@1.10.6`). The new version of [Dayjs 2.0 plans to support  in their roadmap here](https://github.com/iamkun/dayjs/issues/1281). Here is my current workaround:

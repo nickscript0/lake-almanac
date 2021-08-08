@@ -386,19 +386,37 @@ function getSubsetReadings(td: TemperatureDay) {
             (r.date.isAfter(DAY_START) || r.date.isSame(DAY_START)) &&
             (r.date.isBefore(DAY_END) || r.date.isSame(DAY_END))
         ) {
-            console.log(
-                `DAYTIME READING`,
-                toReading(r),
-                `isAfter`,
-                dayjsToStr(DAY_START),
-                `isBefore`,
-                dayjsToStr(DAY_END)
-            );
+            // console.log(
+            //     `DAYTIME READING`,
+            //     toReading(r),
+            //     `isAfter`,
+            //     dayjsToStr(DAY_START),
+            //     `isBefore`,
+            //     dayjsToStr(DAY_END)
+            // );
             daytimeReadings.push(r);
         } else if (
             (r.date.isAfter(DAY_END) && r.date.isBefore(NEXT_DAY_START)) ||
             (r.date.isBefore(DAY_START) && r.date.isAfter(PREV_DAY_END))
         ) {
+            const a = r.date.isAfter(DAY_END) && r.date.isBefore(NEXT_DAY_START);
+            const b = r.date.isBefore(DAY_START) && r.date.isAfter(PREV_DAY_END);
+            if (r.value === 0.3125) {
+                console.log(
+                    `NIGHTTIME READING`,
+                    dayjsToStr(r.date),
+                    `isAfter`,
+                    dayjsToStr(DAY_END),
+                    r.date.isAfter(DAY_END),
+                    `isBefore`,
+                    dayjsToStr(DAY_START),
+                    r.date.isBefore(DAY_START),
+                    'conditions',
+                    a,
+                    b
+                );
+            }
+
             nighttimeReadings.push(r);
         }
 
