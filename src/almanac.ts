@@ -184,6 +184,12 @@ export function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) 
         getSubsetReadings(temperatureDay);
     const dailyMetrics = getDailyMetrics(temperatureDay, daytimeReadings, nighttimeReadings);
 
+    console.log(`DEBUG daytimeReadings`, daytimeReadings.map(toReading));
+    console.log(
+        `DEBUG dailyMetrics.hiLows.ColdestDaytime`,
+        dailyMetrics.hiLows.ColdestDaytime && toReading(dailyMetrics.hiLows.ColdestDaytime)
+    );
+
     for (const [k, type] of Object.entries(AlmanacPropertyDesc)) {
         // We know key is 'keyof AlmanacMonth' but it's typing as string, I wonder why ts has this limitation?
 
