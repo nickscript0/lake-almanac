@@ -97,7 +97,12 @@ export function frToOutdoorReadingDay(fr: FieldResponse): TemperatureReading[] {
     return fr.feeds.map((f) => {
         const v = f[OUTDOOR_TEMP_FIELD];
         const value = v ? parseFloat(v) : NaN;
-        return { date: dayjs.tz(f.created_at, TIMEZONE), value };
+        // NO
+        // return { date: dayjs.tz(f.created_at, TIMEZONE), value };
+        // Do not set dayjs.tz here (it will cause incorrect dates).
+        // The data from the server is already in TIMEZONE thanks to the timezone=America/Vancouver in the req
+        return { date: dayjs(f.created_at), value };
+        // return {}.toLocaleString("en-US", {timeZone: "Pacific/Honolulu"});
     });
 }
 
@@ -171,6 +176,8 @@ const first = <T>(arr: T[]) => arr[0];
 export async function processDay(response: DayResponse) {
     const alm = await getAlmanac();
     const temperatureDay = { readings: frToOutdoorReadingDay(response.json), day: response.day };
+    // await Deno.writeTextFile('src/test/res/response-2021-01-02.json', JSON.stringify(response, null, 2));
+    // console.log(`Wrote src/test/res/response-2021-01-02.json`)
     updateAlmanac(alm, temperatureDay);
     await Deno.writeTextFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2));
     console.log(`Wrote`, ALMANAC_PATH);
@@ -189,16 +196,24 @@ export function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) 
     if (!almanac[year]) almanac[year] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
     if (!almanac[ALL]) almanac[ALL] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
 
+    temperatureDay.readings.sort(ascDateTempReadingSort);
+    console.log(`DEBUG all Readings1`, temperatureDay.readings.map(toReading).slice(0, 40));
+    console.log(`DEBUG all Readings2`, temperatureDay.readings.map(toReading).slice(40, 80));
+    console.log(`DEBUG all Readings2`, temperatureDay.readings.map(toReading).slice(80, temperatureDay.readings.length));
+
     temperatureDay.readings.sort(ascValueThenDateTempReadingSort);
     const { daytimeReadings, nighttimeReadings, afterSummerReadings, beforeSummerReadings } =
         getSubsetReadings(temperatureDay);
     const dailyMetrics = getDailyMetrics(temperatureDay, daytimeReadings, nighttimeReadings);
 
-    console.log(`DEBUG daytimeReadings`, daytimeReadings.map(toReading));
-    console.log(
-        `DEBUG dailyMetrics.hiLows.ColdestDaytime`,
-        dailyMetrics.hiLows.ColdestDaytime && toReading(dailyMetrics.hiLows.ColdestDaytime)
-    );
+    // daytimeReadings.sort(ascDateTempReadingSort);
+    // nighttimeReadings.sort(ascDateTempReadingSort);
+    // console.log(`DEBUG daytimeReadings`, daytimeReadings.map(toReading));
+    // console.log(`DEBUG nighttimeReadings`, nighttimeReadings.map(toReading));
+    // console.log(
+    //     `DEBUG dailyMetrics.hiLows.ColdestDaytime`,
+    //     dailyMetrics.hiLows.ColdestDaytime && toReading(dailyMetrics.hiLows.ColdestDaytime)
+    // );
 
     for (const [k, type] of Object.entries(AlmanacPropertyDesc)) {
         // We know key is 'keyof AlmanacMonth' but it's typing as string, I wonder why ts has this limitation?
@@ -237,7 +252,8 @@ export function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) 
 }
 
 function toReading(tr: TemperatureReading): Reading {
-    return { date: tr.date.format('YYYY-MM-DD HH:mm:ssZ[Z]'), value: tr.value };
+    // We set tz here because tr.date is already in TIMEZONE as requested from the server
+    return { date: (tr.date as any).tz(TIMEZONE).format('YYYY-MM-DD HH:mm:ssZ[Z]'), value: tr.value };
 }
 
 function dayjsToStr(d: dayjsTypes.Dayjs) {
@@ -352,6 +368,10 @@ function ascValueSort(a: NumericValue, b: NumericValue) {
 
 function ascDateSort(a: Reading, b: Reading) {
     return new Date(a.date).getTime() - new Date(b.date).getTime();
+}
+
+function ascDateTempReadingSort(a: TemperatureReading, b: TemperatureReading) {
+    return a.date.toDate().getTime() - b.date.toDate().getTime();
 }
 
 function firstFreeze(ascReadings: TemperatureReading[]) {
