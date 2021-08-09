@@ -18,9 +18,11 @@ scripts/test.sh
 - More metrics: largest variation days
 
 ### Dayjs Bug
-This only happens in AST on my devbox and not in repl.it
+Note: This only seems reproduceable when the server is in a AST (possibly other tzs) as my devbox is and not in repl.it (which is in UTC).
 ```bash
 deno
+
+import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
 import utc from 'https://cdn.skypack.dev/dayjs@1.10.6/plugin/utc';
 import timezone from 'https://cdn.skypack.dev/dayjs@1.10.6/plugin/timezone';
 dayjs.extend(utc);

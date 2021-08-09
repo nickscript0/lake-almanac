@@ -1,5 +1,6 @@
 import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
 import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
+import { isBefore } from './util.ts';
 
 // Thingspeak API response
 export interface FieldResponse {
@@ -73,7 +74,7 @@ export async function fetchLakeDay(day: string): Promise<DayResponse> {
     const startDayjs = dayjs(day);
     // Assert day is valid
     if (!startDayjs.isValid()) throw new Error(`Invalid day requested ${day}`);
-    if (startDayjs.isBefore(EARLIEST_RECORD))
+    if (isBefore(startDayjs, dayjs(EARLIEST_RECORD)))
         throw new Error(`Invalid day requested ${day}, no data before ${EARLIEST_RECORD}`);
 
     const endDayJs = startDayjs.add(1, 'day');

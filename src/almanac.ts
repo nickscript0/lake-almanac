@@ -6,6 +6,8 @@ import timezone from 'https://cdn.skypack.dev/dayjs@1.10.6/plugin/timezone';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+import { isBefore, isAfter, isSame } from './util.ts';
+
 /**
  * The fixed timezone to perform date logic with, this makes most sense to be the tz where.
  * This makes most sense to be tz that the temperature readings are from.
@@ -283,7 +285,7 @@ function updateFirstFreezeSequence(tempReading: TemperatureReading | undefined, 
         if (seq.length < SEQUENCE_SIZE) {
             seq.push(reading);
             seq.sort(ascDateSort);
-        } else if (tempReading.date.isBefore(last(seq).date)) {
+        } else if (isBefore(tempReading.date, dayjs(last(seq).date))) {
             seq[seq.length - 1] = reading;
             seq.sort(ascDateSort);
         }
@@ -383,8 +385,8 @@ function getSubsetReadings(td: TemperatureDay) {
     for (const r of td.readings) {
         // Daytime / Nighttime
         if (
-            (r.date.isAfter(DAY_START) || r.date.isSame(DAY_START)) &&
-            (r.date.isBefore(DAY_END) || r.date.isSame(DAY_END))
+            (isAfter(r.date, DAY_START) || isSame(r.date, DAY_START)) &&
+            (isBefore(r.date, DAY_END) || isSame(r.date, DAY_END))
         ) {
             // console.log(
             //     `DAYTIME READING`,
@@ -396,21 +398,21 @@ function getSubsetReadings(td: TemperatureDay) {
             // );
             daytimeReadings.push(r);
         } else if (
-            (r.date.isAfter(DAY_END) && r.date.isBefore(NEXT_DAY_START)) ||
-            (r.date.isBefore(DAY_START) && r.date.isAfter(PREV_DAY_END))
+            (isAfter(r.date, DAY_END) && isBefore(r.date, NEXT_DAY_START)) ||
+            (isBefore(r.date, DAY_START) && isAfter(r.date, PREV_DAY_END))
         ) {
-            const a = r.date.isAfter(DAY_END) && r.date.isBefore(NEXT_DAY_START);
-            const b = r.date.isBefore(DAY_START) && r.date.isAfter(PREV_DAY_END);
+            const a = isAfter(r.date, DAY_END) && isBefore(r.date, NEXT_DAY_START);
+            const b = isBefore(r.date, DAY_START) && isAfter(r.date, PREV_DAY_END);
             if (r.value === 0.3125) {
                 console.log(
                     `NIGHTTIME READING`,
                     dayjsToStr(r.date),
                     `isAfter`,
                     dayjsToStr(DAY_END),
-                    r.date.isAfter(DAY_END),
+                    isAfter(r.date, DAY_END),
                     `isBefore`,
                     dayjsToStr(DAY_START),
-                    r.date.isBefore(DAY_START),
+                    isBefore(r.date, DAY_START),
                     'conditions',
                     a,
                     b
@@ -421,7 +423,7 @@ function getSubsetReadings(td: TemperatureDay) {
         }
 
         // After / Before Summer
-        if (r.date.isBefore(SUMMER_SPLIT)) {
+        if (isBefore(r.date, SUMMER_SPLIT)) {
             beforeSummerReadings.push(r);
         } else {
             afterSummerReadings.push(r);
@@ -445,12 +447,12 @@ function getSeason(origDate: dayjsTypes.Dayjs): Season {
     const NEXT_MARCH_EQUINOX: dayjsTypes.Dayjs = dayjs('2022-03-20 9:37:00-00:00Z');
     const PREV_DEC_SOLSTICE: dayjsTypes.Dayjs = dayjs('2020-12-21 15:59:00-00:00Z');
 
-    if (d.isAfter(MARCH_EQUINOX.subtract(1, 'second')) && d.isBefore(JUNE_SOLSTICE)) return 'Spring';
-    else if (d.isAfter(JUNE_SOLSTICE.subtract(1, 'second')) && d.isBefore(SEPT_EQUINOX)) return 'Summer';
-    else if (d.isAfter(SEPT_EQUINOX.subtract(1, 'second')) && d.isBefore(DEC_SOLSTICE)) return 'Fall';
+    if (isAfter(d, MARCH_EQUINOX.subtract(1, 'second')) && isBefore(d, JUNE_SOLSTICE)) return 'Spring';
+    else if (isAfter(d, JUNE_SOLSTICE.subtract(1, 'second')) && isBefore(d, SEPT_EQUINOX)) return 'Summer';
+    else if (isAfter(d, SEPT_EQUINOX.subtract(1, 'second')) && isBefore(d, DEC_SOLSTICE)) return 'Fall';
     else if (
-        (d.isAfter(DEC_SOLSTICE.subtract(1, 'second')) && d.isBefore(NEXT_MARCH_EQUINOX)) ||
-        (d.isAfter(PREV_DEC_SOLSTICE.subtract(1, 'second')) && d.isBefore(MARCH_EQUINOX))
+        (isAfter(d, DEC_SOLSTICE.subtract(1, 'second')) && isBefore(d, NEXT_MARCH_EQUINOX)) ||
+        (isAfter(d, PREV_DEC_SOLSTICE.subtract(1, 'second')) && isBefore(d, MARCH_EQUINOX))
     )
         return 'Winter';
     else {
