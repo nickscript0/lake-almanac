@@ -17,3 +17,8 @@ export function isBefore(a: dayjsTypes.Dayjs, b: dayjsTypes.Dayjs) {
 export function isSame(a: dayjsTypes.Dayjs, b: dayjsTypes.Dayjs) {
     return a.toDate().getTime() === b.toDate().getTime();
 }
+
+// Difference in milliseconds
+export function diffMs(a: dayjsTypes.Dayjs, b: dayjsTypes.Dayjs) {
+    return a.toDate().getTime() - b.toDate().getTime();
+}

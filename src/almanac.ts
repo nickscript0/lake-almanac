@@ -6,7 +6,7 @@ import timezone from 'https://cdn.skypack.dev/dayjs@1.10.6/plugin/timezone';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-import { isBefore, isAfter, isSame } from './util.ts';
+import { isBefore, isAfter, isSame, diffMs } from './util.ts';
 
 /**
  * The fixed timezone to perform date logic with, this makes most sense to be the tz where.
@@ -553,7 +553,7 @@ function findNearestReadingToTime(findDate: dayjsTypes.Dayjs, readings: Temperat
         const curTime = normalize(r.date);
         const closestTime = normalize(closest.date);
 
-        if (Math.abs(curTime.diff(desiredTime, 'ms')) < Math.abs(closestTime.diff(desiredTime, 'ms'))) {
+        if (Math.abs(diffMs(curTime, desiredTime)) < Math.abs(diffMs(closestTime, desiredTime))) {
             closest = r;
         }
     }
