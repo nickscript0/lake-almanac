@@ -197,10 +197,13 @@ export function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) 
     if (!almanac[ALL]) almanac[ALL] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
 
     // DEBUG LOGGING TO REMOVE
-    // temperatureDay.readings.sort(ascDateTempReadingSort);
-    // console.log(`DEBUG all Readings1`, temperatureDay.readings.map(toReading).slice(0, 40));
-    // console.log(`DEBUG all Readings2`, temperatureDay.readings.map(toReading).slice(40, 80));
-    // console.log(`DEBUG all Readings2`, temperatureDay.readings.map(toReading).slice(80, temperatureDay.readings.length));
+    temperatureDay.readings.sort(ascDateTempReadingSort);
+    console.log(`DEBUG all Readings1`, temperatureDay.readings.map(toReading).slice(0, 40));
+    console.log(`DEBUG all Readings2`, temperatureDay.readings.map(toReading).slice(40, 80));
+    console.log(
+        `DEBUG all Readings2`,
+        temperatureDay.readings.map(toReading).slice(80, temperatureDay.readings.length)
+    );
 
     temperatureDay.readings.sort(ascValueThenDateTempReadingSort);
     const { daytimeReadings, nighttimeReadings, afterSummerReadings, beforeSummerReadings } =
@@ -323,7 +326,13 @@ function getDailyMetrics(
     nighttimeReadings: TemperatureReading[]
 ): DailyMetrics {
     const allReadings = temperatureDay.readings;
+    const AverageMidnight =
+        allReadings.length > 0 ? { average: findNearestReadingToTime(MIDNIGHT, allReadings).value, n: 1 } : undefined;
+    const AverageNoon =
+        allReadings.length > 0 ? { average: findNearestReadingToTime(NOON, allReadings).value, n: 1 } : undefined;
 
+    console.log(`AVERAGE MIDNIGHT`, AverageMidnight);
+    console.log(`AVERAGE NOON`, AverageNoon);
     return {
         hiLows: {
             HottestDays: last(allReadings),
@@ -338,14 +347,8 @@ function getDailyMetrics(
             AverageDaytime: daytimeReadings.length > 0 ? valueAverage(daytimeReadings) : undefined,
 
             AverageNighttime: daytimeReadings.length > 0 ? valueAverage(nighttimeReadings) : undefined,
-            AverageMidnight:
-                allReadings.length > 0
-                    ? { average: findNearestReadingToTime(MIDNIGHT, allReadings).value, n: 1 }
-                    : undefined,
-            AverageNoon:
-                allReadings.length > 0
-                    ? { average: findNearestReadingToTime(NOON, allReadings).value, n: 1 }
-                    : undefined,
+            AverageMidnight,
+            AverageNoon,
         },
     };
 }
