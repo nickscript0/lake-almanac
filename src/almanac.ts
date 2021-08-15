@@ -326,6 +326,13 @@ function getDailyMetrics(
     nighttimeReadings: TemperatureReading[]
 ): DailyMetrics {
     const allReadings = temperatureDay.readings;
+
+    if (allReadings.length > 0) {
+        const nearestMidnight = findNearestReadingToTime(MIDNIGHT, allReadings);
+        const nearestNoon = findNearestReadingToTime(NOON, allReadings);
+        console.log('nearestMidnight', toReading(nearestMidnight));
+        console.log('nearestNoon', toReading(nearestNoon));
+    }
     const AverageMidnight =
         allReadings.length > 0 ? { average: findNearestReadingToTime(MIDNIGHT, allReadings).value, n: 1 } : undefined;
     const AverageNoon =

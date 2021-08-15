@@ -3,6 +3,7 @@
 # Usage:
 #  - Run all the tests: scripts/test
 #  - Filter by pattern: scripts/test "test name"
+# export NO_COLOR=true
 
 if [ $# -eq 0 ]; then
     deno test --allow-read --allow-write --unstable src/test/**
