@@ -196,16 +196,18 @@ export function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) 
     if (!almanac[year]) almanac[year] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
     if (!almanac[ALL]) almanac[ALL] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
 
-    temperatureDay.readings.sort(ascDateTempReadingSort);
-    console.log(`DEBUG all Readings1`, temperatureDay.readings.map(toReading).slice(0, 40));
-    console.log(`DEBUG all Readings2`, temperatureDay.readings.map(toReading).slice(40, 80));
-    console.log(`DEBUG all Readings2`, temperatureDay.readings.map(toReading).slice(80, temperatureDay.readings.length));
+    // DEBUG LOGGING TO REMOVE
+    // temperatureDay.readings.sort(ascDateTempReadingSort);
+    // console.log(`DEBUG all Readings1`, temperatureDay.readings.map(toReading).slice(0, 40));
+    // console.log(`DEBUG all Readings2`, temperatureDay.readings.map(toReading).slice(40, 80));
+    // console.log(`DEBUG all Readings2`, temperatureDay.readings.map(toReading).slice(80, temperatureDay.readings.length));
 
     temperatureDay.readings.sort(ascValueThenDateTempReadingSort);
     const { daytimeReadings, nighttimeReadings, afterSummerReadings, beforeSummerReadings } =
         getSubsetReadings(temperatureDay);
     const dailyMetrics = getDailyMetrics(temperatureDay, daytimeReadings, nighttimeReadings);
 
+    // DEBUG LOGGING TO REMOVE
     // daytimeReadings.sort(ascDateTempReadingSort);
     // nighttimeReadings.sort(ascDateTempReadingSort);
     // console.log(`DEBUG daytimeReadings`, daytimeReadings.map(toReading));
@@ -390,7 +392,9 @@ function getSubsetReadings(td: TemperatureDay) {
     // 6am Pacific
     // const DAY_START = dayjs(`${td.day} 13:00:00-00:00Z`);
     const DAY_START: dayjsTypes.Dayjs = dayjs.tz(`${td.day} 06:00:00`, TIMEZONE);
-    console.log(`DAY_START IS`, dayjsToStr(DAY_START));
+
+    // DEBUG LOGGING TO REMOVE
+    // console.log(`DAY_START IS`, dayjsToStr(DAY_START));
     // 6pm Pacific
     const DAY_END = DAY_START.add(12, 'hour');
     const PREV_DAY_END = DAY_END.subtract(1, 'day');
@@ -421,23 +425,24 @@ function getSubsetReadings(td: TemperatureDay) {
             (isAfter(r.date, DAY_END) && isBefore(r.date, NEXT_DAY_START)) ||
             (isBefore(r.date, DAY_START) && isAfter(r.date, PREV_DAY_END))
         ) {
-            const a = isAfter(r.date, DAY_END) && isBefore(r.date, NEXT_DAY_START);
-            const b = isBefore(r.date, DAY_START) && isAfter(r.date, PREV_DAY_END);
-            if (r.value === 0.3125) {
-                console.log(
-                    `NIGHTTIME READING`,
-                    dayjsToStr(r.date),
-                    `isAfter`,
-                    dayjsToStr(DAY_END),
-                    isAfter(r.date, DAY_END),
-                    `isBefore`,
-                    dayjsToStr(DAY_START),
-                    isBefore(r.date, DAY_START),
-                    'conditions',
-                    a,
-                    b
-                );
-            }
+            // DEBUG LOGGING TO REMOVE
+            // const a = isAfter(r.date, DAY_END) && isBefore(r.date, NEXT_DAY_START);
+            // const b = isBefore(r.date, DAY_START) && isAfter(r.date, PREV_DAY_END);
+            // if (r.value === 0.3125) {
+            //     console.log(
+            //         `NIGHTTIME READING`,
+            //         dayjsToStr(r.date),
+            //         `isAfter`,
+            //         dayjsToStr(DAY_END),
+            //         isAfter(r.date, DAY_END),
+            //         `isBefore`,
+            //         dayjsToStr(DAY_START),
+            //         isBefore(r.date, DAY_START),
+            //         'conditions',
+            //         a,
+            //         b
+            //     );
+            // }
 
             nighttimeReadings.push(r);
         }

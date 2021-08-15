@@ -1,0 +1,804 @@
+{
+  "2020": {
+    "Year": {
+      "HottestDays": [
+        {
+          "date": "2020-09-30 15:34:23-07:00Z",
+          "value": 16.8125
+        },
+        {
+          "date": "2020-05-10 15:00:08-07:00Z",
+          "value": 19.8125
+        },
+        {
+          "date": "2020-07-15 15:43:32-07:00Z",
+          "value": 23.9375
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2020-05-10 05:13:03-07:00Z",
+          "value": 7.375
+        },
+        {
+          "date": "2020-09-30 08:01:43-07:00Z",
+          "value": 10.9375
+        },
+        {
+          "date": "2020-07-15 05:46:26-07:00Z",
+          "value": 14.8125
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2020-09-30 18:08:30-07:00Z",
+          "value": 15.8125
+        },
+        {
+          "date": "2020-05-10 18:03:01-07:00Z",
+          "value": 17.625
+        },
+        {
+          "date": "2020-07-15 18:17:36-07:00Z",
+          "value": 22.8125
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2020-05-10 05:13:03-07:00Z",
+          "value": 7.375
+        },
+        {
+          "date": "2020-09-30 05:46:53-07:00Z",
+          "value": 11.25
+        },
+        {
+          "date": "2020-07-15 05:46:26-07:00Z",
+          "value": 14.8125
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2020-09-30 15:34:23-07:00Z",
+          "value": 16.8125
+        },
+        {
+          "date": "2020-05-10 15:00:08-07:00Z",
+          "value": 19.8125
+        },
+        {
+          "date": "2020-07-15 15:43:32-07:00Z",
+          "value": 23.9375
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2020-05-10 06:01:11-07:00Z",
+          "value": 7.9375
+        },
+        {
+          "date": "2020-09-30 08:01:43-07:00Z",
+          "value": 10.9375
+        },
+        {
+          "date": "2020-07-15 06:05:42-07:00Z",
+          "value": 14.875
+        }
+      ],
+      "Average": {
+        "average": 15.465896436525613,
+        "n": 449
+      },
+      "AverageNighttime": {
+        "average": 14.529017857142858,
+        "n": 224
+      },
+      "AverageDaytime": {
+        "average": 16.398611111111112,
+        "n": 225
+      },
+      "AverageNoon": {
+        "average": 16.6875,
+        "n": 3
+      },
+      "AverageMidnight": {
+        "average": 15.104166666666666,
+        "n": 3
+      }
+    },
+    "Spring": {
+      "HottestDays": [
+        {
+          "date": "2020-05-10 15:00:08-07:00Z",
+          "value": 19.8125
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2020-05-10 05:13:03-07:00Z",
+          "value": 7.375
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2020-05-10 18:03:01-07:00Z",
+          "value": 17.625
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2020-05-10 05:13:03-07:00Z",
+          "value": 7.375
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2020-05-10 15:00:08-07:00Z",
+          "value": 19.8125
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2020-05-10 06:01:11-07:00Z",
+          "value": 7.9375
+        }
+      ],
+      "Average": {
+        "average": 13.6,
+        "n": 150
+      },
+      "AverageNighttime": {
+        "average": 12.115,
+        "n": 75
+      },
+      "AverageDaytime": {
+        "average": 15.085,
+        "n": 75
+      },
+      "AverageNoon": {
+        "average": 16.0625,
+        "n": 1
+      },
+      "AverageMidnight": {
+        "average": 12.875,
+        "n": 1
+      }
+    },
+    "Summer": {
+      "HottestDays": [
+        {
+          "date": "2020-07-15 15:43:32-07:00Z",
+          "value": 23.9375
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2020-07-15 05:46:26-07:00Z",
+          "value": 14.8125
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2020-07-15 18:17:36-07:00Z",
+          "value": 22.8125
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2020-07-15 05:46:26-07:00Z",
+          "value": 14.8125
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2020-07-15 15:43:32-07:00Z",
+          "value": 23.9375
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2020-07-15 06:05:42-07:00Z",
+          "value": 14.875
+        }
+      ],
+      "Average": {
+        "average": 19.37961409395973,
+        "n": 149
+      },
+      "AverageNighttime": {
+        "average": 18.75760135135135,
+        "n": 74
+      },
+      "AverageDaytime": {
+        "average": 19.993333333333332,
+        "n": 75
+      },
+      "AverageNoon": {
+        "average": 19.75,
+        "n": 1
+      },
+      "AverageMidnight": {
+        "average": 20.5,
+        "n": 1
+      }
+    },
+    "Fall": {
+      "HottestDays": [
+        {
+          "date": "2020-09-30 15:34:23-07:00Z",
+          "value": 16.8125
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2020-09-30 08:01:43-07:00Z",
+          "value": 10.9375
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2020-09-30 18:08:30-07:00Z",
+          "value": 15.8125
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2020-09-30 05:46:53-07:00Z",
+          "value": 11.25
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2020-09-30 15:34:23-07:00Z",
+          "value": 16.8125
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2020-09-30 08:01:43-07:00Z",
+          "value": 10.9375
+        }
+      ],
+      "Average": {
+        "average": 13.444166666666666,
+        "n": 150
+      },
+      "AverageNighttime": {
+        "average": 12.770833333333334,
+        "n": 75
+      },
+      "AverageDaytime": {
+        "average": 14.1175,
+        "n": 75
+      },
+      "AverageNoon": {
+        "average": 14.25,
+        "n": 1
+      },
+      "AverageMidnight": {
+        "average": 11.9375,
+        "n": 1
+      }
+    },
+    "Winter": {
+      "HottestDays": [],
+      "ColdestDays": [],
+      "HottestNightime": [],
+      "ColdestNighttime": [],
+      "HottestDaytime": [],
+      "ColdestDaytime": []
+    },
+    "FirstFreezesAfterSummer": [],
+    "FirstFreezesBeforeSummer": []
+  },
+  "2021": {
+    "Year": {
+      "HottestDays": [
+        {
+          "date": "2021-01-02 23:53:06-08:00Z",
+          "value": 1.5625
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2021-01-02 00:09:32-08:00Z",
+          "value": 0.0625
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2021-01-02 23:53:06-08:00Z",
+          "value": 1.5625
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2021-01-02 00:09:32-08:00Z",
+          "value": 0.0625
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2021-01-02 12:20:13-08:00Z",
+          "value": 1.0625
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2021-01-02 06:05:16-08:00Z",
+          "value": 0.1875
+        }
+      ],
+      "Average": {
+        "average": 0.5687919463087249,
+        "n": 149
+      },
+      "AverageNighttime": {
+        "average": 0.5194256756756757,
+        "n": 74
+      },
+      "AverageDaytime": {
+        "average": 0.6175,
+        "n": 75
+      },
+      "AverageNoon": {
+        "average": 1,
+        "n": 1
+      },
+      "AverageMidnight": {
+        "average": 1.5625,
+        "n": 1
+      }
+    },
+    "Spring": {
+      "HottestDays": [],
+      "ColdestDays": [],
+      "HottestNightime": [],
+      "ColdestNighttime": [],
+      "HottestDaytime": [],
+      "ColdestDaytime": []
+    },
+    "Summer": {
+      "HottestDays": [],
+      "ColdestDays": [],
+      "HottestNightime": [],
+      "ColdestNighttime": [],
+      "HottestDaytime": [],
+      "ColdestDaytime": []
+    },
+    "Fall": {
+      "HottestDays": [],
+      "ColdestDays": [],
+      "HottestNightime": [],
+      "ColdestNighttime": [],
+      "HottestDaytime": [],
+      "ColdestDaytime": []
+    },
+    "Winter": {
+      "HottestDays": [
+        {
+          "date": "2021-01-02 23:53:06-08:00Z",
+          "value": 1.5625
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2021-01-02 00:09:32-08:00Z",
+          "value": 0.0625
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2021-01-02 23:53:06-08:00Z",
+          "value": 1.5625
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2021-01-02 00:09:32-08:00Z",
+          "value": 0.0625
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2021-01-02 12:20:13-08:00Z",
+          "value": 1.0625
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2021-01-02 06:05:16-08:00Z",
+          "value": 0.1875
+        }
+      ],
+      "Average": {
+        "average": 0.5687919463087249,
+        "n": 149
+      },
+      "AverageNighttime": {
+        "average": 0.5194256756756757,
+        "n": 74
+      },
+      "AverageDaytime": {
+        "average": 0.6175,
+        "n": 75
+      },
+      "AverageNoon": {
+        "average": 1,
+        "n": 1
+      },
+      "AverageMidnight": {
+        "average": 1.5625,
+        "n": 1
+      }
+    },
+    "FirstFreezesAfterSummer": [],
+    "FirstFreezesBeforeSummer": []
+  },
+  "All": {
+    "Year": {
+      "HottestDays": [
+        {
+          "date": "2021-01-02 23:53:06-08:00Z",
+          "value": 1.5625
+        },
+        {
+          "date": "2020-09-30 15:34:23-07:00Z",
+          "value": 16.8125
+        },
+        {
+          "date": "2020-05-10 15:00:08-07:00Z",
+          "value": 19.8125
+        },
+        {
+          "date": "2020-07-15 15:43:32-07:00Z",
+          "value": 23.9375
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2021-01-02 00:09:32-08:00Z",
+          "value": 0.0625
+        },
+        {
+          "date": "2020-05-10 05:13:03-07:00Z",
+          "value": 7.375
+        },
+        {
+          "date": "2020-09-30 08:01:43-07:00Z",
+          "value": 10.9375
+        },
+        {
+          "date": "2020-07-15 05:46:26-07:00Z",
+          "value": 14.8125
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2021-01-02 23:53:06-08:00Z",
+          "value": 1.5625
+        },
+        {
+          "date": "2020-09-30 18:08:30-07:00Z",
+          "value": 15.8125
+        },
+        {
+          "date": "2020-05-10 18:03:01-07:00Z",
+          "value": 17.625
+        },
+        {
+          "date": "2020-07-15 18:17:36-07:00Z",
+          "value": 22.8125
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2021-01-02 00:09:32-08:00Z",
+          "value": 0.0625
+        },
+        {
+          "date": "2020-05-10 05:13:03-07:00Z",
+          "value": 7.375
+        },
+        {
+          "date": "2020-09-30 05:46:53-07:00Z",
+          "value": 11.25
+        },
+        {
+          "date": "2020-07-15 05:46:26-07:00Z",
+          "value": 14.8125
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2021-01-02 12:20:13-08:00Z",
+          "value": 1.0625
+        },
+        {
+          "date": "2020-09-30 15:34:23-07:00Z",
+          "value": 16.8125
+        },
+        {
+          "date": "2020-05-10 15:00:08-07:00Z",
+          "value": 19.8125
+        },
+        {
+          "date": "2020-07-15 15:43:32-07:00Z",
+          "value": 23.9375
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2021-01-02 06:05:16-08:00Z",
+          "value": 0.1875
+        },
+        {
+          "date": "2020-05-10 06:01:11-07:00Z",
+          "value": 7.9375
+        },
+        {
+          "date": "2020-09-30 08:01:43-07:00Z",
+          "value": 10.9375
+        },
+        {
+          "date": "2020-07-15 06:05:42-07:00Z",
+          "value": 14.875
+        }
+      ],
+      "Average": {
+        "average": 11.754076086956522,
+        "n": 598
+      },
+      "AverageNighttime": {
+        "average": 11.050125838926174,
+        "n": 298
+      },
+      "AverageDaytime": {
+        "average": 12.453333333333335,
+        "n": 300
+      },
+      "AverageNoon": {
+        "average": 12.765625,
+        "n": 4
+      },
+      "AverageMidnight": {
+        "average": 11.71875,
+        "n": 4
+      }
+    },
+    "Spring": {
+      "HottestDays": [
+        {
+          "date": "2020-05-10 15:00:08-07:00Z",
+          "value": 19.8125
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2020-05-10 05:13:03-07:00Z",
+          "value": 7.375
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2020-05-10 18:03:01-07:00Z",
+          "value": 17.625
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2020-05-10 05:13:03-07:00Z",
+          "value": 7.375
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2020-05-10 15:00:08-07:00Z",
+          "value": 19.8125
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2020-05-10 06:01:11-07:00Z",
+          "value": 7.9375
+        }
+      ],
+      "Average": {
+        "average": 13.6,
+        "n": 150
+      },
+      "AverageNighttime": {
+        "average": 12.115,
+        "n": 75
+      },
+      "AverageDaytime": {
+        "average": 15.085,
+        "n": 75
+      },
+      "AverageNoon": {
+        "average": 16.0625,
+        "n": 1
+      },
+      "AverageMidnight": {
+        "average": 12.875,
+        "n": 1
+      }
+    },
+    "Summer": {
+      "HottestDays": [
+        {
+          "date": "2020-07-15 15:43:32-07:00Z",
+          "value": 23.9375
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2020-07-15 05:46:26-07:00Z",
+          "value": 14.8125
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2020-07-15 18:17:36-07:00Z",
+          "value": 22.8125
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2020-07-15 05:46:26-07:00Z",
+          "value": 14.8125
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2020-07-15 15:43:32-07:00Z",
+          "value": 23.9375
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2020-07-15 06:05:42-07:00Z",
+          "value": 14.875
+        }
+      ],
+      "Average": {
+        "average": 19.37961409395973,
+        "n": 149
+      },
+      "AverageNighttime": {
+        "average": 18.75760135135135,
+        "n": 74
+      },
+      "AverageDaytime": {
+        "average": 19.993333333333332,
+        "n": 75
+      },
+      "AverageNoon": {
+        "average": 19.75,
+        "n": 1
+      },
+      "AverageMidnight": {
+        "average": 20.5,
+        "n": 1
+      }
+    },
+    "Fall": {
+      "HottestDays": [
+        {
+          "date": "2020-09-30 15:34:23-07:00Z",
+          "value": 16.8125
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2020-09-30 08:01:43-07:00Z",
+          "value": 10.9375
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2020-09-30 18:08:30-07:00Z",
+          "value": 15.8125
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2020-09-30 05:46:53-07:00Z",
+          "value": 11.25
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2020-09-30 15:34:23-07:00Z",
+          "value": 16.8125
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2020-09-30 08:01:43-07:00Z",
+          "value": 10.9375
+        }
+      ],
+      "Average": {
+        "average": 13.444166666666666,
+        "n": 150
+      },
+      "AverageNighttime": {
+        "average": 12.770833333333334,
+        "n": 75
+      },
+      "AverageDaytime": {
+        "average": 14.1175,
+        "n": 75
+      },
+      "AverageNoon": {
+        "average": 14.25,
+        "n": 1
+      },
+      "AverageMidnight": {
+        "average": 11.9375,
+        "n": 1
+      }
+    },
+    "Winter": {
+      "HottestDays": [
+        {
+          "date": "2021-01-02 23:53:06-08:00Z",
+          "value": 1.5625
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2021-01-02 00:09:32-08:00Z",
+          "value": 0.0625
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2021-01-02 23:53:06-08:00Z",
+          "value": 1.5625
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2021-01-02 00:09:32-08:00Z",
+          "value": 0.0625
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2021-01-02 12:20:13-08:00Z",
+          "value": 1.0625
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2021-01-02 06:05:16-08:00Z",
+          "value": 0.1875
+        }
+      ],
+      "Average": {
+        "average": 0.5687919463087249,
+        "n": 149
+      },
+      "AverageNighttime": {
+        "average": 0.5194256756756757,
+        "n": 74
+      },
+      "AverageDaytime": {
+        "average": 0.6175,
+        "n": 75
+      },
+      "AverageNoon": {
+        "average": 1,
+        "n": 1
+      },
+      "AverageMidnight": {
+        "average": 1.5625,
+        "n": 1
+      }
+    },
+    "FirstFreezesAfterSummer": [],
+    "FirstFreezesBeforeSummer": []
+  }
+}
