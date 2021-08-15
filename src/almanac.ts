@@ -546,16 +546,23 @@ const MIDNIGHT = dayjs.tz(`2001-01-01 00:00`, TIMEZONE);
 // const NOON = dayjs('2001-01-01 12:00-07:00Z');
 const NOON = dayjs.tz('2001-01-01 12:00', TIMEZONE);
 function findNearestReadingToTime(findDate: dayjsTypes.Dayjs, readings: TemperatureReading[]): TemperatureReading {
-    const normalize = (d: dayjsTypes.Dayjs) => d.set('year', 2001).set('month', 1).date(1);
+    const normalize = (d: dayjsTypes.Dayjs) => (d.set('year', 2001).set('month', 1).date(1) as any).tz(TIMEZONE);
     const desiredTime = normalize(findDate);
     let closest = readings[0];
+
+    let curTime;
+    let closestTime;
+
     for (const r of readings) {
-        const curTime = normalize(r.date);
-        const closestTime = normalize(closest.date);
+        curTime = normalize(r.date);
+        closestTime = normalize(closest.date);
 
         if (Math.abs(diffMs(curTime, desiredTime)) < Math.abs(diffMs(closestTime, desiredTime))) {
             closest = r;
         }
     }
+    console.log(`findNearestReadingToTime(findDate: ${dayjsToStr(findDate)} ...)`);
+    console.log(`Math.abs(diffMs(curTime=${dayjsToStr(curTime as any)}, desiredTime=${dayjsToStr(desiredTime)})) < Math.abs(diffMs(closestTime=${dayjsToStr(closestTime as any)}, desiredTime))`);
+    console.log(`${Math.abs(diffMs(curTime as any, desiredTime))} < desiredTime=${dayjsToStr(desiredTime)})) < ${Math.abs(diffMs(closestTime as any, desiredTime))}`);
     return closest;
 }
