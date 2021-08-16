@@ -48,6 +48,10 @@ Deno.test('benchmark: updateAlmanac should process days from all seasons', async
     assertEquals(alm, expectedAlm);
 });
 
+function toDjs(d: { date: string; value: number }) {
+    return { date: dayjs(d.date), value: d.value };
+}
+
 const testDay = [
     { date: '2021-01-02 00:09:32-08:00Z', value: 0.0625 },
     { date: '2021-01-02 00:19:09-08:00Z', value: 0.125 },
@@ -200,17 +204,25 @@ const testDay = [
     { date: '2021-01-02 23:53:06-08:00Z', value: 1.5625 },
 ];
 
-function toDjs(d: { date: string; value: number }) {
-    return { date: dayjs(d.date), value: d.value };
-}
+const testDaySmallSet = [
+    { date: '2021-01-02 00:09:32-08:00Z', value: 0.0625 },
+    { date: '2021-01-02 00:19:09-08:00Z', value: 0.125 },
+    { date: '2021-01-02 02:24:08-08:00Z', value: 0.125 },
+    { date: '2021-01-02 23:43:28-08:00Z', value: 1.3125 },
+    { date: '2021-01-02 23:53:06-08:00Z', value: 1.5625 },
+];
 
 Deno.test('findNearestReadingToTime works with DST dataset', () => {
+    const testDayMidnightBug = [
+        { date: '2021-01-02 00:09:32-08:00Z', value: 0.0625 },
+        { date: '2021-01-02 23:53:06-08:00Z', value: 1.5625 },
+    ];
+
     const noon = dayjs('2001-01-01 12:00:00-08:00Z');
     const nearestNoon = findNearestReadingToTime(noon, testDay.map(toDjs));
     assertEquals(nearestNoon.date.toISOString(), '2021-01-02T12:00:59.000Z');
 
     const midnight = dayjs('2001-01-01 00:00:00-08:00Z');
-    const nearestMidnight = findNearestReadingToTime(midnight, testDay.map(toDjs));
+    const nearestMidnight = findNearestReadingToTime(midnight, testDayMidnightBug.map(toDjs));
     assertEquals(nearestMidnight.date.toISOString(), '2021-01-02T23:53:06.000Z');
-
 });
