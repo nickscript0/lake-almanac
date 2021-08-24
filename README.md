@@ -17,7 +17,7 @@ scripts/test.sh
 - Aug 24, 2021: Fix tz bug repro'd by `scripts/test 'findNearestReadingToTime works with DST dataset'`
    - Option 1: I think the ideal solution is work entirely in UTC. 1. Request data in UTC, 2. almanac logic in UTC, 3. Then convert to Lake time just before writing output json
    - Option 2: Could try fixing just the findNearestReadingToTime and Noon/Midnight functions as nothing else seems broken now
-   - Option 3: Log a bug with Dayjs tz plugin
+   - Option 3: Log a bug with Dayjs tz plugin (see dayjs-tz-bug.js). I was going to log this in dayjs github issues but it may not be worth my time as there are no responses to these other tz bugs since April for one of them https://github.com/iamkun/dayjs/issues/1462 and https://github.com/iamkun/dayjs/issues/1606. 
 - [Done pending TZ bug] More metrics: seasonal hi/low/averages [winter,spring,summer,fall,year]
 - [Done pending TZ bug] More metrics: largest variation days
 - Relative metrics: Coldest/Hottest temp last week and last month, Coldest/Hottest day/night last week/month
