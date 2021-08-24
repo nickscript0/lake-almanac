@@ -545,11 +545,19 @@ function valueAverage(readings: TemperatureReading[]): MovingAverage {
 const MIDNIGHT = dayjs.tz(`2001-01-01 00:00`, TIMEZONE);
 // const NOON = dayjs('2001-01-01 12:00-07:00Z');
 const NOON = dayjs.tz('2001-01-01 12:00', TIMEZONE);
-export function findNearestReadingToTime(findDate: dayjsTypes.Dayjs, readings: TemperatureReading[]): TemperatureReading {
-    const normalize = (d: dayjsTypes.Dayjs) => {
+export function findNearestReadingToTime(
+    findDate: dayjsTypes.Dayjs,
+    readings: TemperatureReading[]
+): TemperatureReading {
+    const normalize2 = (d: dayjsTypes.Dayjs) => {
         const utcD = dayjs(new Date(d.toISOString()));
-        return (utcD.set('year', 2001).set('month', 1).date(1) as any); //.tz(TIMEZONE);
-    }
+        return utcD.set('year', 2001).set('month', 1).date(1) as any; //.tz(TIMEZONE);
+    };
+
+    const normalize = (d: dayjsTypes.Dayjs) => {
+        const utcD = new Date(d.toISOString());
+        return dayjs(utcD.setFullYear(2001, 1, 1));
+    };
     const desiredTime = normalize(findDate);
     let closest = readings[0];
 
@@ -565,7 +573,13 @@ export function findNearestReadingToTime(findDate: dayjsTypes.Dayjs, readings: T
         }
     }
     console.log(`findNearestReadingToTime(findDate: ${dayjsToStr(findDate)} ...)`);
-    console.log(`Math.abs(diffMs(curTime=${dayjsToStr(curTime as any)}, desiredTime=${dayjsToStr(desiredTime)})) < Math.abs(diffMs(closestTime=${dayjsToStr(closestTime as any)}, desiredTime))`);
-    console.log(`${Math.abs(diffMs(curTime as any, desiredTime))} < ${Math.abs(diffMs(closestTime as any, desiredTime))}`);
+    console.log(
+        `Math.abs(diffMs(curTime=${dayjsToStr(curTime as any)}, desiredTime=${dayjsToStr(
+            desiredTime
+        )})) < Math.abs(diffMs(closestTime=${dayjsToStr(closestTime as any)}, desiredTime))`
+    );
+    console.log(
+        `${Math.abs(diffMs(curTime as any, desiredTime))} < ${Math.abs(diffMs(closestTime as any, desiredTime))}`
+    );
     return closest;
 }
