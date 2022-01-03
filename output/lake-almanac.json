@@ -690,6 +690,51 @@
       }
     ]
   },
+  "2022": {
+    "HottestDays": [
+      {
+        "date": "2022-01-02 06:58:03+00:00Z",
+        "value": -10.75
+      }
+    ],
+    "ColdestDays": [
+      {
+        "date": "2022-01-01 12:14:32+00:00Z",
+        "value": -14.0625
+      }
+    ],
+    "HottestNightime": [
+      {
+        "date": "2022-01-02 06:58:03+00:00Z",
+        "value": -10.75
+      }
+    ],
+    "ColdestNighttime": [
+      {
+        "date": "2022-01-01 12:14:32+00:00Z",
+        "value": -14.0625
+      }
+    ],
+    "HottestDaytime": [
+      {
+        "date": "2022-01-01 23:17:08+00:00Z",
+        "value": -11.1875
+      }
+    ],
+    "ColdestDaytime": [
+      {
+        "date": "2022-01-01 13:02:34+00:00Z",
+        "value": -13.9375
+      }
+    ],
+    "FirstFreezesAfterSummer": [],
+    "FirstFreezesBeforeSummer": [
+      {
+        "date": "2022-01-01 12:14:32+00:00Z",
+        "value": -14.0625
+      }
+    ]
+  },
   "All": {
     "HottestDays": [
       {
