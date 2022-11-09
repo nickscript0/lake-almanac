@@ -15,14 +15,14 @@ jobs:
         steps:
             # Check out the repository so it can read the files inside of it and do other operations
             - name: Check out repo
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
             # This step installs Deno, which is a new Javascript runtime that improves on Node. We'll use it for postprocessing later
             - name: Setup deno
               uses: denoland/setup-deno@main
               with:
                   deno-version: v1.x
             - name: Fetch data
-              uses: githubocto/flat@v3
+              uses: nickscript0/flat@v4
               with:
                   # This is an unused http_url (as postprocess makes all the requests it needs) but is currently required to exist by the action
                   http_url: https://cdn.skypack.dev/dayjs@1.10.6
