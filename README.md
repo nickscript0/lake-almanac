@@ -8,6 +8,9 @@ time ./scripts/archiver.sh 2018-10-06 2021-07-19
 ./scripts/archiver.sh
 ```
 
+## History
+- Nov 8, 2022: I discovered the actions started failing on Sep 12, then hanging for 6h on Oct 4, 2022. This second hanging issue was due to the archiver.ts not exiting when complete. The fix was to simply call Deno.exit(0) at the bottom of main. My guess is something changed in the Deno version that requires this...
+
 ## TODOs
 - More metrics: seasonal hi/low/averages [winter,spring,summer,fall,year]
 - More metrics: largest variation days
