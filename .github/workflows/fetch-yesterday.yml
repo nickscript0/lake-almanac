@@ -22,7 +22,7 @@ jobs:
               with:
                   deno-version: v1.x
             - name: Fetch data
-              uses: nickscript0/flat@v4.0
+              uses: nickscript0/flat@v4.1
               with:
                   # This is an unused http_url (as postprocess makes all the requests it needs) but is currently required to exist by the action
                   http_url: https://httpbin.org/ip
