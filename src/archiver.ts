@@ -25,6 +25,7 @@ async function main() {
         }
         await processDay(response);
     }
+    Deno.exit(0);
 }
 
 function parseArgs(): { start: dayjsTypes.Dayjs; end: dayjsTypes.Dayjs; saveResponses: boolean } {
