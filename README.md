@@ -11,6 +11,12 @@ time ./scripts/archiver.sh 2018-10-06 2021-07-19
 ## History
 - Nov 8, 2022: I discovered the actions started failing on Sep 12, then hanging for 6h on Oct 4, 2022. This second hanging issue was due to the archiver.ts not exiting when complete. The fix was to simply call Deno.exit(0) at the bottom of main. My guess is something changed in the Deno version that requires this...
   - I also switched to my own fork of `flat` due to the original giving deprecation warnings for Node12
+- Nov 9, 2022: After fixing the Nov 8 problem, I then populated the data gap by running on my devbox
+   ```bash
+   ./scripts/archiver.sh --save-responses 2022-09-04 2022-11-08
+   git add output/responses-archive/
+   git push
+   ```
 
 ## TODOs
 - More metrics: seasonal hi/low/averages [winter,spring,summer,fall,year]
