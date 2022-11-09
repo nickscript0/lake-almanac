@@ -12,5 +12,5 @@
  */
 
 // Browser-Optimized Imports (Don't directly import the URLs below in your application!)
-export * from '/-/dayjs@v1.10.6-IGk4EkkLu2NH3TnGkI7I/dist=es2020,mode=imports/optimized/dayjs.js';
-export {default} from '/-/dayjs@v1.10.6-IGk4EkkLu2NH3TnGkI7I/dist=es2020,mode=imports/optimized/dayjs.js';
+export * from '/-/dayjs@v1.10.6-IGk4EkkLu2NH3TnGkI7I/dist=es2019,mode=imports/optimized/dayjs.js';
+export {default} from '/-/dayjs@v1.10.6-IGk4EkkLu2NH3TnGkI7I/dist=es2019,mode=imports/optimized/dayjs.js';
