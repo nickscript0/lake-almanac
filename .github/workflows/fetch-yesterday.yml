@@ -12,6 +12,8 @@ on:
 jobs:
     scheduled:
         runs-on: ubuntu-latest
+        # This job normally takes under 30s, add a timeout to prevent issues where it hangs indefinitely and uses up the actions quota
+        timeout-minutes: 5
         steps:
             # Check out the repository so it can read the files inside of it and do other operations
             - name: Check out repo
