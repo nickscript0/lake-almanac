@@ -823,7 +823,12 @@
         "value": -11.5
       }
     ],
-    "FirstFreezesAfterSummer": [],
+    "FirstFreezesAfterSummer": [
+      {
+        "date": "2022-11-08 05:46:38+00:00Z",
+        "value": -5.5625
+      }
+    ],
     "FirstFreezesBeforeSummer": [
       {
         "date": "2022-01-01 12:14:32+00:00Z",
