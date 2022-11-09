@@ -23,6 +23,8 @@ scripts/test.sh
 - Relative metrics: Coldest/Hottest temp last week and last month, Coldest/Hottest day/night last week/month
 
 ### Dayjs Bug
+Repro'd here in repl.it https://replit.com/@nocl123/Dayjs-tz-bug#index.js
+
 Note: This only seems reproduceable when the server is in a AST (possibly other tzs) as my devbox is and not in repl.it (which is in UTC).
 ```bash
 deno
