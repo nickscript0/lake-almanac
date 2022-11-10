@@ -226,3 +226,19 @@ Deno.test('findNearestReadingToTime works with DST dataset', () => {
     const nearestMidnight = findNearestReadingToTime(midnight, testDayMidnightBug.map(toDjs));
     assertEquals(nearestMidnight.date.toISOString(), '2021-01-02T23:53:06.000Z');
 });
+
+Deno.test('Minimal ADT bug', () => {
+    /**
+     * This is the minimal example of the dayjs.tz plugin failing during DST described in the README.
+     * This test likely only fails during DST, as it is currently passing on Nov 10, 2022 (Atlantic Standard Time).
+     */
+    const d1 = '2021-01-02 17:07:54';
+    const d2 = '2021-01-02 18:00:00';
+
+    // Server in AST returns false, UTC returns false
+    assertEquals(false, dayjs(d1).isAfter(dayjs(d2)));
+    // Server in AST returns true, UTC returns false
+    assertEquals(false, dayjs.tz(d1, 'America/Vancouver').isAfter(dayjs.tz(d2, 'America/Vancouver')));
+    // Server in AST returns false, UTC returns flase
+    assertEquals(false, dayjs(d1).tz('America/Vancouver').isAfter(dayjs(d2).tz('America/Vancouver')));
+});
