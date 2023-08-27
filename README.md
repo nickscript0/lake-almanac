@@ -15,11 +15,11 @@ scripts/test.sh
 
 ## Latest Status - Nov 12, 2022
 - Continue to work on the new-metrics-avgs branch but the main branch is working fine as is so no rush
-- Currently in Atlantic Standard Time the almanac-test.ts passes, but it will fail again when we are in Daylight time.
+- Currently in Atlantic Standard Time the almanac-test.ts passes, but it will fail again when we are in Daylight time (yes confirmed 'Minimal ADT bug' fails on Aug 27, 2023).
 - There are several Dayjs TZ bugs as documented in the TODOs, and people in this thread even recommend switching to Luxon or another lib due to them https://github.com/iamkun/dayjs/issues/1805
 - I have created dayjs-test.ts to attempt to test the bugs found in the issue tracker. One is failing.
 - I have created date-fns-test.ts to attempt to tell if date-fns can handle the problematic tz issues, thereby I could switch out to using it.
-- Conclusion: Currently waiting on date-fns to fix bugs, or switch to date-fns (seems to not have any issues due to using the builtin TZ functionality, but still need to confirm it has all the functionality we need) / Luxon (though no TS support and nodejs??)
+- Conclusion: Currently waiting on day.js to fix bugs, or switch to date-fns (seems to not have any issues due to using the builtin TZ functionality, but still need to confirm it has all the functionality we need) / Luxon (though no TS support and nodejs??)
 
 ## TODOs 
 - Aug 24, 2021: Fix tz bug repro'd by `scripts/test 'findNearestReadingToTime works with DST dataset'`

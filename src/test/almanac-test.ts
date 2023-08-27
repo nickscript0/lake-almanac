@@ -230,7 +230,7 @@ Deno.test('findNearestReadingToTime works with DST dataset', () => {
 Deno.test('Minimal ADT bug', () => {
     /**
      * This is the minimal example of the dayjs.tz plugin failing during DST described in the README.
-     * This test likely only fails during DST, as it is currently passing on Nov 10, 2022 (Atlantic Standard Time).
+     * This test likely only fails during DST, as it is currently passing on Nov 10, 2022 (Atlantic Standard Time), confirmed yes failing on Aug 27, 2023 (ADT).
      */
     const d1 = '2021-01-02 17:07:54';
     const d2 = '2021-01-02 18:00:00';
