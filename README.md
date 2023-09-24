@@ -14,8 +14,10 @@ scripts/test
 ```
 
 ## Latest Status - Sept 24, 2023
-- Upgraded from dayjs@1.10.6 to dayjs@1.11.10 resolved the Minimal ADT bug failure
-- Fixed 'Timezone conversion is broken when not using DST Time test' as far as I can tell it was expecting the wrong value I have now fixed it with confirmations using https://www.timeanddate.com/worldclock/converter.html?iso=20211130T224200&p1=286&p2=1440&p3=195
+- Fixed 2 of 3 failing tests
+   - Upgraded from dayjs@1.10.6 to dayjs@1.11.10 resolved the Minimal ADT bug failure
+   - Fixed 'Timezone conversion is broken when not using DST Time test' as far as I can tell it was expecting the wrong value I have now fixed it with confirmations using https://www.timeanddate.com/worldclock/converter.html?iso=20211130T224200&p1=286&p2=1440&p3=195
+- This workaround https://github.com/iamkun/dayjs/issues/1805#issuecomment-1464953487 may be a fix for the final failing 'Github Issue: tz func with valueOf bug' test, TODO investigate further also see my updated comment in said test
 
 ### Before
 ```bash

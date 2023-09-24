@@ -34,6 +34,20 @@ Deno.test('Github Issue: tz func should preserve offset in June', () => {
 
 Deno.test('Github Issue: tz func with valueOf bug', () => {
     // https://github.com/iamkun/dayjs/issues/1462#issuecomment-886705547
+    
+/**
+ * Sept 24, 2023: Something's weird in dayjs tz still I think: (This suggestion might be a workaround??? https://github.com/iamkun/dayjs/issues/1805)
+ * This doesn't seem consistent, it treats timestamps differently than date strings
+ *  > dayjs.tz('2021-10-31T13:19:36', 'Europe/Berlin').format()
+    '2021-10-31T13:19:36+01:00'
+    > dayjs.tz('2021-10-31T13:19:36', 'Europe/Berlin').toISOString()
+    '2021-10-31T12:19:36.000Z'
+    > dayjs.tz(ts, 'Europe/Berlin').format()
+    '2021-10-31T13:19:36+01:00'
+    > dayjs.tz(ts, 'Europe/Berlin').toISOString()
+    '2021-10-31T12:19:36.303Z'
+ */
+
     const ts = 1635682776303;
     const timezone = 'Europe/Berlin';
 
