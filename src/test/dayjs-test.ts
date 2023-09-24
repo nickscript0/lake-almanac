@@ -85,7 +85,6 @@ Deno.test('Github Issue: Timezone conversion is broken when not using DST Time',
     // These next 3 create a time in local timezone, convert to Paris tz, then compare to UTC. These also pass fine
     // Because the net result should be the same as the first 3.
     const t1Paris = dayjs('2021-10-30').set('hour', 18).set('minute', 42).tz('Europe/Paris');
-    console.log(`t1Paris: ${t1Paris.toString()}`);
     assertEquals('2021-10-30T21:42:00.000Z', t1Paris.toISOString());
 
     const t2Paris = dayjs('2021-10-31').set('hour', 18).set('minute', 42).tz('Europe/Paris');
