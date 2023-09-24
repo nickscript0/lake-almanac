@@ -25,6 +25,6 @@ jobs:
               uses: githubocto/flat@v3
               with:
                   # This is an unused http_url (as postprocess makes all the requests it needs) but is currently required to exist by the action
-                  http_url: https://cdn.skypack.dev/dayjs@1.10.6
+                  http_url: https://cdn.skypack.dev/dayjs@1.11.10
                   downloaded_filename: output/skypack-dayjs.txt
                   postprocess: src/archiver.ts

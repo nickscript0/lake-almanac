@@ -1,4 +1,4 @@
-import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
+import dayjs from 'https://cdn.skypack.dev/dayjs@1.11.10';
 import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
 import { isBefore } from './util.ts';
 

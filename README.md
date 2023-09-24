@@ -10,8 +10,28 @@ scripts/archiver.sh --save-responses 2018-10-06 2021-07-31 2>&1 | tee output.log
 
 ## Run Tests
 ```bash
-scripts/test.sh
+scripts/test
 ```
+
+## Latest Status - Sept 24, 2023
+- Upgraded from dayjs@1.10.6 to dayjs@1.11.10 resolved the Minimal ADT bug failure
+
+### Before
+```bash
+```bash
+Github Issue: tz func with valueOf bug ... FAILED (6ms)
+Minimal ADT bug ... FAILED (4ms)
+Github Issue: Timezone conversion is broken when not using DST Time ... FAILED (3ms)
+```
+
+### After
+```bash
+Github Issue: tz func with valueOf bug ... FAILED (6ms)
+Minimal ADT bug ... ok (5ms)
+Github Issue: Timezone conversion is broken when not using DST Time ... FAILED (4ms)
+```
+
+- I'm guessing it was this fix https://github.com/iamkun/dayjs/pull/2420
 
 ## Latest Status - Nov 12, 2022
 - Continue to work on the new-metrics-avgs branch but the main branch is working fine as is so no rush

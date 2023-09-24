@@ -5,7 +5,7 @@
  */
 import { parse } from 'https://deno.land/std@0.102.0/flags/mod.ts';
 
-import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
+import dayjs from 'https://cdn.skypack.dev/dayjs@1.11.10';
 import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
 
 import { fetchLakeDay, EARLIEST_RECORD } from './thingspeak-sensor-api.ts';
