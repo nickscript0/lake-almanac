@@ -1179,7 +1179,12 @@
         "value": -15.8125
       }
     ],
-    "FirstFreezesAfterSummer": [],
+    "FirstFreezesAfterSummer": [
+      {
+        "date": "2024-11-17 05:25:44+00:00Z",
+        "value": 0
+      }
+    ],
     "FirstFreezesBeforeSummer": [
       {
         "date": "2024-01-08 07:59:08+00:00Z",
