@@ -1224,6 +1224,51 @@
       }
     ]
   },
+  "2025": {
+    "HottestDays": [
+      {
+        "date": "2025-01-01 23:04:38+00:00Z",
+        "value": 1.5
+      }
+    ],
+    "ColdestDays": [
+      {
+        "date": "2025-01-01 15:51:48+00:00Z",
+        "value": -0.125
+      }
+    ],
+    "HottestNightime": [
+      {
+        "date": "2025-01-02 01:09:41+00:00Z",
+        "value": 0.6875
+      }
+    ],
+    "ColdestNighttime": [
+      {
+        "date": "2025-01-02 07:44:10+00:00Z",
+        "value": -0.0625
+      }
+    ],
+    "HottestDaytime": [
+      {
+        "date": "2025-01-01 23:04:38+00:00Z",
+        "value": 1.5
+      }
+    ],
+    "ColdestDaytime": [
+      {
+        "date": "2025-01-01 15:51:48+00:00Z",
+        "value": -0.125
+      }
+    ],
+    "FirstFreezesAfterSummer": [],
+    "FirstFreezesBeforeSummer": [
+      {
+        "date": "2025-01-01 15:51:48+00:00Z",
+        "value": -0.125
+      }
+    ]
+  },
   "All": {
     "HottestDays": [
       {
