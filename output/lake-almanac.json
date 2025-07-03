@@ -2783,6 +2783,150 @@
       }
     ]
   },
+  "2025": {
+    "Year": {
+      "HottestDays": [
+        {
+          "date": "2025-07-01 15:43:35-07:00Z",
+          "value": 31.3125
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2025-07-01 04:48:06-07:00Z",
+          "value": 15.9375
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2025-07-01 18:08:11-07:00Z",
+          "value": 27.875
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2025-07-01 04:48:06-07:00Z",
+          "value": 15.9375
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2025-07-01 15:43:35-07:00Z",
+          "value": 31.3125
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2025-07-01 06:05:10-07:00Z",
+          "value": 16.4375
+        }
+      ],
+      "Average": {
+        "average": 23.17239932885906,
+        "n": 149
+      },
+      "AverageNighttime": {
+        "average": 20.877533783783782,
+        "n": 74
+      },
+      "AverageDaytime": {
+        "average": 25.436666666666667,
+        "n": 75
+      },
+      "AverageNoon": {
+        "average": 24.25,
+        "n": 1
+      },
+      "AverageMidnight": {
+        "average": 21.0625,
+        "n": 1
+      }
+    },
+    "Spring": {
+      "HottestDays": [],
+      "ColdestDays": [],
+      "HottestNightime": [],
+      "ColdestNighttime": [],
+      "HottestDaytime": [],
+      "ColdestDaytime": []
+    },
+    "Summer": {
+      "HottestDays": [
+        {
+          "date": "2025-07-01 15:43:35-07:00Z",
+          "value": 31.3125
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2025-07-01 04:48:06-07:00Z",
+          "value": 15.9375
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2025-07-01 18:08:11-07:00Z",
+          "value": 27.875
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2025-07-01 04:48:06-07:00Z",
+          "value": 15.9375
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2025-07-01 15:43:35-07:00Z",
+          "value": 31.3125
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2025-07-01 06:05:10-07:00Z",
+          "value": 16.4375
+        }
+      ],
+      "Average": {
+        "average": 23.17239932885906,
+        "n": 149
+      },
+      "AverageNighttime": {
+        "average": 20.877533783783782,
+        "n": 74
+      },
+      "AverageDaytime": {
+        "average": 25.436666666666667,
+        "n": 75
+      },
+      "AverageNoon": {
+        "average": 24.25,
+        "n": 1
+      },
+      "AverageMidnight": {
+        "average": 21.0625,
+        "n": 1
+      }
+    },
+    "Fall": {
+      "HottestDays": [],
+      "ColdestDays": [],
+      "HottestNightime": [],
+      "ColdestNighttime": [],
+      "HottestDaytime": [],
+      "ColdestDaytime": []
+    },
+    "Winter": {
+      "HottestDays": [],
+      "ColdestDays": [],
+      "HottestNightime": [],
+      "ColdestNighttime": [],
+      "HottestDaytime": [],
+      "ColdestDaytime": []
+    },
+    "FirstFreezesAfterSummer": [],
+    "FirstFreezesBeforeSummer": []
+  },
   "All": {
     "Year": {
       "HottestDays": [
@@ -2918,24 +3062,24 @@
         }
       ],
       "Average": {
-        "average": 0.5473575289161547,
-        "n": 149311
+        "average": 0.5699129365716579,
+        "n": 149460
       },
       "AverageNighttime": {
-        "average": 0.5210895426412667,
-        "n": 74646
+        "average": 0.5412498327087794,
+        "n": 74720
       },
       "AverageDaytime": {
-        "average": 0.5743573066555807,
-        "n": 74569
+        "average": 0.599338191951128,
+        "n": 74644
       },
       "AverageNoon": {
-        "average": 0.4260971400394477,
-        "n": 1014
+        "average": 0.4495689655172414,
+        "n": 1015
       },
       "AverageMidnight": {
-        "average": 0.6871301775147929,
-        "n": 1014
+        "average": 0.7072044334975369,
+        "n": 1015
       }
     },
     "Spring": {
@@ -3226,24 +3370,24 @@
         }
       ],
       "Average": {
-        "average": 2.4498351318944844,
-        "n": 33360
+        "average": 2.54197939359575,
+        "n": 33509
       },
       "AverageNighttime": {
-        "average": 2.3319694244604317,
-        "n": 16680
+        "average": 2.4138825056702875,
+        "n": 16754
       },
       "AverageDaytime": {
-        "average": 2.567700839328537,
-        "n": 16680
+        "average": 2.6700686362279917,
+        "n": 16755
       },
       "AverageNoon": {
-        "average": 1.9202777777777778,
-        "n": 225
+        "average": 2.0190818584070795,
+        "n": 226
       },
       "AverageMidnight": {
-        "average": 3.0966666666666667,
-        "n": 225
+        "average": 3.176161504424779,
+        "n": 226
       }
     },
     "Fall": {

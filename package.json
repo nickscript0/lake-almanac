@@ -1,14 +1,15 @@
 {
   "name": "lake-almanac",
   "version": "1.0.0",
-  "description": "## Run Archiver ```bash scripts/archiver.sh --save-responses 2018-10-06 2021-07-31 2>&1 | tee output.log",
+  "description": "Lake almanac data archiver - migrated from Deno to Node.js",
   "main": "dayjs-tz-bug.js",
   "scripts": {
     "build": "tsc",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:single": "jest --testNamePattern",
-    "dev": "nodemon --exec ts-node src/archiver.ts"
+    "dev": "nodemon --exec ts-node src/archiver.ts",
+    "archiver": "ts-node src/archiver.ts"
   },
   "repository": {
     "type": "git",
