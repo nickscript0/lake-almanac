@@ -13,6 +13,37 @@ scripts/archiver.sh --save-responses 2018-10-06 2021-07-31 2>&1 | tee output.log
 scripts/test
 ```
 
+## Latest Status - Jul 3, 2025
+scripts/test results in 1 failing test:
+
+```shell
+ ERRORS 
+
+Github Issue: tz func with valueOf bug => ./src/test/dayjs-test.ts:35:6
+error: AssertionError: Values are not equal:
+
+
+    [Diff] Actual / Expected
+
+
+-   2021-10-31T12:19:36.303Z
++   2021-10-31T13:19:36.303Z
+
+
+  throw new AssertionError(message);
+        ^
+    at assertEquals (https://deno.land/std@0.102.0/testing/asserts.ts:259:9)
+    at file:///home/parallels/projects/lake-almanac/src/test/dayjs-test.ts:60:5
+
+ FAILURES 
+
+Github Issue: tz func with valueOf bug => ./src/test/dayjs-test.ts:35:6
+
+FAILED | 11 passed | 1 failed (306ms)
+
+error: Test failed
+```
+
 ## Latest Status - Sept 24, 2023
 - Fixed 2 of 3 failing tests
    - Upgraded from dayjs@1.10.6 to dayjs@1.11.10 resolved the Minimal ADT bug failure

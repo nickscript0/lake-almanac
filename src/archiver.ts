@@ -3,14 +3,12 @@
  *
  * This is for days before the daily almanac cron was put into place.
  */
-import { parse } from 'https://deno.land/std@0.102.0/flags/mod.ts';
+import { Command } from 'commander';
+import dayjs, { Dayjs } from 'dayjs';
 
-import dayjs from 'https://cdn.skypack.dev/dayjs@1.11.10';
-import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
-
-import { fetchLakeDay, EARLIEST_RECORD } from './thingspeak-sensor-api.ts';
-import { processDay } from './almanac.ts';
-import { writeZippedStringToFile } from './writer.ts';
+import { fetchLakeDay, EARLIEST_RECORD } from './thingspeak-sensor-api';
+import { processDay } from './almanac';
+import { writeZippedStringToFile } from './writer';
 
 async function main() {
     const range = parseArgs();
@@ -31,7 +29,7 @@ async function main() {
     }
 }
 
-function parseArgs(): { start: dayjsTypes.Dayjs; end: dayjsTypes.Dayjs; saveResponses: boolean } {
+function parseArgs(): { start: Dayjs; end: Dayjs; saveResponses: boolean } {
     function exitWithUsage(errMessage: string) {
         console.log(
             `Error: ${errMessage}.
@@ -44,22 +42,32 @@ Examples:
  archiver.ts
 `
         );
-        Deno.exit(1);
+        process.exit(1);
     }
     const SAVE_RESPONSES_FLAG = 'save-responses';
-    const args = parse(Deno.args, { boolean: [SAVE_RESPONSES_FLAG] });
-    if (args['h'] || args['help']) exitWithUsage('Help');
-    if (args._.length === 0 || args._.length === 1) {
-        const now: dayjsTypes.Dayjs = dayjs();
+    const program = new Command();
+    program
+        .argument('[start-date]', 'Start date (YYYY-MM-DD)')
+        .argument('[end-date]', 'End date (YYYY-MM-DD)')
+        .option(`--${SAVE_RESPONSES_FLAG}`, 'Save API responses to archive')
+        .option('-h, --help', 'Show help')
+        .parse();
+
+    const args = program.args;
+    const options = program.opts();
+    
+    if (options.help) exitWithUsage('Help');
+    if (args.length === 0 || args.length === 1) {
+        const now: Dayjs = dayjs();
         // Treat yesterday as 2 days ago to eliminate any issues with running this when UTC is past midnight
         const end = dayjs(now.subtract(1, 'day').format('YYYY-MM-DD'));
         const start = dayjs(now.subtract(2, 'day').format('YYYY-MM-DD'));
         return { start, end, saveResponses: true };
-    } else if (args._.length !== 2) {
-        exitWithUsage(`Invalid number of args ${Deno.args.length}`);
+    } else if (args.length !== 2) {
+        exitWithUsage(`Invalid number of args ${args.length}`);
     }
-    const startInput = args._[0];
-    const endInput = args._[1];
+    const startInput = args[0];
+    const endInput = args[1];
     const start = dayjs(startInput);
     const end = dayjs(endInput);
 
@@ -69,7 +77,7 @@ Examples:
     if (!end.isValid()) {
         exitWithUsage(`Invalid end date: ${endInput}`);
     }
-    return { start, end, saveResponses: args[SAVE_RESPONSES_FLAG] };
+    return { start, end, saveResponses: options[SAVE_RESPONSES_FLAG] };
 }
 
 main();

@@ -1,0 +1,43 @@
+{
+  "name": "lake-almanac",
+  "version": "1.0.0",
+  "description": "## Run Archiver ```bash scripts/archiver.sh --save-responses 2018-10-06 2021-07-31 2>&1 | tee output.log",
+  "main": "dayjs-tz-bug.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:single": "jest --testNamePattern",
+    "dev": "nodemon --exec ts-node src/archiver.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickscript0/lake-almanac.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nickscript0/lake-almanac/issues"
+  },
+  "homepage": "https://github.com/nickscript0/lake-almanac#readme",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/jszip": "^3.4.0",
+    "@types/node": "^24.0.10",
+    "@types/node-fetch": "^2.6.12",
+    "jest": "^30.0.4",
+    "nodemon": "^3.1.10",
+    "ts-jest": "^29.4.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "commander": "^14.0.0",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
+    "dayjs": "^1.11.13",
+    "jszip": "^3.10.1",
+    "node-fetch": "^3.3.2"
+  }
+}

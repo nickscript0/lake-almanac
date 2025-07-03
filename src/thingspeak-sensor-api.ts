@@ -1,6 +1,6 @@
-import dayjs from 'https://cdn.skypack.dev/dayjs@1.11.10';
-import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
-import { isBefore } from './util.ts';
+import dayjs, { Dayjs } from 'dayjs';
+import fetch from 'node-fetch';
+import { isBefore } from './util';
 
 // Thingspeak API response
 export interface FieldResponse {
@@ -55,7 +55,7 @@ export interface DateRange {
     end: string;
 }
 
-function dateToThingspeakDateString(d: dayjsTypes.Dayjs) {
+function dateToThingspeakDateString(d: Dayjs) {
     return d.format('YYYY-MM-DD 00:00:00');
 }
 
@@ -82,7 +82,8 @@ export async function fetchLakeDay(day: string): Promise<DayResponse> {
     const end = dateToThingspeakDateString(endDayJs);
     const url = dateRangeToUrl({ start, end }, channelId);
     console.log(`fetch`, url);
-    const json: FieldResponse = await (await fetch(url)).json();
+    const response = await fetch(url);
+    const json: FieldResponse = await response.json() as FieldResponse;
     return { json, day };
 }
 

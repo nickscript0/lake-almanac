@@ -1,12 +1,10 @@
-import dayjs from 'https://cdn.skypack.dev/dayjs@1.11.10';
-import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
-
-import utc from 'https://cdn.skypack.dev/dayjs@1.11.10/plugin/utc';
-import timezone from 'https://cdn.skypack.dev/dayjs@1.11.10/plugin/timezone';
+import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-import { isBefore, isAfter, isSame, diffMs } from './util.ts';
+import { isBefore, isAfter, isSame, diffMs } from './util';
 
 /**
  * The fixed timezone to perform date logic with, this makes most sense to be the tz where.
@@ -16,9 +14,10 @@ const TIMEZONE = 'America/Vancouver';
 // This doesn't seem to do anything???
 // dayjs.tz.setDefault(TIMEZONE);
 
-import { exists } from 'https://deno.land/std@0.102.0/fs/mod.ts';
+import { access } from 'fs/promises';
+import { readFile, writeFile } from 'fs/promises';
 
-import { NumericValue, FieldResponse, DayResponse } from './thingspeak-sensor-api.ts';
+import { NumericValue, FieldResponse, DayResponse } from './thingspeak-sensor-api';
 
 const ALMANAC_PATH = 'output/lake-almanac.json';
 // The size of metric sequences to store e.g., top N coldest days
@@ -82,7 +81,7 @@ interface AlmanacAverages {
 type AlmanacSeason = AlmanacHiLows & AlmanacAverages;
 
 export type TemperatureReading = {
-    date: dayjsTypes.Dayjs;
+    date: Dayjs;
 } & NumericValue;
 
 export interface TemperatureDay {
@@ -179,14 +178,15 @@ export async function processDay(response: DayResponse) {
     // await Deno.writeTextFile('src/test/res/response-2021-01-02.json', JSON.stringify(response, null, 2));
     // console.log(`Wrote src/test/res/response-2021-01-02.json`)
     updateAlmanac(alm, temperatureDay);
-    await Deno.writeTextFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2));
+    await writeFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2), 'utf8');
     console.log(`Wrote`, ALMANAC_PATH);
 }
 
 async function getAlmanac(): Promise<Almanac> {
-    if (await exists(ALMANAC_PATH)) {
-        return JSON.parse(await Deno.readTextFile(ALMANAC_PATH));
-    } else {
+    try {
+        await access(ALMANAC_PATH);
+        return JSON.parse(await readFile(ALMANAC_PATH, 'utf8'));
+    } catch {
         return {};
     }
 }
@@ -261,7 +261,7 @@ function toReading(tr: TemperatureReading): Reading {
     return { date: (tr.date as any).tz(TIMEZONE).format('YYYY-MM-DD HH:mm:ssZ[Z]'), value: tr.value };
 }
 
-function dayjsToStr(d: dayjsTypes.Dayjs) {
+function dayjsToStr(d: Dayjs) {
     return `${d.format('YYYY-MM-DD HH:mm:ssZ[Z]')} UTC=${d.toISOString()}`;
 }
 
@@ -401,7 +401,7 @@ function getSubsetReadings(td: TemperatureDay) {
 
     // 6am Pacific
     // const DAY_START = dayjs(`${td.day} 13:00:00-00:00Z`);
-    const DAY_START: dayjsTypes.Dayjs = dayjs.tz(`${td.day} 06:00:00`, TIMEZONE);
+    const DAY_START: Dayjs = dayjs.tz(`${td.day} 06:00:00`, TIMEZONE);
 
     // DEBUG LOGGING TO REMOVE
     // console.log(`DAY_START IS`, dayjsToStr(DAY_START));
@@ -409,7 +409,7 @@ function getSubsetReadings(td: TemperatureDay) {
     const DAY_END = DAY_START.add(12, 'hour');
     const PREV_DAY_END = DAY_END.subtract(1, 'day');
     const NEXT_DAY_START = DAY_START.add(1, 'day');
-    const SUMMER_SPLIT: dayjsTypes.Dayjs = dayjs.tz(`${td.day.split('-')[0]}-07-01`, TIMEZONE);
+    const SUMMER_SPLIT: Dayjs = dayjs.tz(`${td.day.split('-')[0]}-07-01`, TIMEZONE);
 
     const daytimeReadings: TemperatureReading[] = [];
     const nighttimeReadings: TemperatureReading[] = [];
@@ -472,15 +472,15 @@ function getSubsetReadings(td: TemperatureDay) {
  * The equinox/solstic always fall between two days in the next 10 years so we use the equinoxes and sostices for 2021
  * for a reasonable approximation.
  */
-function getSeason(origDate: dayjsTypes.Dayjs): Season {
+function getSeason(origDate: Dayjs): Season {
     // Normalize incoming date's year to the season boundaries year
     const d = origDate.set('year', 2021);
-    const MARCH_EQUINOX: dayjsTypes.Dayjs = dayjs('2021-03-20 9:37:00-00:00Z');
-    const JUNE_SOLSTICE: dayjsTypes.Dayjs = dayjs('2021-06-21 3:32:00-00:00Z');
-    const SEPT_EQUINOX: dayjsTypes.Dayjs = dayjs('2021-09-22 19:21:00-00:00Z');
-    const DEC_SOLSTICE: dayjsTypes.Dayjs = dayjs('2021-12-21 15:59:00-00:00Z');
-    const NEXT_MARCH_EQUINOX: dayjsTypes.Dayjs = dayjs('2022-03-20 9:37:00-00:00Z');
-    const PREV_DEC_SOLSTICE: dayjsTypes.Dayjs = dayjs('2020-12-21 15:59:00-00:00Z');
+    const MARCH_EQUINOX: Dayjs = dayjs('2021-03-20 9:37:00-00:00Z');
+    const JUNE_SOLSTICE: Dayjs = dayjs('2021-06-21 3:32:00-00:00Z');
+    const SEPT_EQUINOX: Dayjs = dayjs('2021-09-22 19:21:00-00:00Z');
+    const DEC_SOLSTICE: Dayjs = dayjs('2021-12-21 15:59:00-00:00Z');
+    const NEXT_MARCH_EQUINOX: Dayjs = dayjs('2022-03-20 9:37:00-00:00Z');
+    const PREV_DEC_SOLSTICE: Dayjs = dayjs('2020-12-21 15:59:00-00:00Z');
 
     if (isAfter(d, MARCH_EQUINOX.subtract(1, 'second')) && isBefore(d, JUNE_SOLSTICE)) return 'Spring';
     else if (isAfter(d, JUNE_SOLSTICE.subtract(1, 'second')) && isBefore(d, SEPT_EQUINOX)) return 'Summer';
@@ -546,15 +546,15 @@ const MIDNIGHT = dayjs.tz(`2001-01-01 00:00`, TIMEZONE);
 // const NOON = dayjs('2001-01-01 12:00-07:00Z');
 const NOON = dayjs.tz('2001-01-01 12:00', TIMEZONE);
 export function findNearestReadingToTime(
-    findDate: dayjsTypes.Dayjs,
+    findDate: Dayjs,
     readings: TemperatureReading[]
 ): TemperatureReading {
-    const normalize2 = (d: dayjsTypes.Dayjs) => {
+    const normalize2 = (d: Dayjs) => {
         const utcD = dayjs(new Date(d.toISOString()));
         return utcD.set('year', 2001).set('month', 1).date(1) as any; //.tz(TIMEZONE);
     };
 
-    const normalize = (d: dayjsTypes.Dayjs) => {
+    const normalize = (d: Dayjs) => {
         const utcD = new Date(d.toISOString());
         return dayjs(utcD.setFullYear(2001, 1, 1));
     };
