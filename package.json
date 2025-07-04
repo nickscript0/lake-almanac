@@ -9,7 +9,8 @@
     "test:watch": "jest --watch",
     "test:single": "jest --testNamePattern",
     "dev": "nodemon --exec ts-node src/archiver.ts",
-    "archiver": "ts-node src/archiver.ts"
+    "archiver": "ts-node src/archiver.ts",
+    "migrate-archive": "ts-node scripts/migrate-archive-structure.ts"
   },
   "repository": {
     "type": "git",
