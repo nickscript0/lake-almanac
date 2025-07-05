@@ -179,7 +179,7 @@ export async function processDay(response: DayResponse) {
     // console.log(`Wrote src/test/res/response-2021-01-02.json`)
     updateAlmanac(alm, temperatureDay);
     await writeFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2), 'utf8');
-    console.log(`Wrote`, ALMANAC_PATH);
+    console.log(`Wrote`, ALMANAC_PATH, `for date`, temperatureDay.day);
 }
 
 async function getAlmanac(): Promise<Almanac> {
@@ -330,16 +330,16 @@ function getDailyMetrics(
     if (allReadings.length > 0) {
         const nearestMidnight = findNearestReadingToTime(MIDNIGHT, allReadings);
         const nearestNoon = findNearestReadingToTime(NOON, allReadings);
-        console.log('nearestMidnight', toReading(nearestMidnight));
-        console.log('nearestNoon', toReading(nearestNoon));
+        // console.log('nearestMidnight', toReading(nearestMidnight));
+        // console.log('nearestNoon', toReading(nearestNoon));
     }
     const AverageMidnight =
         allReadings.length > 0 ? { average: findNearestReadingToTime(MIDNIGHT, allReadings).value, n: 1 } : undefined;
     const AverageNoon =
         allReadings.length > 0 ? { average: findNearestReadingToTime(NOON, allReadings).value, n: 1 } : undefined;
 
-    console.log(`AVERAGE MIDNIGHT`, AverageMidnight);
-    console.log(`AVERAGE NOON`, AverageNoon);
+    // console.log(`AVERAGE MIDNIGHT`, AverageMidnight);
+    // console.log(`AVERAGE NOON`, AverageNoon);
     return {
         hiLows: {
             HottestDays: last(allReadings),
