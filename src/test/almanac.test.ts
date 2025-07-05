@@ -260,59 +260,71 @@ describe('almanac', () => {
 
             FirstFreezesBeforeSummer: Sequence<Reading>;
             FirstFreezesAfterSummer: Sequence<Reading>;
-
         }
         type OriginalAlmanac = Record<string, OriginalAlmanacYear>;
 
         // Helper function to normalize dates to UTC for comparison
         function normalizeReadings(readings: Reading[]): Reading[] {
-            return readings.map(reading => {
+            return readings.map((reading) => {
                 // Clean up the date format - remove the trailing Z if there's already a timezone offset
                 let cleanDate = reading.date;
                 if (cleanDate.includes('-') && cleanDate.endsWith('Z')) {
                     cleanDate = cleanDate.slice(0, -1); // Remove trailing Z
                 }
-                
+
                 // Parse the date string and convert to UTC, preserving the actual moment in time
                 const utcDate = dayjs(cleanDate).utc().format();
                 return {
                     ...reading,
-                    date: utcDate
+                    date: utcDate,
                 };
             });
         }
 
         const day1 = await readDayResponse('2025-07-01');
-        const day2 = await  readDayResponse('2025-07-02');
-        const originalAlm: OriginalAlmanac = await readResJson<OriginalAlmanac>('original-format-almanac-2025-07-01-to-2025-07-03.json');
+        const day2 = await readDayResponse('2025-07-02');
+        const originalAlm: OriginalAlmanac = await readResJson<OriginalAlmanac>(
+            'original-format-almanac-2025-07-01-to-2025-07-03.json'
+        );
         const temperatureDay1 = { readings: frToOutdoorReadingDay(day1.json), day: day1.day };
         const temperatureDay2 = { readings: frToOutdoorReadingDay(day2.json), day: day2.day };
         const alm: Almanac = {};
         updateAlmanac(alm, temperatureDay1);
         updateAlmanac(alm, temperatureDay2);
-        
+
         // Compare the new almanac format with the original format
         // The original format corresponds to the "Year" level data in the new format
         const expectedYears = ['2025', 'All'];
-        
+
         for (const year of expectedYears) {
             expect(alm[year]).toBeDefined();
             expect(alm[year].Year).toBeDefined();
             expect(originalAlm[year]).toBeDefined();
-            
+
             const newYearData = alm[year].Year;
             const originalYearData = originalAlm[year];
-            
+
             // Compare actual values between new and original formats, normalizing dates to UTC
             expect(normalizeReadings(newYearData.HottestDays)).toEqual(normalizeReadings(originalYearData.HottestDays));
             expect(normalizeReadings(newYearData.ColdestDays)).toEqual(normalizeReadings(originalYearData.ColdestDays));
-            expect(normalizeReadings(newYearData.HottestNightime)).toEqual(normalizeReadings(originalYearData.HottestNightime));
-            expect(normalizeReadings(newYearData.ColdestNighttime)).toEqual(normalizeReadings(originalYearData.ColdestNighttime));
-            expect(normalizeReadings(newYearData.HottestDaytime)).toEqual(normalizeReadings(originalYearData.HottestDaytime));
-            expect(normalizeReadings(newYearData.ColdestDaytime)).toEqual(normalizeReadings(originalYearData.ColdestDaytime));
-            expect(normalizeReadings(alm[year].FirstFreezesBeforeSummer)).toEqual(normalizeReadings(originalYearData.FirstFreezesBeforeSummer));
-            expect(normalizeReadings(alm[year].FirstFreezesAfterSummer)).toEqual(normalizeReadings(originalYearData.FirstFreezesAfterSummer));
+            expect(normalizeReadings(newYearData.HottestNightime)).toEqual(
+                normalizeReadings(originalYearData.HottestNightime)
+            );
+            expect(normalizeReadings(newYearData.ColdestNighttime)).toEqual(
+                normalizeReadings(originalYearData.ColdestNighttime)
+            );
+            expect(normalizeReadings(newYearData.HottestDaytime)).toEqual(
+                normalizeReadings(originalYearData.HottestDaytime)
+            );
+            expect(normalizeReadings(newYearData.ColdestDaytime)).toEqual(
+                normalizeReadings(originalYearData.ColdestDaytime)
+            );
+            expect(normalizeReadings(alm[year].FirstFreezesBeforeSummer)).toEqual(
+                normalizeReadings(originalYearData.FirstFreezesBeforeSummer)
+            );
+            expect(normalizeReadings(alm[year].FirstFreezesAfterSummer)).toEqual(
+                normalizeReadings(originalYearData.FirstFreezesAfterSummer)
+            );
         }
-
-    })
+    });
 });

@@ -19,7 +19,7 @@ async function main() {
     for (let i = 0; i < numDays; i++) {
         const curDay = range.start.add(i, 'day');
         let response: DayResponse;
-        
+
         if (range.useLocalArchive) {
             const archivedResponse = await loadArchivedDay(curDay.format('YYYY-MM-DD'));
             if (!archivedResponse) {
@@ -70,7 +70,7 @@ Examples:
 
     const args = program.args;
     const options = program.opts();
-    
+
     if (options.help) exitWithUsage('Help');
     if (args.length === 0 || args.length === 1) {
         const now: Dayjs = dayjs();
@@ -92,11 +92,11 @@ Examples:
     if (!end.isValid()) {
         exitWithUsage(`Invalid end date: ${endInput}`);
     }
-    return { 
-        start, 
-        end, 
-        saveResponses: !!options.saveResponses, 
-        useLocalArchive: !!options.useLocalArchive 
+    return {
+        start,
+        end,
+        saveResponses: !!options.saveResponses,
+        useLocalArchive: !!options.useLocalArchive,
     };
 }
 
@@ -105,23 +105,23 @@ async function loadArchivedDay(day: string): Promise<DayResponse | null> {
     if (!dayjs_day.isValid()) {
         throw new Error(`Invalid day requested ${day}`);
     }
-    
+
     const year = dayjs_day.year();
     const archivePath = `output/responses-archive/${year}/${day}.zip`;
-    
+
     try {
         const zipBuffer = await readFile(archivePath);
         const zip = await JSZip.loadAsync(zipBuffer);
         const jsonFile = zip.file(`${day}.json`);
-        
+
         if (!jsonFile) {
             console.warn(`Warning: JSON file not found in archive: ${day}.json`);
             return null;
         }
-        
+
         const jsonContent = await jsonFile.async('text');
         const json: FieldResponse = JSON.parse(jsonContent);
-        
+
         return { json, day };
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);

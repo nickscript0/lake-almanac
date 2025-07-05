@@ -20,7 +20,7 @@ import {
     MovingAverage,
     Season,
     ALL,
-    seasons
+    seasons,
 } from './types';
 
 export type { Almanac, TemperatureReading, TemperatureDay, Sequence, Reading } from './types';
@@ -95,8 +95,6 @@ function EmptyAlmanacSeason(): AlmanacSeason {
     };
 }
 
-
-
 const AlmanacPropertyDesc: Record<keyof AlmanacSeason, ReadingType> = {
     HottestDays: 'high',
     ColdestDays: 'low',
@@ -114,8 +112,6 @@ const AlmanacPropertyDesc: Record<keyof AlmanacSeason, ReadingType> = {
 
     // LargestVariationDays: 'other',
 };
-
-
 
 const last = <T>(arr: T[]) => arr[arr.length - 1];
 const first = <T>(arr: T[]) => arr[0];
@@ -261,8 +257,6 @@ function updateFirstFreezeSequence(tempReading: TemperatureReading | undefined, 
     }
     return seq;
 }
-
-
 
 // Assumes ascValueSorted readings
 function getDailyMetrics(
@@ -490,10 +484,7 @@ function valueAverage(readings: TemperatureReading[]): MovingAverage {
 const MIDNIGHT = dayjs.tz(`2001-01-01 00:00`, TIMEZONE);
 // const NOON = dayjs('2001-01-01 12:00-07:00Z');
 const NOON = dayjs.tz('2001-01-01 12:00', TIMEZONE);
-export function findNearestReadingToTime(
-    findDate: Dayjs,
-    readings: TemperatureReading[]
-): TemperatureReading {
+export function findNearestReadingToTime(findDate: Dayjs, readings: TemperatureReading[]): TemperatureReading {
     const normalize2 = (d: Dayjs) => {
         const utcD = dayjs(new Date(d.toISOString()));
         return utcD.set('year', 2001).set('month', 1).date(1) as any; //.tz(TIMEZONE);

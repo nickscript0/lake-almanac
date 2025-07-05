@@ -4,7 +4,7 @@ import { NumericValue } from './thingspeak-sensor-api';
 export type Year = string;
 export const ALL = 'All';
 export const seasons = ['Spring', 'Summer', 'Fall', 'Winter'] as const;
-export type Season = typeof seasons[number];
+export type Season = (typeof seasons)[number];
 
 export type Almanac = Record<Year, AlmanacYear>;
 

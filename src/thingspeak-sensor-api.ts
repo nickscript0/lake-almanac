@@ -83,7 +83,7 @@ export async function fetchLakeDay(day: string): Promise<DayResponse> {
     const url = dateRangeToUrl({ start, end }, channelId);
     console.log(`fetch`, url);
     const response = await fetch(url);
-    const json: FieldResponse = await response.json() as FieldResponse;
+    const json: FieldResponse = (await response.json()) as FieldResponse;
     return { json, day };
 }
 
