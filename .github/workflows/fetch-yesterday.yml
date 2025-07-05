@@ -25,3 +25,14 @@ jobs:
               run: npm ci
             - name: Run archiver
               run: npm run archiver
+            - name: Commit and push changes
+              run: |
+                git config --global user.name 'github-actions[bot]'
+                git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+                if ! git diff --quiet output/; then
+                  git add output/
+                  git commit -m "Update lake almanac data for $(date -d 'yesterday' '+%Y-%m-%d')"
+                  git push
+                else
+                  echo "No changes to commit in output/ directory."
+                fi
