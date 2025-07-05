@@ -1,3 +1,18 @@
+/**
+ * Archive Structure Migration Script
+ * 
+ * Purpose: Migrates flat archive structure to year-based directory structure.
+ * Moves zip files from output/responses-archive/ to output/responses-archive/YYYY/
+ * 
+ * Usage: npm run ts-node scripts/migrate-archive-structure.ts
+ * 
+ * This script:
+ * - Scans for YYYY-MM-DD.zip files in the flat archive directory
+ * - Creates year subdirectories as needed
+ * - Moves files to their respective year folders
+ * - Provides migration statistics and error handling
+ */
+
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -10,14 +25,14 @@ interface MigrationStats {
 
 function migrateArchiveStructure(): void {
     console.log('Starting migration of archive structure...');
-    
+
     if (!fs.existsSync(RESPONSES_ARCHIVE_DIR)) {
         console.error(`Archive directory does not exist: ${RESPONSES_ARCHIVE_DIR}`);
         process.exit(1);
     }
 
     const files: string[] = fs.readdirSync(RESPONSES_ARCHIVE_DIR);
-    
+
     const zipFiles: string[] = files.filter((file: string) => {
         return file.endsWith('.zip') && /^\d{4}-\d{2}-\d{2}\.zip$/.test(file);
     });
