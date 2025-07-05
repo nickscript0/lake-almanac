@@ -21,7 +21,11 @@ async function main() {
         let response: DayResponse;
         
         if (range.useLocalArchive) {
-            response = await loadArchivedDay(curDay.format('YYYY-MM-DD'));
+            const archivedResponse = await loadArchivedDay(curDay.format('YYYY-MM-DD'));
+            if (!archivedResponse) {
+                continue;
+            }
+            response = archivedResponse;
         } else {
             response = await fetchLakeDay(curDay.format('YYYY-MM-DD'));
             if (range.saveResponses) {
@@ -96,7 +100,7 @@ Examples:
     };
 }
 
-async function loadArchivedDay(day: string): Promise<DayResponse> {
+async function loadArchivedDay(day: string): Promise<DayResponse | null> {
     const dayjs_day = dayjs(day);
     if (!dayjs_day.isValid()) {
         throw new Error(`Invalid day requested ${day}`);
@@ -111,7 +115,8 @@ async function loadArchivedDay(day: string): Promise<DayResponse> {
         const jsonFile = zip.file(`${day}.json`);
         
         if (!jsonFile) {
-            throw new Error(`JSON file not found in archive: ${day}.json`);
+            console.warn(`Warning: JSON file not found in archive: ${day}.json`);
+            return null;
         }
         
         const jsonContent = await jsonFile.async('text');
@@ -120,7 +125,8 @@ async function loadArchivedDay(day: string): Promise<DayResponse> {
         return { json, day };
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        throw new Error(`Failed to load archived day ${day}: ${errorMessage}`);
+        console.warn(`Warning: Failed to load archived day ${day}: ${errorMessage}`);
+        return null;
     }
 }
 
