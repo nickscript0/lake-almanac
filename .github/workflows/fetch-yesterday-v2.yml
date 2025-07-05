@@ -1,0 +1,40 @@
+name: Process Lake Almanac v2 for yesterday
+
+on:
+    # push:
+    #   branches:
+    #     - main
+    workflow_dispatch:
+    schedule:
+        # Daily 5am
+        - cron: '0 5 * * *'
+
+jobs:
+    scheduled:
+        runs-on: ubuntu-latest
+        steps:
+            # Check out the repository so it can read the files inside of it and do other operations
+            - name: Check out repo
+              uses: actions/checkout@v4
+              with:
+                ref: migrate-to-nodejs
+            # Setup Node.js for running the archiver
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '22'
+            - name: Install dependencies
+              run: npm ci
+            - name: Run archiver
+              run: npm run archiver
+            - name: Commit and push changes
+              run: |
+                git config --global user.name 'github-actions[bot]'
+                git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+                if ! git diff --quiet output/; then
+                  git add output/
+                  git commit -m "Update lake almanac data for $(date -d 'yesterday' '+%Y-%m-%d')"
+                  git push
+                else
+                  echo "No changes to commit in output/ directory."
+                fi
