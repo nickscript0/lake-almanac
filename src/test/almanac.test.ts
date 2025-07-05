@@ -7,7 +7,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 import { frToOutdoorReadingDay, updateAlmanac, findNearestReadingToTime } from '../almanac';
-import { Almanac, Sequence, Reading } from '../types';
+import { AlmanacWithMetadata, AlmanacYear, Sequence, Reading } from '../types';
 import { DayResponse, FieldResponse } from '../thingspeak-sensor-api';
 
 /**
@@ -25,7 +25,7 @@ async function readDayResponse(day: string): Promise<DayResponse> {
 describe('almanac', () => {
     test('benchmark: updateAlmanac should process 1 day from empty almanac', async () => {
         const response = await readDayResponse('2021-01-02');
-        const expectedAlm = await readResJson<Almanac>('almanac-2021-01-02-to-2021-01-3.json');
+        const expectedAlm = await readResJson<AlmanacWithMetadata>('almanac-2021-01-02-to-2021-01-3.json');
         const temperatureDay = { readings: frToOutdoorReadingDay(response.json), day: response.day };
         const alm = {};
         updateAlmanac(alm, temperatureDay);
@@ -49,7 +49,7 @@ describe('almanac', () => {
 
         const alm = {};
         temperatureDays.forEach((td) => updateAlmanac(alm, td));
-        const expectedAlm = await readResJson<Almanac>('almanac-4seasons-2020-1day-2021.json');
+        const expectedAlm = await readResJson<AlmanacWithMetadata>('almanac-4seasons-2020-1day-2021.json');
         expect(alm).toEqual(expectedAlm);
     });
 
@@ -288,7 +288,7 @@ describe('almanac', () => {
         );
         const temperatureDay1 = { readings: frToOutdoorReadingDay(day1.json), day: day1.day };
         const temperatureDay2 = { readings: frToOutdoorReadingDay(day2.json), day: day2.day };
-        const alm: Almanac = {};
+        const alm: AlmanacWithMetadata = {};
         updateAlmanac(alm, temperatureDay1);
         updateAlmanac(alm, temperatureDay2);
 
@@ -298,10 +298,11 @@ describe('almanac', () => {
 
         for (const year of expectedYears) {
             expect(alm[year]).toBeDefined();
-            expect(alm[year].Year).toBeDefined();
+            const yearData = alm[year] as AlmanacYear;
+            expect(yearData.Year).toBeDefined();
             expect(originalAlm[year]).toBeDefined();
 
-            const newYearData = alm[year].Year;
+            const newYearData = yearData.Year;
             const originalYearData = originalAlm[year];
 
             // Compare actual values between new and original formats, normalizing dates to UTC
@@ -319,10 +320,10 @@ describe('almanac', () => {
             expect(normalizeReadings(newYearData.ColdestDaytime)).toEqual(
                 normalizeReadings(originalYearData.ColdestDaytime)
             );
-            expect(normalizeReadings(alm[year].FirstFreezesBeforeSummer)).toEqual(
+            expect(normalizeReadings(yearData.FirstFreezesBeforeSummer)).toEqual(
                 normalizeReadings(originalYearData.FirstFreezesBeforeSummer)
             );
-            expect(normalizeReadings(alm[year].FirstFreezesAfterSummer)).toEqual(
+            expect(normalizeReadings(yearData.FirstFreezesAfterSummer)).toEqual(
                 normalizeReadings(originalYearData.FirstFreezesAfterSummer)
             );
         }

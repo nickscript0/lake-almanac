@@ -36,6 +36,29 @@ npm run archiver
     npm run archiver
     ```
 
+## Retry Missed Days
+
+The system automatically tracks days when data collection fails. Use the retry utility to attempt fetching missed days:
+
+```bash
+# Retry all missed days from the almanac
+npm run retry-missed-days
+
+# Retry missed days and save API responses to archive
+npm run retry-missed-days -- --save-responses
+
+# Show help for all options
+npm run retry-missed-days -- --help
+```
+
+The retry utility will:
+
+- Read the current almanac to find all missed days
+- Attempt to fetch data for each missed day from the ThingSpeak API
+- Update the almanac with successful retrievals
+- Remove successfully retrieved days from the missed days list
+- Optionally save API responses to the archive for future local processing
+
 ## Run Tests
 
 ```bash

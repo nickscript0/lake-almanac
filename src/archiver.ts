@@ -9,7 +9,7 @@ import { readFile } from 'fs/promises';
 import JSZip from 'jszip';
 
 import { fetchLakeDay, EARLIEST_RECORD, FieldResponse, DayResponse } from './thingspeak-sensor-api';
-import { processDay } from './almanac';
+import { processDay, processDayFailure } from './almanac';
 import { writeZippedStringToFile } from './writer';
 
 async function main() {
@@ -18,25 +18,33 @@ async function main() {
     const numDays = range.end.diff(range.start, 'day');
     for (let i = 0; i < numDays; i++) {
         const curDay = range.start.add(i, 'day');
+        const dayString = curDay.format('YYYY-MM-DD');
         let response: DayResponse;
 
-        if (range.useLocalArchive) {
-            const archivedResponse = await loadArchivedDay(curDay.format('YYYY-MM-DD'));
-            if (!archivedResponse) {
-                continue;
+        try {
+            if (range.useLocalArchive) {
+                const archivedResponse = await loadArchivedDay(dayString);
+                if (!archivedResponse) {
+                    await processDayFailure(dayString, new Error('No archived data available'));
+                    continue;
+                }
+                response = archivedResponse;
+            } else {
+                response = await fetchLakeDay(dayString);
+                if (range.saveResponses) {
+                    await writeZippedStringToFile(
+                        `output/responses-archive/${curDay.year()}`,
+                        response.day,
+                        JSON.stringify(response.json)
+                    );
+                }
             }
-            response = archivedResponse;
-        } else {
-            response = await fetchLakeDay(curDay.format('YYYY-MM-DD'));
-            if (range.saveResponses) {
-                await writeZippedStringToFile(
-                    `output/responses-archive/${curDay.year()}`,
-                    response.day,
-                    JSON.stringify(response.json)
-                );
-            }
+            await processDay(response);
+        } catch (error) {
+            const err = error instanceof Error ? error : new Error(String(error));
+            console.error(`Failed to process day ${dayString}:`, err.message);
+            await processDayFailure(dayString, err);
         }
-        await processDay(response);
     }
 }
 
@@ -115,18 +123,22 @@ async function loadArchivedDay(day: string): Promise<DayResponse | null> {
         const jsonFile = zip.file(`${day}.json`);
 
         if (!jsonFile) {
-            console.warn(`Warning: JSON file not found in archive: ${day}.json`);
-            return null;
+            throw new Error(`JSON file not found in archive: ${day}.json`);
         }
 
         const jsonContent = await jsonFile.async('text');
         const json: FieldResponse = JSON.parse(jsonContent);
 
+        // Validate that we got meaningful data
+        if (!json.feeds || json.feeds.length === 0) {
+            throw new Error(`No data feeds in archived file for day ${day}`);
+        }
+
         return { json, day };
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.warn(`Warning: Failed to load archived day ${day}: ${errorMessage}`);
-        return null;
+        throw error; // Re-throw to be handled by caller
     }
 }
 

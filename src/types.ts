@@ -6,7 +6,18 @@ export const ALL = 'All';
 export const seasons = ['Spring', 'Summer', 'Fall', 'Winter'] as const;
 export type Season = (typeof seasons)[number];
 
+export interface AlmanacMetadata {
+    startDate?: string; // First day with data (YYYY-MM-DD)
+    endDate?: string; // Last day with data (YYYY-MM-DD)
+    missedDays: string[]; // Array of missed days (YYYY-MM-DD)
+}
+
 export type Almanac = Record<Year, AlmanacYear>;
+
+export interface AlmanacWithMetadata {
+    _metadata?: AlmanacMetadata;
+    [year: string]: AlmanacYear | AlmanacMetadata | undefined;
+}
 
 export interface AlmanacYear {
     Year: AlmanacSeason;

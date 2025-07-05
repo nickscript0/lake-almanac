@@ -21,9 +21,19 @@ import {
     Season,
     ALL,
     seasons,
+    AlmanacWithMetadata,
+    AlmanacMetadata,
 } from './types';
 
-export type { Almanac, TemperatureReading, TemperatureDay, Sequence, Reading } from './types';
+export type {
+    Almanac,
+    TemperatureReading,
+    TemperatureDay,
+    Sequence,
+    Reading,
+    AlmanacWithMetadata,
+    AlmanacMetadata,
+} from './types';
 
 /**
  * The fixed timezone to perform date logic with, this makes most sense to be the tz where.
@@ -122,11 +132,19 @@ export async function processDay(response: DayResponse) {
     // await Deno.writeTextFile('src/test/res/response-2021-01-02.json', JSON.stringify(response, null, 2));
     // console.log(`Wrote src/test/res/response-2021-01-02.json`)
     updateAlmanac(alm, temperatureDay);
+    updateMetadataForSuccessfulDay(alm, response.day);
     await writeFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2), 'utf8');
     console.log(`Wrote`, ALMANAC_PATH, `for date`, temperatureDay.day);
 }
 
-async function getAlmanac(): Promise<Almanac> {
+export async function processDayFailure(day: string, error: Error) {
+    const alm = await getAlmanac();
+    addMissedDay(alm, day);
+    await writeFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2), 'utf8');
+    console.log(`Recorded missed day ${day} in almanac due to error:`, error.message);
+}
+
+async function getAlmanac(): Promise<AlmanacWithMetadata> {
     try {
         await access(ALMANAC_PATH);
         return JSON.parse(await readFile(ALMANAC_PATH, 'utf8'));
@@ -135,10 +153,54 @@ async function getAlmanac(): Promise<Almanac> {
     }
 }
 
-export function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) {
+function initializeMetadata(almanac: AlmanacWithMetadata): void {
+    if (!almanac._metadata) {
+        almanac._metadata = {
+            missedDays: [],
+        };
+    }
+}
+
+function updateMetadataForSuccessfulDay(almanac: AlmanacWithMetadata, day: string): void {
+    initializeMetadata(almanac);
+    const metadata = almanac._metadata!;
+
+    // Update start date if this is the first day or earlier than current start
+    if (!metadata.startDate || day < metadata.startDate) {
+        metadata.startDate = day;
+    }
+
+    // Update end date if this is later than current end
+    if (!metadata.endDate || day > metadata.endDate) {
+        metadata.endDate = day;
+    }
+
+    // Remove from missed days if it was previously missed
+    const missedIndex = metadata.missedDays.indexOf(day);
+    if (missedIndex !== -1) {
+        metadata.missedDays.splice(missedIndex, 1);
+    }
+}
+
+function addMissedDay(almanac: AlmanacWithMetadata, day: string): void {
+    initializeMetadata(almanac);
+    const metadata = almanac._metadata!;
+
+    // Add to missed days if not already present
+    if (!metadata.missedDays.includes(day)) {
+        metadata.missedDays.push(day);
+        metadata.missedDays.sort(); // Keep sorted for easier reading
+    }
+}
+
+export function updateAlmanac(almanac: AlmanacWithMetadata, temperatureDay: TemperatureDay) {
     const year = dayjs(temperatureDay.day).year().toString();
     if (!almanac[year]) almanac[year] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
     if (!almanac[ALL]) almanac[ALL] = JSON.parse(JSON.stringify(EmptyAlmanacYear));
+
+    // Type assertions for year data access
+    const yearData = almanac[year] as AlmanacYear;
+    const allData = almanac[ALL] as AlmanacYear;
 
     // DEBUG LOGGING TO REMOVE
     temperatureDay.readings.sort(ascDateTempReadingSort);
@@ -175,29 +237,29 @@ export function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) 
             const metric = dailyMetrics.hiLows[key];
             if (metric) {
                 // Year
-                updateHiLowSequence(metric, almanac[year].Year[key], type);
-                updateHiLowSequence(metric, almanac[ALL].Year[key], type);
+                updateHiLowSequence(metric, yearData.Year[key], type);
+                updateHiLowSequence(metric, allData.Year[key], type);
                 // Season
-                updateHiLowSequence(metric, almanac[year][season][key], type);
-                updateHiLowSequence(metric, almanac[ALL][season][key], type);
+                updateHiLowSequence(metric, yearData[season][key], type);
+                updateHiLowSequence(metric, allData[season][key], type);
             }
         } else if (type === 'avg') {
             const key = k as keyof AlmanacAverages;
             const metric = dailyMetrics.averages[key];
             if (metric) {
                 // Year
-                almanac[year].Year[key] = combineMovingAverages(almanac[year].Year[key], metric);
-                almanac[ALL].Year[key] = combineMovingAverages(almanac[ALL].Year[key], metric);
+                yearData.Year[key] = combineMovingAverages(yearData.Year[key], metric);
+                allData.Year[key] = combineMovingAverages(allData.Year[key], metric);
                 // Season
-                almanac[year][season][key] = combineMovingAverages(almanac[year][season][key], metric);
-                almanac[ALL][season][key] = combineMovingAverages(almanac[ALL][season][key], metric);
+                yearData[season][key] = combineMovingAverages(yearData[season][key], metric);
+                allData[season][key] = combineMovingAverages(allData[season][key], metric);
             }
         }
     }
 
     // Freezes
-    updateFirstFreezeSequence(firstFreeze(afterSummerReadings), almanac[year].FirstFreezesAfterSummer);
-    updateFirstFreezeSequence(firstFreeze(beforeSummerReadings), almanac[year].FirstFreezesBeforeSummer);
+    updateFirstFreezeSequence(firstFreeze(afterSummerReadings), yearData.FirstFreezesAfterSummer);
+    updateFirstFreezeSequence(firstFreeze(beforeSummerReadings), yearData.FirstFreezesBeforeSummer);
 }
 
 function toReading(tr: TemperatureReading): Reading {

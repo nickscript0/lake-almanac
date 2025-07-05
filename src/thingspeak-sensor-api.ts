@@ -82,8 +82,19 @@ export async function fetchLakeDay(day: string): Promise<DayResponse> {
     const end = dateToThingspeakDateString(endDayJs);
     const url = dateRangeToUrl({ start, end }, channelId);
     console.log(`fetch`, url);
+
     const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText} for day ${day}`);
+    }
+
     const json: FieldResponse = (await response.json()) as FieldResponse;
+
+    // Validate that we got meaningful data
+    if (!json.feeds || json.feeds.length === 0) {
+        throw new Error(`No data feeds returned for day ${day}`);
+    }
+
     return { json, day };
 }
 
