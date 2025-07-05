@@ -157,14 +157,14 @@ const AlmanacPropertyDesc: Record<keyof AlmanacSeason, ReadingType> = {
     // LargestVariationDays: 'other',
 };
 
-type Sequence<T> = T[];
+export type Sequence<T> = T[];
 interface MovingAverage {
     average: number;
     // Number of points
     n: number;
 }
 
-type Reading = {
+export type Reading = {
     // Of form '2021-07-02 14:22:55' in Pacific Time
     date: string;
 } & NumericValue;
@@ -198,12 +198,12 @@ export function updateAlmanac(almanac: Almanac, temperatureDay: TemperatureDay) 
 
     // DEBUG LOGGING TO REMOVE
     temperatureDay.readings.sort(ascDateTempReadingSort);
-    console.log(`DEBUG all Readings1`, temperatureDay.readings.map(toReading).slice(0, 40));
-    console.log(`DEBUG all Readings2`, temperatureDay.readings.map(toReading).slice(40, 80));
-    console.log(
-        `DEBUG all Readings2`,
-        temperatureDay.readings.map(toReading).slice(80, temperatureDay.readings.length)
-    );
+    // console.log(`DEBUG all Readings1`, temperatureDay.readings.map(toReading).slice(0, 40));
+    // console.log(`DEBUG all Readings2`, temperatureDay.readings.map(toReading).slice(40, 80));
+    // console.log(
+    //     `DEBUG all Readings2`,
+    //     temperatureDay.readings.map(toReading).slice(80, temperatureDay.readings.length)
+    // );
 
     temperatureDay.readings.sort(ascValueThenDateTempReadingSort);
     const { daytimeReadings, nighttimeReadings, afterSummerReadings, beforeSummerReadings } =
@@ -572,14 +572,14 @@ export function findNearestReadingToTime(
             closest = r;
         }
     }
-    console.log(`findNearestReadingToTime(findDate: ${dayjsToStr(findDate)} ...)`);
-    console.log(
-        `Math.abs(diffMs(curTime=${dayjsToStr(curTime as any)}, desiredTime=${dayjsToStr(
-            desiredTime
-        )})) < Math.abs(diffMs(closestTime=${dayjsToStr(closestTime as any)}, desiredTime))`
-    );
-    console.log(
-        `${Math.abs(diffMs(curTime as any, desiredTime))} < ${Math.abs(diffMs(closestTime as any, desiredTime))}`
-    );
+    // console.log(`findNearestReadingToTime(findDate: ${dayjsToStr(findDate)} ...)`);
+    // console.log(
+    //     `Math.abs(diffMs(curTime=${dayjsToStr(curTime as any)}, desiredTime=${dayjsToStr(
+    //         desiredTime
+    //     )})) < Math.abs(diffMs(closestTime=${dayjsToStr(closestTime as any)}, desiredTime))`
+    // );
+    // console.log(
+    //     `${Math.abs(diffMs(curTime as any, desiredTime))} < ${Math.abs(diffMs(closestTime as any, desiredTime))}`
+    // );
     return closest;
 }
