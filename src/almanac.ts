@@ -5,6 +5,25 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 import { isBefore, isAfter, isSame, diffMs } from './util';
+import {
+    Almanac,
+    AlmanacYear,
+    AlmanacSeason,
+    AlmanacHiLows,
+    AlmanacAverages,
+    TemperatureReading,
+    TemperatureDay,
+    Sequence,
+    Reading,
+    ReadingType,
+    DailyMetrics,
+    MovingAverage,
+    Season,
+    ALL,
+    seasons
+} from './types';
+
+export type { Almanac, TemperatureReading, TemperatureDay, Sequence, Reading } from './types';
 
 /**
  * The fixed timezone to perform date logic with, this makes most sense to be the tz where.
@@ -30,67 +49,6 @@ const OUTDOOR_TEMP_FIELD = 'field2';
  *   e.g. ColdestDays[0] is the coldest day, last(HottestDays) is the hottest
  * - All dates are in sensor time, Pacific Time
  */
-
-// e.g. 2021 or All
-type Year = string;
-const ALL = 'All';
-const seasons = ['Spring', 'Summer', 'Fall', 'Winter'] as const;
-type Season = typeof seasons[number];
-
-export type Almanac = Record<Year, AlmanacYear>;
-
-/**
- * All Hottest/Coldest metrics are sorted by asc temperature
- * FirstFreezes: sorted by asc date
- */
-interface AlmanacYear {
-    // Seasons
-    Year: AlmanacSeason;
-    Spring: AlmanacSeason;
-    Summer: AlmanacSeason;
-    Fall: AlmanacSeason;
-    Winter: AlmanacSeason;
-
-    // Sorted by Date asc
-    FirstFreezesBeforeSummer: Sequence<Reading>;
-    FirstFreezesAfterSummer: Sequence<Reading>;
-
-    // LargestVariationDays: Sequence<Reading>;
-}
-
-interface AlmanacHiLows {
-    HottestDays: Sequence<Reading>;
-    ColdestDays: Sequence<Reading>;
-
-    HottestNightime: Sequence<Reading>;
-    ColdestNighttime: Sequence<Reading>;
-
-    HottestDaytime: Sequence<Reading>;
-    ColdestDaytime: Sequence<Reading>;
-}
-
-interface AlmanacAverages {
-    Average: MovingAverage | undefined;
-    AverageNighttime: MovingAverage | undefined;
-    AverageDaytime: MovingAverage | undefined;
-
-    AverageNoon: MovingAverage | undefined;
-    AverageMidnight: MovingAverage | undefined;
-}
-
-type AlmanacSeason = AlmanacHiLows & AlmanacAverages;
-
-export type TemperatureReading = {
-    date: Dayjs;
-} & NumericValue;
-
-export interface TemperatureDay {
-    readings: TemperatureReading[];
-    /**
-     * Date only string e.g. '2021-07-02'
-     */
-    day: string;
-}
 
 export function frToOutdoorReadingDay(fr: FieldResponse): TemperatureReading[] {
     return fr.feeds.map((f) => {
@@ -137,7 +95,7 @@ function EmptyAlmanacSeason(): AlmanacSeason {
     };
 }
 
-type ReadingType = 'high' | 'low' | 'avg';
+
 
 const AlmanacPropertyDesc: Record<keyof AlmanacSeason, ReadingType> = {
     HottestDays: 'high',
@@ -157,17 +115,7 @@ const AlmanacPropertyDesc: Record<keyof AlmanacSeason, ReadingType> = {
     // LargestVariationDays: 'other',
 };
 
-export type Sequence<T> = T[];
-interface MovingAverage {
-    average: number;
-    // Number of points
-    n: number;
-}
 
-export type Reading = {
-    // Of form '2021-07-02 14:22:55' in Pacific Time
-    date: string;
-} & NumericValue;
 
 const last = <T>(arr: T[]) => arr[arr.length - 1];
 const first = <T>(arr: T[]) => arr[0];
@@ -314,10 +262,7 @@ function updateFirstFreezeSequence(tempReading: TemperatureReading | undefined, 
     return seq;
 }
 
-interface DailyMetrics {
-    hiLows: Record<keyof AlmanacHiLows, TemperatureReading | undefined>;
-    averages: Record<keyof AlmanacAverages, MovingAverage | undefined>;
-}
+
 
 // Assumes ascValueSorted readings
 function getDailyMetrics(

@@ -6,7 +6,8 @@ import { readFile } from 'fs/promises';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-import { Almanac, frToOutdoorReadingDay, updateAlmanac, findNearestReadingToTime, Sequence, Reading } from '../almanac';
+import { frToOutdoorReadingDay, updateAlmanac, findNearestReadingToTime } from '../almanac';
+import { Almanac, Sequence, Reading } from '../types';
 import { DayResponse, FieldResponse } from '../thingspeak-sensor-api';
 
 /**
