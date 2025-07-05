@@ -126,8 +126,15 @@ const AlmanacPropertyDesc: Record<keyof AlmanacSeason, ReadingType> = {
 const last = <T>(arr: T[]) => arr[arr.length - 1];
 const first = <T>(arr: T[]) => arr[0];
 
-export async function processDay(response: DayResponse) {
+export async function processDay(response: DayResponse, force: boolean = false) {
     const alm = await getAlmanac();
+
+    // Check if day is already processed (unless force flag is set)
+    if (!force && isDayAlreadyProcessed(response.day, alm._metadata)) {
+        console.log(`Day ${response.day} already processed, skipping. Use --force to reprocess.`);
+        return;
+    }
+
     const temperatureDay = { readings: frToOutdoorReadingDay(response.json), day: response.day };
     // await Deno.writeTextFile('src/test/res/response-2021-01-02.json', JSON.stringify(response, null, 2));
     // console.log(`Wrote src/test/res/response-2021-01-02.json`)
@@ -159,6 +166,13 @@ function initializeMetadata(almanac: AlmanacWithMetadata): void {
             missedDays: [],
         };
     }
+}
+
+function isDayAlreadyProcessed(day: string, metadata: AlmanacMetadata | undefined): boolean {
+    if (!metadata || !metadata.startDate || !metadata.endDate) {
+        return false;
+    }
+    return day >= metadata.startDate && day <= metadata.endDate && !metadata.missedDays.includes(day);
 }
 
 function updateMetadataForSuccessfulDay(almanac: AlmanacWithMetadata, day: string): void {

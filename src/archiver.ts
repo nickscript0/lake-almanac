@@ -39,7 +39,7 @@ async function main() {
                     );
                 }
             }
-            await processDay(response);
+            await processDay(response, range.force);
         } catch (error) {
             const err = error instanceof Error ? error : new Error(String(error));
             console.error(`Failed to process day ${dayString}:`, err.message);
@@ -48,18 +48,19 @@ async function main() {
     }
 }
 
-function parseArgs(): { start: Dayjs; end: Dayjs; saveResponses: boolean; useLocalArchive: boolean } {
+function parseArgs(): { start: Dayjs; end: Dayjs; saveResponses: boolean; useLocalArchive: boolean; force: boolean } {
     function exitWithUsage(errMessage: string) {
         console.log(
             `Error: ${errMessage}.
 Usage:
- 1. archiver.ts [--${SAVE_RESPONSES_FLAG}] <start-date> <end-date>
- 2. archiver.ts --${USE_LOCAL_ARCHIVE_FLAG} <start-date> <end-date>
- 3. archiver.ts (For github-actions, run with no arguments, or 1 argument it will ignore, 
+ 1. archiver.ts [--${SAVE_RESPONSES_FLAG}] [--${FORCE_FLAG}] <start-date> <end-date>
+ 2. archiver.ts --${USE_LOCAL_ARCHIVE_FLAG} [--${FORCE_FLAG}] <start-date> <end-date>
+ 3. archiver.ts [--${FORCE_FLAG}] (For github-actions, run with no arguments, or 1 argument it will ignore, 
     to only process yesterday and with --${SAVE_RESPONSES_FLAG} enabled)
 Examples:
  archiver.ts ${EARLIEST_RECORD} 2020-09-01
  archiver.ts --${USE_LOCAL_ARCHIVE_FLAG} 2020-01-01 2020-01-31
+ archiver.ts --${FORCE_FLAG} 2025-01-01 2025-01-02
  archiver.ts
 `
         );
@@ -67,12 +68,14 @@ Examples:
     }
     const SAVE_RESPONSES_FLAG = 'save-responses';
     const USE_LOCAL_ARCHIVE_FLAG = 'use-local-archive';
+    const FORCE_FLAG = 'force';
     const program = new Command();
     program
         .argument('[start-date]', 'Start date (YYYY-MM-DD)')
         .argument('[end-date]', 'End date (YYYY-MM-DD)')
         .option(`--${SAVE_RESPONSES_FLAG}`, 'Save API responses to archive')
         .option(`--${USE_LOCAL_ARCHIVE_FLAG}`, 'Use local archive instead of fetching from API')
+        .option(`--${FORCE_FLAG}`, 'Force reprocessing of already processed days')
         .option('-h, --help', 'Show help')
         .parse();
 
@@ -85,7 +88,7 @@ Examples:
         // Treat yesterday as 2 days ago to eliminate any issues with running this when UTC is past midnight
         const end = dayjs(now.subtract(1, 'day').format('YYYY-MM-DD'));
         const start = dayjs(now.subtract(2, 'day').format('YYYY-MM-DD'));
-        return { start, end, saveResponses: true, useLocalArchive: false };
+        return { start, end, saveResponses: true, useLocalArchive: false, force: !!options.force };
     } else if (args.length !== 2) {
         exitWithUsage(`Invalid number of args ${args.length}`);
     }
@@ -105,6 +108,7 @@ Examples:
         end,
         saveResponses: !!options.saveResponses,
         useLocalArchive: !!options.useLocalArchive,
+        force: !!options.force,
     };
 }
 
