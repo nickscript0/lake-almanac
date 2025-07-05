@@ -5,9 +5,32 @@
 # With date range and response saving
 npm run archiver -- --save-responses 2018-10-06 2021-07-31 2>&1 | tee output.log
 
+# Process from local archive (rebuild almanac from stored responses)
+npm run archiver -- --use-local-archive 2020-01-01 2020-01-31
+
 # Process yesterday only (this is what the daily Github Action runs)
 npm run archiver
 ```
+
+### Archiver Modes
+
+1. **API Mode (default)**: Fetches data from ThingSpeak API and optionally saves responses
+   ```bash
+   npm run archiver -- [--save-responses] <start-date> <end-date>
+   ```
+
+2. **Local Archive Mode**: Uses locally stored response files instead of fetching from API
+   ```bash
+   npm run archiver -- --use-local-archive <start-date> <end-date>
+   ```
+   - Reads from `output/responses-archive/YYYY/YYYY-MM-DD.zip` files
+   - Useful for rebuilding almanac data from historical responses
+   - Requires archive files to exist for the specified date range
+
+3. **Daily Mode**: Processes yesterday's data (used by GitHub Actions)
+   ```bash
+   npm run archiver
+   ```
 
 ## Run Tests
 ```bash
