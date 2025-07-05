@@ -10,7 +10,9 @@
     "test:single": "jest --testNamePattern",
     "dev": "nodemon --exec ts-node src/archiver.ts",
     "archiver": "ts-node src/archiver.ts",
-    "migrate-archive": "ts-node scripts/migrate-archive-structure.ts"
+    "migrate-archive": "ts-node scripts/migrate-archive-structure.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "repository": {
     "type": "git",
