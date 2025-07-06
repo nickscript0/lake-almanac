@@ -37,6 +37,7 @@ async function main() {
     let processedDays = 0;
     let totalRows = 0;
     let skippedDays = 0;
+    const allTimestamps: Array<{ timestamp: string; dayFile: string }> = [];
 
     for (let i = 0; i < numDays; i++) {
         const curDay = config.start.add(i, 'day');
@@ -48,6 +49,7 @@ async function main() {
                 const rows = convertToCSVRows(response, dayString);
                 for (const row of rows) {
                     writeStream.write(formatCSVRow(row) + '\n');
+                    allTimestamps.push({ timestamp: row.date_recorded, dayFile: dayString });
                     totalRows++;
                 }
                 processedDays++;
@@ -69,11 +71,34 @@ async function main() {
 
     writeStream.end();
 
+    // Calculate timestamp gap statistics
+    const gapStats = calculateTimestampGaps(allTimestamps);
+
     console.log(`\nExport completed:`);
     console.log(`- Days processed: ${processedDays}`);
     console.log(`- Days skipped: ${skippedDays}`);
     console.log(`- Total rows: ${totalRows}`);
     console.log(`- Output file: ${config.outputFile}`);
+
+    if (gapStats) {
+        console.log(`\nTimestamp Gap Statistics (between files only):`);
+        console.log(`- Total gaps analyzed: ${gapStats.totalGaps}`);
+        console.log(`- Average gap (≤ 10 min only): ${gapStats.avgGapMinutes.toFixed(1)} minutes`);
+        console.log(`- Minimum gap: ${gapStats.minGapMinutes.toFixed(1)} minutes`);
+        console.log(`- Maximum gap: ${gapStats.maxGapMinutes.toFixed(1)} minutes`);
+        console.log(`- Files with gaps > 10 minutes: ${gapStats.largeGaps.length}`);
+        console.log(`- Files with gaps ≤ 10 minutes: ${gapStats.totalGaps - gapStats.largeGaps.length}`);
+
+        if (gapStats.largeGaps.length > 0) {
+            console.log(`\nFiles with gaps > 10 minutes:`);
+            for (const gap of gapStats.largeGaps) {
+                console.log(`- ${gap.fromFile} to ${gap.toFile}: ${gap.gapMinutes.toFixed(1)} minutes`);
+            }
+        }
+    } else {
+        console.log(`\nNo inter-file gaps found (only one file or no valid timestamps)`);
+    }
+
     console.log(`\nPostgreSQL COPY command:`);
     console.log(`COPY temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, channel_id, day_date)`);
     console.log(`FROM '${config.outputFile}' WITH (FORMAT CSV, HEADER);`);
@@ -202,6 +227,70 @@ function escapeCSVField(value: string): string {
         return '"' + value.replace(/"/g, '""') + '"';
     }
     return value;
+}
+
+function calculateTimestampGaps(timestampData: Array<{ timestamp: string; dayFile: string }>): {
+    totalGaps: number;
+    avgGapMinutes: number;
+    minGapMinutes: number;
+    maxGapMinutes: number;
+    largeGaps: Array<{ fromFile: string; toFile: string; gapMinutes: number }>;
+} | null {
+    if (timestampData.length < 2) {
+        return null;
+    }
+
+    // Sort timestamps chronologically
+    const sortedData = timestampData
+        .map((item) => ({ ...item, dayjsTimestamp: dayjs(item.timestamp) }))
+        .filter((item) => item.dayjsTimestamp.isValid())
+        .sort((a, b) => a.dayjsTimestamp.valueOf() - b.dayjsTimestamp.valueOf());
+
+    if (sortedData.length < 2) {
+        return null;
+    }
+
+    // Calculate gaps in minutes - only between different files
+    const gaps: number[] = [];
+    const smallGaps: number[] = [];
+    const largeGaps: Array<{ fromFile: string; toFile: string; gapMinutes: number }> = [];
+
+    for (let i = 1; i < sortedData.length; i++) {
+        // Only count gaps between different files
+        if (sortedData[i].dayFile !== sortedData[i - 1].dayFile) {
+            const gapMinutes = sortedData[i].dayjsTimestamp.diff(sortedData[i - 1].dayjsTimestamp, 'minute', true);
+            gaps.push(gapMinutes);
+
+            // Track gaps larger than 10 minutes
+            if (gapMinutes > 10) {
+                largeGaps.push({
+                    fromFile: sortedData[i - 1].dayFile,
+                    toFile: sortedData[i].dayFile,
+                    gapMinutes,
+                });
+            } else {
+                smallGaps.push(gapMinutes);
+            }
+        }
+    }
+
+    if (gaps.length === 0) {
+        return null;
+    }
+
+    const totalGaps = gaps.length;
+    // Calculate average only for gaps <= 10 minutes
+    const avgGapMinutes = smallGaps.length > 0 ? smallGaps.reduce((sum, gap) => sum + gap, 0) / smallGaps.length : 0;
+    const minGapMinutes = Math.min(...gaps);
+    const maxGapMinutes = Math.max(...gaps);
+
+    return {
+        totalGaps,
+        avgGapMinutes,
+        minGapMinutes,
+        maxGapMinutes,
+        largeGaps,
+    };
 }
 
 main().catch((error) => {
