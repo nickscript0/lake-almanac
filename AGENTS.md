@@ -7,6 +7,13 @@
 - **Build**: `npm run build`
 - **Development**: `npm run dev`
 
+## Data Export Commands
+
+- **CSV Export**: `npm run csv-export <start-date> <end-date> [output-file]`
+    - Exports archived temperature data to CSV for PostgreSQL import
+    - Example: `npm run csv-export 2020-01-01 2020-12-31 lake-data-2020.csv`
+    - Generates PostgreSQL COPY command for easy database import
+
 ## Code Style Guidelines
 
 ### Runtime & Imports

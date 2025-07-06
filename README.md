@@ -63,6 +63,35 @@ The retry utility will:
 - Remove successfully retrieved days from the missed days list
 - Optionally save API responses to the archive for future local processing
 
+## Export Data to CSV
+
+Export archived temperature data to CSV format for PostgreSQL database import:
+
+```bash
+# Export data for a specific date range
+npm run csv-export 2020-01-01 2020-12-31
+
+# Export with custom output filename
+npm run csv-export 2018-10-06 2025-01-01 full-dataset.csv
+
+# Export recent data
+npm run csv-export 2024-01-01 2024-12-31 lake-data-2024.csv
+```
+
+The CSV export utility will:
+
+- Read archived data from `output/responses-archive/YYYY/YYYY-MM-DD.zip` files
+- Generate a CSV file with columns: `date_recorded`, `entry_id`, `indoor_temp`, `outdoor_temp`, `channel_id`, `day_date`
+- Provide a PostgreSQL COPY command for easy database import
+- Handle missing days gracefully and show progress for large date ranges
+
+**PostgreSQL Import Example:**
+
+```sql
+COPY temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, channel_id, day_date)
+FROM '/path/to/lake-data-export.csv' WITH (FORMAT CSV, HEADER);
+```
+
 ## Run Tests
 
 ```bash

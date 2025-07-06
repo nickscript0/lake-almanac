@@ -11,6 +11,7 @@
     "dev": "nodemon --exec ts-node src/archiver.ts",
     "archiver": "ts-node src/archiver.ts",
     "retry-missed-days": "ts-node src/retry-missed-days.ts",
+    "csv-export": "ts-node scripts/csv-exporter.ts",
     "migrate-archive": "ts-node scripts/migrate-archive-structure.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
