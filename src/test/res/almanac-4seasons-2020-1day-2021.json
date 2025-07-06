@@ -289,7 +289,8 @@
       "ColdestDaytime": []
     },
     "FirstFreezesAfterSummer": [],
-    "FirstFreezesBeforeSummer": []
+    "FirstFreezesBeforeSummer": [],
+    "LastFreezesBeforeSummer": []
   },
   "2021": {
     "Year": {
@@ -433,7 +434,8 @@
       }
     },
     "FirstFreezesAfterSummer": [],
-    "FirstFreezesBeforeSummer": []
+    "FirstFreezesBeforeSummer": [],
+    "LastFreezesBeforeSummer": []
   },
   "All": {
     "Year": {
@@ -799,6 +801,7 @@
       }
     },
     "FirstFreezesAfterSummer": [],
-    "FirstFreezesBeforeSummer": []
+    "FirstFreezesBeforeSummer": [],
+    "LastFreezesBeforeSummer": []
   }
 }

@@ -141,7 +141,8 @@
       }
     },
     "FirstFreezesAfterSummer": [],
-    "FirstFreezesBeforeSummer": []
+    "FirstFreezesBeforeSummer": [],
+    "LastFreezesBeforeSummer": []
   },
   "All": {
     "Year": {
@@ -285,6 +286,7 @@
       }
     },
     "FirstFreezesAfterSummer": [],
-    "FirstFreezesBeforeSummer": []
+    "FirstFreezesBeforeSummer": [],
+    "LastFreezesBeforeSummer": []
   }
 }

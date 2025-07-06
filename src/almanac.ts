@@ -82,6 +82,7 @@ const EmptyAlmanacYear: AlmanacYear = {
 
     FirstFreezesAfterSummer: [],
     FirstFreezesBeforeSummer: [],
+    LastFreezesBeforeSummer: [],
 
     // LargestVariationDays: [],
 };
@@ -274,6 +275,7 @@ export function updateAlmanac(almanac: AlmanacWithMetadata, temperatureDay: Temp
     // Freezes
     updateFirstFreezeSequence(firstFreeze(afterSummerReadings), yearData.FirstFreezesAfterSummer);
     updateFirstFreezeSequence(firstFreeze(beforeSummerReadings), yearData.FirstFreezesBeforeSummer);
+    updateLastFreezeSequence(lastFreeze(beforeSummerReadings), yearData.LastFreezesBeforeSummer);
 }
 
 function toReading(tr: TemperatureReading): Reading {
@@ -329,6 +331,25 @@ function updateFirstFreezeSequence(tempReading: TemperatureReading | undefined, 
         } else if (isBefore(tempReading.date, dayjs(last(seq).date))) {
             seq[seq.length - 1] = reading;
             seq.sort(ascDateSort);
+        }
+    }
+    return seq;
+}
+
+function updateLastFreezeSequence(tempReading: TemperatureReading | undefined, seq: Sequence<Reading>) {
+    if (tempReading) {
+        const reading = toReading(tempReading);
+        // Skip if already exists
+        if (seq.some((e) => e.date === reading.date && e.value === reading.value)) {
+            return seq;
+        }
+
+        if (seq.length < SEQUENCE_SIZE) {
+            seq.push(reading);
+            seq.sort(descDateSort);
+        } else if (isAfter(tempReading.date, dayjs(last(seq).date))) {
+            seq[seq.length - 1] = reading;
+            seq.sort(descDateSort);
         }
     }
     return seq;
@@ -397,12 +418,26 @@ function ascDateSort(a: Reading, b: Reading) {
     return new Date(a.date).getTime() - new Date(b.date).getTime();
 }
 
+function descDateSort(a: Reading, b: Reading) {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+}
+
 function ascDateTempReadingSort(a: TemperatureReading, b: TemperatureReading) {
     return a.date.toDate().getTime() - b.date.toDate().getTime();
 }
 
 function firstFreeze(ascReadings: TemperatureReading[]) {
     for (const r of ascReadings) {
+        if (r.value <= 0) {
+            return r;
+        }
+    }
+    return undefined;
+}
+
+function lastFreeze(ascReadings: TemperatureReading[]) {
+    for (let i = ascReadings.length - 1; i >= 0; i--) {
+        const r = ascReadings[i];
         if (r.value <= 0) {
             return r;
         }

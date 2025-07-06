@@ -11,6 +11,10 @@ npm run archiver -- --use-local-archive 2020-01-01 2020-01-31
 
 # Process yesterday only (this is what the daily Github Action runs)
 npm run archiver
+
+# How to re-generate lake-almanac.json if say we added new stats / fields
+rm output/lake-almanac.json
+npm run archiver -- --use-local-archive 2018-10-06 <today's date>
 ```
 
 ### Archiver Modes

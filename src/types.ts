@@ -28,6 +28,7 @@ export interface AlmanacYear {
 
     FirstFreezesBeforeSummer: Sequence<Reading>;
     FirstFreezesAfterSummer: Sequence<Reading>;
+    LastFreezesBeforeSummer: Sequence<Reading>;
 }
 
 export interface AlmanacHiLows {
