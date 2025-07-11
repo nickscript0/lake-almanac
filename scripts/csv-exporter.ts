@@ -18,7 +18,6 @@ interface CsvRow {
     indoor_temp: string | null;
     outdoor_temp: string | null;
     channel_id: number;
-    day_date: string;
 }
 
 async function main() {
@@ -30,7 +29,7 @@ async function main() {
     const writeStream = createWriteStream(config.outputFile);
 
     // Write CSV header
-    const header = 'date_recorded,entry_id,indoor_temp,outdoor_temp,channel_id,day_date\n';
+    const header = 'date_recorded,entry_id,indoor_temp,outdoor_temp,channel_id\n';
     writeStream.write(header);
 
     const numDays = config.end.diff(config.start, 'day');
@@ -46,7 +45,7 @@ async function main() {
         try {
             const response = await loadArchivedDay(dayString);
             if (response) {
-                const rows = convertToCSVRows(response, dayString);
+                const rows = convertToCSVRows(response);
                 for (const row of rows) {
                     writeStream.write(formatCSVRow(row) + '\n');
                     allTimestamps.push({ timestamp: row.date_recorded, dayFile: dayString });
@@ -100,7 +99,7 @@ async function main() {
     }
 
     console.log(`\nPostgreSQL COPY command:`);
-    console.log(`COPY temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, channel_id, day_date)`);
+    console.log(`COPY temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, channel_id)`);
     console.log(`FROM '${config.outputFile}' WITH (FORMAT CSV, HEADER);`);
 }
 
@@ -185,7 +184,7 @@ async function loadArchivedDay(day: string): Promise<FieldResponse | null> {
     }
 }
 
-function convertToCSVRows(response: FieldResponse, dayDate: string): CsvRow[] {
+function convertToCSVRows(response: FieldResponse): CsvRow[] {
     const rows: CsvRow[] = [];
 
     for (const feed of response.feeds) {
@@ -200,7 +199,6 @@ function convertToCSVRows(response: FieldResponse, dayDate: string): CsvRow[] {
             indoor_temp: feed.field1 || null,
             outdoor_temp: feed.field2 || null,
             channel_id: response.channel.id,
-            day_date: dayDate,
         });
     }
 
@@ -215,7 +213,6 @@ function formatCSVRow(row: CsvRow): string {
         row.indoor_temp || '',
         row.outdoor_temp || '',
         row.channel_id.toString(),
-        escapeCSVField(row.day_date),
     ];
 
     return fields.join(',');

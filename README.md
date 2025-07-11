@@ -102,6 +102,15 @@ scripts/test
 - https://vercel.com/ns0s-projects/~/stores/integration/neon/store_xu5iln4FGQCUuKPA/guides
 - https://console.neon.tech/app/org-still-band-62770543/projects -- Login is same as vercel github auth
 
+### SQL Manual loads
+Using the conn string from https://console.neon.tech/app/projects/dry-thunder-38275234/branches/br-nameless-morning-adsy4myo?branchId=br-nameless-morning-adsy4myo&database=neondb
+
+```shell
+npm run csv-export 2018-10-06 2025-07-10 export-to-2025-07-09.csv
+
+psql 'postgresql://neondb_owner:readacted@ep-polished-bird-ad1ybvh5-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require' -c "\COPY lake_temperature_readings FROM export-to-2025-07-09.csv CSV HEADER"
+```
+
 
 ## Latest Status - Jul 3, 2025
 
