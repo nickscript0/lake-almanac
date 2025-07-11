@@ -98,6 +98,11 @@ FROM '/path/to/lake-data-export.csv' WITH (FORMAT CSV, HEADER);
 scripts/test
 ```
 
+## Neon Database (start integrating Jul 11, 2025)
+- https://vercel.com/ns0s-projects/~/stores/integration/neon/store_xu5iln4FGQCUuKPA/guides
+- https://console.neon.tech/app/org-still-band-62770543/projects -- Login is same as vercel github auth
+
+
 ## Latest Status - Jul 3, 2025
 
 scripts/test results in 1 failing test:
