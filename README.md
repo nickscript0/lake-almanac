@@ -114,35 +114,9 @@ psql 'postgresql://neondb_owner:readacted@ep-polished-bird-ad1ybvh5-pooler.c-2.u
 
 ## Latest Status - Jul 3, 2025
 
-scripts/test results in 1 failing test:
+I migrated to nodejs, some of those dayjs tests still fail, they are currently commented out with xtest. 
 
-```shell
- ERRORS
-
-Github Issue: tz func with valueOf bug => ./src/test/dayjs-test.ts:35:6
-error: AssertionError: Values are not equal:
-
-
-    [Diff] Actual / Expected
-
-
--   2021-10-31T12:19:36.303Z
-+   2021-10-31T13:19:36.303Z
-
-
-  throw new AssertionError(message);
-        ^
-    at assertEquals (https://deno.land/std@0.102.0/testing/asserts.ts:259:9)
-    at file:///home/parallels/projects/lake-almanac/src/test/dayjs-test.ts:60:5
-
- FAILURES
-
-Github Issue: tz func with valueOf bug => ./src/test/dayjs-test.ts:35:6
-
-FAILED | 11 passed | 1 failed (306ms)
-
-error: Test failed
-```
+Future project migrate to luxon as I need in weather-list app as it is modern and maintained and should resolve all the tz bugs issues.
 
 ## Latest Status - Sept 24, 2023
 
