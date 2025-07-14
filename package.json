@@ -13,6 +13,7 @@
     "retry-missed-days": "ts-node src/retry-missed-days.ts",
     "csv-export": "ts-node scripts/csv-exporter.ts",
     "migrate-archive": "ts-node scripts/migrate-archive-structure.ts",
+    "compare-formats": "npx tsx scripts/compare-almanac-formats.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

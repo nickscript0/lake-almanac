@@ -14,6 +14,14 @@
     - Example: `npm run csv-export 2020-01-01 2020-12-31 lake-data-2020.csv`
     - Generates PostgreSQL COPY command for easy database import
 
+## Format Validation Commands
+
+- **Compare Almanac Formats**: `npm run compare-formats`
+    - Compares old almanac format (main branch) with new format (migrate-to-nodejs branch)
+    - Validates data integrity during format migration
+    - Reports format differences and new features
+    - Fetches data directly from GitHub branches for comparison
+
 ## Code Style Guidelines
 
 ### Runtime & Imports
