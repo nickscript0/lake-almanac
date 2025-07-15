@@ -83,8 +83,8 @@ async function fetchAlmanacData(url: string): Promise<any> {
 }
 
 function compareReadings(oldReadings: Reading[], newReadings: Reading[], fieldName: string, year: string): boolean {
-    const normalizedOld = normalizeReadings(oldReadings);
-    const normalizedNew = normalizeReadings(newReadings);
+    const normalizedOld = normalizeReadings(oldReadings).sort((a, b) => a.date.localeCompare(b.date));
+    const normalizedNew = normalizeReadings(newReadings).sort((a, b) => a.date.localeCompare(b.date));
 
     if (normalizedOld.length !== normalizedNew.length) {
         console.log(
