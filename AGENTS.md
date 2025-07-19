@@ -14,6 +14,15 @@
     - Example: `npm run csv-export 2020-01-01 2020-12-31 lake-data-2020.csv`
     - Generates PostgreSQL COPY command for easy database import
 
+## Database Integration
+
+- **PostgreSQL Database**: The archiver automatically saves temperature readings to PostgreSQL
+    - Requires `DATABASE_URL` environment variable with connection string
+    - Uses table schema defined in `schema/temperature_readings.sql`
+    - Inserts data after successful almanac processing
+    - Includes upsert logic to handle duplicate entries
+    - Database failures are logged as warnings but don't stop archival process
+
 ## Format Validation Commands
 
 - **Compare Almanac Formats**: `npm run compare-formats`

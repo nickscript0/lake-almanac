@@ -47,6 +47,7 @@ import { access } from 'fs/promises';
 import { readFile, writeFile } from 'fs/promises';
 
 import { NumericValue, FieldResponse, DayResponse } from './thingspeak-sensor-api';
+import { saveDayToDatabase } from './database';
 
 const ALMANAC_PATH = 'output/lake-almanac.json';
 // The size of metric sequences to store e.g., top N coldest days
@@ -143,6 +144,14 @@ export async function processDay(response: DayResponse, force: boolean = false) 
     updateMetadataForSuccessfulDay(alm, response.day);
     await writeFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2), 'utf8');
     console.log(`Wrote`, ALMANAC_PATH, `for date`, temperatureDay.day);
+
+    // Save to database
+    try {
+        await saveDayToDatabase(response.json);
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.warn(`Warning: Failed to save day ${response.day} to database: ${errorMessage}`);
+    }
 }
 
 export async function processDayFailure(day: string, error: Error) {

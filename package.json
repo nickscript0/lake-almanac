@@ -41,11 +41,13 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@types/pg": "^8.15.4",
     "commander": "^14.0.0",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "dayjs": "^1.11.13",
     "jszip": "^3.10.1",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "pg": "^8.16.3"
   }
 }
