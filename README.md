@@ -170,9 +170,10 @@ scripts/test
 Using the conn string from https://console.neon.tech/app/projects/dry-thunder-38275234/branches/br-nameless-morning-adsy4myo?branchId=br-nameless-morning-adsy4myo&database=neondb
 
 ```shell
-npm run csv-export 2018-10-06 2025-07-10 export-to-2025-07-09.csv
+npm run csv-export 2018-10-06 2025-07-20 export-to-2025-07-19.csv
 
-psql 'postgresql://neondb_owner:readacted@ep-polished-bird-ad1ybvh5-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require' -c "\COPY lake_temperature_readings FROM export-to-2025-07-09.csv CSV HEADER"
+psql 'postgresql://neondb_owner:redacted@ep-polished-bird-ad1ybvh5-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require' -c "\COPY lake_temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, channel_id)
+FROM 'export-to-2025-07-19.csv' WITH (FORMAT CSV, HEADER);"
 ```
 
 ## Latest Status - Jul 3, 2025
