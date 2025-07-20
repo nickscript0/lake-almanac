@@ -92,6 +92,35 @@ COPY temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, c
 FROM '/path/to/lake-data-export.csv' WITH (FORMAT CSV, HEADER);
 ```
 
+## Check Database Gaps
+
+Check for missing dates in the PostgreSQL database temperature readings:
+
+```bash
+# Check all gaps from project start to yesterday
+npx ts-node scripts/check-database-gaps.ts
+
+# Check last 30 days for gaps
+npx ts-node scripts/check-database-gaps.ts --recent 30
+
+# Check specific date range
+npx ts-node scripts/check-database-gaps.ts -s 2024-01-01 -e 2024-12-31
+
+# List all missing dates (not just summary)
+npx ts-node scripts/check-database-gaps.ts --list-missing
+
+# Show help for all options
+npx ts-node scripts/check-database-gaps.ts --help
+```
+
+The gap checker will:
+
+- Identify missing dates in the database temperature readings table
+- Show the latest date with data in the database
+- Provide suggestions for backfilling missing data using existing tools
+- Support checking recent periods or specific date ranges
+- Require `DATABASE_URL` environment variable to be set
+
 ## Run Tests
 
 ```bash
@@ -99,10 +128,12 @@ scripts/test
 ```
 
 ## Neon Database (start integrating Jul 11, 2025)
+
 - https://vercel.com/ns0s-projects/~/stores/integration/neon/store_xu5iln4FGQCUuKPA/guides
 - https://console.neon.tech/app/org-still-band-62770543/projects -- Login is same as vercel github auth
 
 ### SQL Manual loads
+
 Using the conn string from https://console.neon.tech/app/projects/dry-thunder-38275234/branches/br-nameless-morning-adsy4myo?branchId=br-nameless-morning-adsy4myo&database=neondb
 
 ```shell
@@ -111,10 +142,9 @@ npm run csv-export 2018-10-06 2025-07-10 export-to-2025-07-09.csv
 psql 'postgresql://neondb_owner:readacted@ep-polished-bird-ad1ybvh5-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require' -c "\COPY lake_temperature_readings FROM export-to-2025-07-09.csv CSV HEADER"
 ```
 
-
 ## Latest Status - Jul 3, 2025
 
-I migrated to nodejs, some of those dayjs tests still fail, they are currently commented out with xtest. 
+I migrated to nodejs, some of those dayjs tests still fail, they are currently commented out with xtest.
 
 Future project migrate to luxon as I need in weather-list app as it is modern and maintained and should resolve all the tz bugs issues.
 

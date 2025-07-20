@@ -11,6 +11,7 @@
     "dev": "nodemon --exec ts-node src/archiver.ts",
     "archiver": "ts-node src/archiver.ts",
     "retry-missed-days": "ts-node src/retry-missed-days.ts",
+    "check-db-gaps": "ts-node scripts/check-database-gaps.ts",
     "csv-export": "ts-node scripts/csv-exporter.ts",
     "migrate-archive": "ts-node scripts/migrate-archive-structure.ts",
     "compare-formats": "npx tsx scripts/compare-almanac-formats.ts",
@@ -46,6 +47,7 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "dayjs": "^1.11.13",
+    "dotenv": "^17.2.0",
     "jszip": "^3.10.1",
     "node-fetch": "^3.3.2",
     "pg": "^8.16.3"
