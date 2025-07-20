@@ -57,7 +57,7 @@ function buildMultiRowInsertQuery(batchSize: number): string {
         INSERT INTO lake_temperature_readings 
         (date_recorded, entry_id, indoor_temp, outdoor_temp, channel_id)
         VALUES ${valuesClauses.join(', ')}
-        ON CONFLICT (entry_id, channel_id) DO UPDATE SET
+        ON CONFLICT (entry_id, date_recorded) DO UPDATE SET
             date_recorded = EXCLUDED.date_recorded,
             indoor_temp = EXCLUDED.indoor_temp,
             outdoor_temp = EXCLUDED.outdoor_temp

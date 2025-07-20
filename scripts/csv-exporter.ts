@@ -99,7 +99,7 @@ async function main() {
     }
 
     console.log(`\nPostgreSQL COPY command:`);
-    console.log(`COPY temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, channel_id)`);
+    console.log(`COPY lake_temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, channel_id)`);
     console.log(`FROM '${config.outputFile}' WITH (FORMAT CSV, HEADER);`);
 }
 
