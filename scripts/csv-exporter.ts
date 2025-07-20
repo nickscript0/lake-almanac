@@ -26,18 +26,15 @@ async function main() {
     console.log(`Exporting data from ${config.start.format('YYYY-MM-DD')} to ${config.end.format('YYYY-MM-DD')}`);
     console.log(`Output file: ${config.outputFile}`);
 
-    const writeStream = createWriteStream(config.outputFile);
-
-    // Write CSV header
-    const header = 'date_recorded,entry_id,indoor_temp,outdoor_temp,channel_id\n';
-    writeStream.write(header);
-
     const numDays = config.end.diff(config.start, 'day');
     let processedDays = 0;
-    let totalRows = 0;
+    let totalRowsBeforeDedup = 0;
     let skippedDays = 0;
     const allTimestamps: Array<{ timestamp: string; dayFile: string }> = [];
+    const allRows: CsvRow[] = [];
+    const seenKeys = new Set<string>();
 
+    // Collect all rows first
     for (let i = 0; i < numDays; i++) {
         const curDay = config.start.add(i, 'day');
         const dayString = curDay.format('YYYY-MM-DD');
@@ -47,9 +44,15 @@ async function main() {
             if (response) {
                 const rows = convertToCSVRows(response);
                 for (const row of rows) {
-                    writeStream.write(formatCSVRow(row) + '\n');
                     allTimestamps.push({ timestamp: row.date_recorded, dayFile: dayString });
-                    totalRows++;
+                    totalRowsBeforeDedup++;
+
+                    // Create composite key for duplicate detection (entry_id + date_recorded)
+                    const key = `${row.entry_id}|${row.date_recorded}`;
+                    if (!seenKeys.has(key)) {
+                        seenKeys.add(key);
+                        allRows.push(row);
+                    }
                 }
                 processedDays++;
             } else {
@@ -64,19 +67,31 @@ async function main() {
 
         // Progress update every 30 days
         if ((i + 1) % 30 === 0 || i === numDays - 1) {
-            console.log(`Progress: ${i + 1}/${numDays} days processed, ${totalRows} rows exported`);
+            console.log(`Progress: ${i + 1}/${numDays} days processed, ${totalRowsBeforeDedup} rows collected`);
         }
+    }
+
+    // Write deduplicated data to CSV
+    const writeStream = createWriteStream(config.outputFile);
+    const header = 'date_recorded,entry_id,indoor_temp,outdoor_temp,channel_id\n';
+    writeStream.write(header);
+
+    for (const row of allRows) {
+        writeStream.write(formatCSVRow(row) + '\n');
     }
 
     writeStream.end();
 
     // Calculate timestamp gap statistics
     const gapStats = calculateTimestampGaps(allTimestamps);
+    const duplicatesRemoved = totalRowsBeforeDedup - allRows.length;
 
     console.log(`\nExport completed:`);
     console.log(`- Days processed: ${processedDays}`);
     console.log(`- Days skipped: ${skippedDays}`);
-    console.log(`- Total rows: ${totalRows}`);
+    console.log(`- Total rows before deduplication: ${totalRowsBeforeDedup}`);
+    console.log(`- Duplicates removed: ${duplicatesRemoved}`);
+    console.log(`- Final rows exported: ${allRows.length}`);
     console.log(`- Output file: ${config.outputFile}`);
 
     if (gapStats) {
