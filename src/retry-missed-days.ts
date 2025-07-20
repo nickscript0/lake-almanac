@@ -1,7 +1,12 @@
 /**
  * Utility script to retry fetching data for missed days recorded in the almanac.
  */
+import dotenv from 'dotenv';
 import { Command } from 'commander';
+
+// Load environment variables from .env.local (and .env as fallback)
+dotenv.config({ path: '.env.local' });
+dotenv.config(); // fallback to .env
 import { readFile } from 'fs/promises';
 import { fetchLakeDay } from './thingspeak-sensor-api';
 import { processDay, processDayFailure, AlmanacWithMetadata } from './almanac';

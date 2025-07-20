@@ -98,19 +98,19 @@ Check for missing dates in the PostgreSQL database temperature readings:
 
 ```bash
 # Check all gaps from project start to yesterday
-npx ts-node scripts/check-database-gaps.ts
+npm run check-db-gaps
 
 # Check last 30 days for gaps
-npx ts-node scripts/check-database-gaps.ts --recent 30
+npm run check-db-gaps -- --recent 30
 
 # Check specific date range
-npx ts-node scripts/check-database-gaps.ts -s 2024-01-01 -e 2024-12-31
+npm run check-db-gaps -- -s 2024-01-01 -e 2024-12-31
 
 # List all missing dates (not just summary)
-npx ts-node scripts/check-database-gaps.ts --list-missing
+npm run check-db-gaps -- --list-missing
 
 # Show help for all options
-npx ts-node scripts/check-database-gaps.ts --help
+npm run check-db-gaps -- --help
 ```
 
 The gap checker will:
@@ -120,6 +120,39 @@ The gap checker will:
 - Provide suggestions for backfilling missing data using existing tools
 - Support checking recent periods or specific date ranges
 - Require `DATABASE_URL` environment variable to be set
+
+## Backfill Database from Archive
+
+Backfill missing database entries using existing archived JSON files (recommended approach for filling database gaps):
+
+```bash
+# Backfill a specific date range
+npm run backfill-database -- -s 2024-01-01 -e 2024-01-31
+
+# Backfill specific dates
+npm run backfill-database -- -d 2024-01-15,2024-02-20,2024-03-10
+
+# Preview what would be processed (dry run)
+npm run backfill-database -- --dry-run -s 2024-01-01 -e 2024-01-07
+
+# Show help for all options
+npm run backfill-database -- --help
+```
+
+The database backfill utility will:
+
+- Read archived data from `output/responses-archive/YYYY/YYYY-MM-DD.zip` files
+- Extract temperature readings and insert into PostgreSQL database
+- **Database-only operation**: Does NOT update almanac metadata or store new files
+- Use upsert logic to safely handle duplicate entries
+- Report success/failure for each date processed
+- Handle missing archive files gracefully
+- Require `DATABASE_URL` environment variable to be set
+
+**When to use:**
+
+- **Recommended**: Use `npm run backfill-database` when you have archived data and just need to fill database gaps
+- **Alternative**: Use `npm run retry-missed-days` when you need to fetch new data from the API and update almanac metadata
 
 ## Run Tests
 

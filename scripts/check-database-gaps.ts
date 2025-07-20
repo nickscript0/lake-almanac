@@ -195,9 +195,11 @@ Examples:
                 }
             }
 
-            console.log(`\n💡 To backfill missing data, you can use:`);
-            console.log(`   npm run retry-missed-days`);
-            console.log(`   (Note: This requires the dates to be in almanac metadata)`);
+            console.log(`\n💡 To backfill missing data, you have two options:`);
+            console.log(`   1. From existing archives: npm run backfill-database`);
+            console.log(`      (Recommended: Uses archived data, database-only update)`);
+            console.log(`   2. Fetch new data: npm run retry-missed-days`);
+            console.log(`      (Requires dates to be in almanac metadata, fetches from API)`);
         }
     } catch (error) {
         console.error('Error checking database gaps:', error);

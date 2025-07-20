@@ -23,6 +23,25 @@
     - Includes upsert logic to handle duplicate entries
     - Database failures are logged as warnings but don't stop archival process
 
+- **Database Gap Checking**: `npm run check-db-gaps`
+    - Identifies missing dates in the database by comparing expected date range with existing records
+    - Supports date range filtering and recent day checking
+    - Provides recommendations for backfilling missing data
+
+- **Database Backfill from Archive**: `npm run backfill-database <options>`
+    - Backfills database with temperature readings from existing archived JSON files
+    - Database-only operation: does NOT update almanac metadata or store new files
+    - Uses existing upsert logic to handle duplicate entries safely
+    - Options:
+        - `-s, --start-date <date>`: Start date for backfill (YYYY-MM-DD)
+        - `-e, --end-date <date>`: End date for backfill (YYYY-MM-DD)
+        - `-d, --dates <dates>`: Comma-separated list of specific dates
+        - `--dry-run`: Preview what would be processed without making changes
+    - Examples:
+        - `npm run backfill-database -- -s 2024-01-01 -e 2024-01-31`
+        - `npm run backfill-database -- -d 2024-01-15,2024-02-20`
+        - `npm run backfill-database -- --dry-run -s 2024-01-01 -e 2024-01-07`
+
 ## Format Validation Commands
 
 - **Compare Almanac Formats**: `npm run compare-formats`
