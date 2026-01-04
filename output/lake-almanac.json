@@ -6375,57 +6375,81 @@
         {
           "date": "2026-01-01 21:19:47Z",
           "value": -0.75
+        },
+        {
+          "date": "2026-01-02 21:30:48Z",
+          "value": 0.6875
         }
       ],
       "ColdestDays": [
         {
           "date": "2026-01-01 12:50:36Z",
           "value": -2.75
+        },
+        {
+          "date": "2026-01-02 08:51:38Z",
+          "value": -1.5625
         }
       ],
       "HottestNightime": [
         {
           "date": "2026-01-02 07:15:32Z",
           "value": -1.375
+        },
+        {
+          "date": "2026-01-03 02:09:31Z",
+          "value": -0.0625
         }
       ],
       "ColdestNighttime": [
         {
           "date": "2026-01-01 12:50:36Z",
           "value": -2.75
+        },
+        {
+          "date": "2026-01-02 08:51:38Z",
+          "value": -1.5625
         }
       ],
       "HottestDaytime": [
         {
           "date": "2026-01-01 21:19:47Z",
           "value": -0.75
+        },
+        {
+          "date": "2026-01-02 21:30:48Z",
+          "value": 0.6875
         }
       ],
       "ColdestDaytime": [
         {
           "date": "2026-01-01 15:24:19Z",
           "value": -2.75
+        },
+        {
+          "date": "2026-01-02 14:08:47Z",
+          "value": -1.375
         }
       ],
       "Average": {
-        "average": -1.9316666666666666,
-        "n": 150
+        "average": -1.2289583333333334,
+        "n": 300
       },
       "AverageNighttime": {
-        "average": -2.0341666666666667,
-        "n": 75
+        "average": -1.4379166666666667,
+        "n": 150
       },
       "AverageDaytime": {
-        "average": -1.8291666666666666,
-        "n": 75
+        "average": -1.02,
+        "n": 150
       },
       "AverageNoon": {
-        "average": -1.375,
-        "n": 1
+        "average": -0.46875,
+        "n": 2
       },
       "AverageMidnight": {
-        "average": -2,
-        "n": 1
+        "average": -1.75,
+        "n": 2
       }
     },
     "Spring": {
@@ -6457,57 +6481,81 @@
         {
           "date": "2026-01-01 21:19:47Z",
           "value": -0.75
+        },
+        {
+          "date": "2026-01-02 21:30:48Z",
+          "value": 0.6875
         }
       ],
       "ColdestDays": [
         {
           "date": "2026-01-01 12:50:36Z",
           "value": -2.75
+        },
+        {
+          "date": "2026-01-02 08:51:38Z",
+          "value": -1.5625
         }
       ],
       "HottestNightime": [
         {
           "date": "2026-01-02 07:15:32Z",
           "value": -1.375
+        },
+        {
+          "date": "2026-01-03 02:09:31Z",
+          "value": -0.0625
         }
       ],
       "ColdestNighttime": [
         {
           "date": "2026-01-01 12:50:36Z",
           "value": -2.75
+        },
+        {
+          "date": "2026-01-02 08:51:38Z",
+          "value": -1.5625
         }
       ],
       "HottestDaytime": [
         {
           "date": "2026-01-01 21:19:47Z",
           "value": -0.75
+        },
+        {
+          "date": "2026-01-02 21:30:48Z",
+          "value": 0.6875
         }
       ],
       "ColdestDaytime": [
         {
           "date": "2026-01-01 15:24:19Z",
           "value": -2.75
+        },
+        {
+          "date": "2026-01-02 14:08:47Z",
+          "value": -1.375
         }
       ],
       "Average": {
-        "average": -1.9316666666666666,
-        "n": 150
+        "average": -1.2289583333333334,
+        "n": 300
       },
       "AverageNighttime": {
-        "average": -2.0341666666666667,
-        "n": 75
+        "average": -1.4379166666666667,
+        "n": 150
       },
       "AverageDaytime": {
-        "average": -1.8291666666666666,
-        "n": 75
+        "average": -1.02,
+        "n": 150
       },
       "AverageNoon": {
-        "average": -1.375,
-        "n": 1
+        "average": -0.46875,
+        "n": 2
       },
       "AverageMidnight": {
-        "average": -2,
-        "n": 1
+        "average": -1.75,
+        "n": 2
       }
     },
     "FirstFreezesAfterSummer": [],
@@ -6515,9 +6563,17 @@
       {
         "date": "2026-01-01 12:50:36Z",
         "value": -2.75
+      },
+      {
+        "date": "2026-01-02 08:51:38Z",
+        "value": -1.5625
       }
     ],
     "LastFreezesBeforeSummer": [
+      {
+        "date": "2026-01-03 01:02:15Z",
+        "value": 0
+      },
       {
         "date": "2026-01-01 21:19:47Z",
         "value": -0.75
@@ -6659,24 +6715,24 @@
         }
       ],
       "Average": {
-        "average": 3.1881735507002325,
-        "n": 386014
+        "average": 3.186730734869122,
+        "n": 386164
       },
       "AverageNighttime": {
-        "average": 2.897585347972059,
-        "n": 193004
+        "average": 2.896132865303836,
+        "n": 193079
       },
       "AverageDaytime": {
-        "average": 3.4789879347882398,
-        "n": 192910
+        "average": 3.47755395497059,
+        "n": 192985
       },
       "AverageNoon": {
-        "average": 6.157927530674853,
-        "n": 2608
+        "average": 6.155734955921816,
+        "n": 2609
       },
       "AverageMidnight": {
-        "average": 2.827837423312882,
-        "n": 2608
+        "average": 2.826178612495207,
+        "n": 2609
       }
     },
     "Spring": {
@@ -7275,24 +7331,24 @@
         }
       ],
       "Average": {
-        "average": -1.597634246342835,
-        "n": 94267
+        "average": -1.595932141457577,
+        "n": 94417
       },
       "AverageNighttime": {
-        "average": -2.0592595541401275,
-        "n": 47100
+        "average": -2.0573237943826177,
+        "n": 47175
       },
       "AverageDaytime": {
-        "average": -1.1368202745422538,
-        "n": 47133
+        "average": -1.1353491463311312,
+        "n": 47208
       },
       "AverageNoon": {
-        "average": -0.6350393700787401,
-        "n": 635
+        "average": -0.6333529874213837,
+        "n": 636
       },
       "AverageMidnight": {
-        "average": -2.0621062992126005,
-        "n": 635
+        "average": -2.0612224842767315,
+        "n": 636
       }
     },
     "FirstFreezesAfterSummer": [],
@@ -7340,6 +7396,6 @@
       "2023-06-13"
     ],
     "startDate": "2018-10-06",
-    "endDate": "2026-01-01"
+    "endDate": "2026-01-02"
   }
 }
