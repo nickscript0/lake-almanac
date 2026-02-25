@@ -2,9 +2,11 @@
 
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { Reading } from '../src/types';
 
 dayjs.extend(utc);
+dayjs.extend(timezone);
 
 // Old format types (from main branch)
 interface OriginalAlmanacYear {
@@ -82,7 +84,41 @@ async function fetchAlmanacData(url: string): Promise<any> {
     }
 }
 
-function compareReadings(oldReadings: Reading[], newReadings: Reading[], fieldName: string, year: string): boolean {
+interface CompareResult {
+    success: boolean;
+    toleratedMismatches: number;
+}
+
+function parseReadingDate(date: string) {
+    let cleanDate = date;
+    if (cleanDate.includes('-') && cleanDate.endsWith('Z') && cleanDate.match(/-\d{2}:\d{2}Z$/)) {
+        cleanDate = cleanDate.slice(0, -1);
+    }
+    return dayjs(cleanDate);
+}
+
+function getDayPart(date: string): 'daytime' | 'nighttime' {
+    const local = parseReadingDate(date).tz('America/Vancouver');
+    const minutes = local.hour() * 60 + local.minute();
+    return minutes >= 6 * 60 && minutes <= 18 * 60 ? 'daytime' : 'nighttime';
+}
+
+function expectedDayPartForField(fieldName: string): 'daytime' | 'nighttime' | undefined {
+    if (fieldName === 'HottestNightime' || fieldName === 'ColdestNighttime') return 'nighttime';
+    if (fieldName === 'HottestDaytime' || fieldName === 'ColdestDaytime') return 'daytime';
+    return undefined;
+}
+
+function isToleratedDayPartMismatch(oldReading: Reading, newReading: Reading, fieldName: string): boolean {
+    const expected = expectedDayPartForField(fieldName);
+    if (!expected) return false;
+
+    const oldPart = getDayPart(oldReading.date);
+    const newPart = getDayPart(newReading.date);
+    return oldPart !== expected && newPart === expected;
+}
+
+function compareReadings(oldReadings: Reading[], newReadings: Reading[], fieldName: string, year: string): CompareResult {
     const normalizedOld = normalizeReadings(oldReadings).sort((a, b) => a.date.localeCompare(b.date));
     const normalizedNew = normalizeReadings(newReadings).sort((a, b) => a.date.localeCompare(b.date));
 
@@ -90,23 +126,35 @@ function compareReadings(oldReadings: Reading[], newReadings: Reading[], fieldNa
         console.log(
             `❌ ${year} ${fieldName}: Length mismatch (old: ${normalizedOld.length}, new: ${normalizedNew.length})`
         );
-        return false;
+        return { success: false, toleratedMismatches: 0 };
     }
+
+    let toleratedMismatches = 0;
 
     for (let i = 0; i < normalizedOld.length; i++) {
         const oldReading = normalizedOld[i];
         const newReading = normalizedNew[i];
 
         if (oldReading.date !== newReading.date || oldReading.value !== newReading.value) {
+            if (isToleratedDayPartMismatch(oldReading, newReading, fieldName)) {
+                toleratedMismatches++;
+                console.log(`⚠️  ${year} ${fieldName}[${i}]: Tolerated daypart/tz mismatch`);
+                console.log(`   Old: ${oldReading.date} = ${oldReading.value} (${getDayPart(oldReading.date)})`);
+                console.log(`   New: ${newReading.date} = ${newReading.value} (${getDayPart(newReading.date)})`);
+                continue;
+            }
+
             console.log(`❌ ${year} ${fieldName}[${i}]: Mismatch`);
             console.log(`   Old: ${oldReading.date} = ${oldReading.value}`);
             console.log(`   New: ${newReading.date} = ${newReading.value}`);
-            return false;
+            return { success: false, toleratedMismatches };
         }
     }
 
-    console.log(`✅ ${year} ${fieldName}: Match (${normalizedOld.length} readings)`);
-    return true;
+    const suffix =
+        toleratedMismatches > 0 ? ` with ${toleratedMismatches} tolerated daypart/tz mismatch(es)` : '';
+    console.log(`✅ ${year} ${fieldName}: Match (${normalizedOld.length} readings${suffix})`);
+    return { success: true, toleratedMismatches };
 }
 
 async function compareAlmanacFormats() {
@@ -134,6 +182,7 @@ async function compareAlmanacFormats() {
 
     let totalComparisons = 0;
     let successfulComparisons = 0;
+    let totalToleratedMismatches = 0;
 
     // Compare each common year
     for (const year of commonYears) {
@@ -160,28 +209,31 @@ async function compareAlmanacFormats() {
 
         for (const field of fieldsToCompare) {
             totalComparisons++;
-            const success = compareReadings(oldYearData[field] || [], newYearData.Year[field] || [], field, year);
-            if (success) successfulComparisons++;
+            const result = compareReadings(oldYearData[field] || [], newYearData.Year[field] || [], field, year);
+            if (result.success) successfulComparisons++;
+            totalToleratedMismatches += result.toleratedMismatches;
         }
 
         // Compare freeze data (moved to year level in new format)
         totalComparisons++;
-        const freezeBeforeSuccess = compareReadings(
+        const freezeBeforeResult = compareReadings(
             oldYearData.FirstFreezesBeforeSummer || [],
             newYearData.FirstFreezesBeforeSummer || [],
             'FirstFreezesBeforeSummer',
             year
         );
-        if (freezeBeforeSuccess) successfulComparisons++;
+        if (freezeBeforeResult.success) successfulComparisons++;
+        totalToleratedMismatches += freezeBeforeResult.toleratedMismatches;
 
         totalComparisons++;
-        const freezeAfterSuccess = compareReadings(
+        const freezeAfterResult = compareReadings(
             oldYearData.FirstFreezesAfterSummer || [],
             newYearData.FirstFreezesAfterSummer || [],
             'FirstFreezesAfterSummer',
             year
         );
-        if (freezeAfterSuccess) successfulComparisons++;
+        if (freezeAfterResult.success) successfulComparisons++;
+        totalToleratedMismatches += freezeAfterResult.toleratedMismatches;
 
         // Report new features in new format
         if (newYearData.Year.Average) {
@@ -204,6 +256,7 @@ async function compareAlmanacFormats() {
     console.log(`Total comparisons: ${totalComparisons}`);
     console.log(`Successful matches: ${successfulComparisons}`);
     console.log(`Failed matches: ${totalComparisons - successfulComparisons}`);
+    console.log(`Tolerated daypart/tz mismatches: ${totalToleratedMismatches}`);
     console.log(`Success rate: ${((successfulComparisons / totalComparisons) * 100).toFixed(1)}%`);
 
     // Report format differences
