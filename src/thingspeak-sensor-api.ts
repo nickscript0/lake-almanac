@@ -1,5 +1,6 @@
-import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
-import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
+import dayjs, { Dayjs } from 'dayjs';
+import fetch from 'node-fetch';
+import { isBefore } from './util';
 
 // Thingspeak API response
 export interface FieldResponse {
@@ -41,7 +42,7 @@ export interface FieldFeed {
 const THINGSPEAK_URL_START_FRAGMENT = `https://api.thingspeak.com/channels/`;
 const channelId = '581842'; // lake Indoor / Outdoor sensor
 // The earliest valid record for the lake Outdoor temp sensor
-const EARLIEST_RECORD = '2018-10-06';
+export const EARLIEST_RECORD = '2018-10-06';
 
 function encodeGetParams(params: { [key: string]: string | number }): string {
     return Object.entries(params)
@@ -54,7 +55,7 @@ export interface DateRange {
     end: string;
 }
 
-function dateToThingspeakDateString(d: dayjsTypes.Dayjs) {
+function dateToThingspeakDateString(d: Dayjs) {
     return d.format('YYYY-MM-DD 00:00:00');
 }
 
@@ -73,7 +74,7 @@ export async function fetchLakeDay(day: string): Promise<DayResponse> {
     const startDayjs = dayjs(day);
     // Assert day is valid
     if (!startDayjs.isValid()) throw new Error(`Invalid day requested ${day}`);
-    if (startDayjs.isBefore(EARLIEST_RECORD))
+    if (isBefore(startDayjs, dayjs(EARLIEST_RECORD)))
         throw new Error(`Invalid day requested ${day}, no data before ${EARLIEST_RECORD}`);
 
     const endDayJs = startDayjs.add(1, 'day');
@@ -81,7 +82,19 @@ export async function fetchLakeDay(day: string): Promise<DayResponse> {
     const end = dateToThingspeakDateString(endDayJs);
     const url = dateRangeToUrl({ start, end }, channelId);
     console.log(`fetch`, url);
-    const json: FieldResponse = await (await fetch(url)).json();
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText} for day ${day}`);
+    }
+
+    const json: FieldResponse = (await response.json()) as FieldResponse;
+
+    // Validate that we got meaningful data
+    if (!json.feeds || json.feeds.length === 0) {
+        throw new Error(`No data feeds returned for day ${day}`);
+    }
+
     return { json, day };
 }
 
