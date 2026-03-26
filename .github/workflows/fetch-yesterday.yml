@@ -1,32 +1,45 @@
 name: Process Lake Almanac for yesterday
 
 on:
-    # push:
-    #   branches:
-    #     - main
-    workflow_dispatch:
-    schedule:
-        # Daily 5am
-        - cron: '0 5 * * *'
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
+  schedule:
+    # Daily 5am UTC
+    - cron: "0 5 * * *"
+
+permissions:
+  contents: write
 
 jobs:
-    scheduled:
-        runs-on: ubuntu-latest
-        # This job normally takes under 30s, add a timeout to prevent issues where it hangs indefinitely and uses up the actions quota
-        timeout-minutes: 5
-        steps:
-            # Check out the repository so it can read the files inside of it and do other operations
-            - name: Check out repo
-              uses: actions/checkout@v3
-            # This step installs Deno, which is a new Javascript runtime that improves on Node. We'll use it for postprocessing later
-            - name: Setup deno
-              uses: denoland/setup-deno@main
-              with:
-                  deno-version: v1.x
-            - name: Fetch data
-              uses: nickscript0/flat@v4.1
-              with:
-                  # This is an unused http_url (as postprocess makes all the requests it needs) but is currently required to exist by the action
-                  http_url: https://cdn.skypack.dev/dayjs@1.10.6
-                  downloaded_filename: output/skypack-dayjs.txt
-                  postprocess: src/archiver.ts
+  scheduled:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Check out the repository so it can read the files inside of it and do other operations
+      - name: Check out repo
+        uses: actions/checkout@v4
+      # Setup Node.js for running the archiver
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Run archiver
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npm run archiver
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          if ! git diff --quiet output/; then
+            git add output/
+            git commit -m "Update lake almanac data for $(date -d 'yesterday' '+%Y-%m-%d')"
+            git push
+          else
+            echo "No changes to commit in output/ directory."
+          fi
