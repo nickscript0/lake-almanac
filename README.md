@@ -187,6 +187,10 @@ psql 'postgresql://neondb_owner:redacted@ep-polished-bird-ad1ybvh5-pooler.c-2.us
 FROM 'export-to-2025-07-19.csv' WITH (FORMAT CSV, HEADER);"
 ```
 
+## Latest Status - Mar 26, 2026
+
+Completed migration to nodejs, it is now on main (we are no longer running both simultaneously). Also the weather-list-nextjs app is updated to only use the current new version.
+
 ## Latest Status - Jul 3, 2025
 
 I migrated to nodejs, some of those dayjs tests still fail, they are currently commented out with xtest.
