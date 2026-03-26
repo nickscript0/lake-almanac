@@ -4,7 +4,7 @@ import timezone from 'dayjs/plugin/timezone';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-import { isBefore, isAfter, isSame, diffMs } from './util';
+import { isBefore, isAfter, isSame } from './util';
 import {
     Almanac,
     AlmanacYear,
@@ -605,37 +605,30 @@ const MIDNIGHT = dayjs.tz(`2001-01-01 00:00`, TIMEZONE);
 // const NOON = dayjs('2001-01-01 12:00-07:00Z');
 const NOON = dayjs.tz('2001-01-01 12:00', TIMEZONE);
 export function findNearestReadingToTime(findDate: Dayjs, readings: TemperatureReading[]): TemperatureReading {
-    const normalize2 = (d: Dayjs) => {
-        const utcD = dayjs(new Date(d.toISOString()));
-        return utcD.set('year', 2001).set('month', 1).date(1) as any; //.tz(TIMEZONE);
+    const DAY_MS = 24 * 60 * 60 * 1000;
+    const timeOfDayMs = (d: Dayjs) => {
+        const inSensorTz = d.tz(TIMEZONE);
+        return (
+            (((inSensorTz.hour() * 60 + inSensorTz.minute()) * 60 + inSensorTz.second()) * 1000) +
+            inSensorTz.millisecond()
+        );
+    };
+    const circularClockDiffMs = (a: number, b: number) => {
+        const direct = Math.abs(a - b);
+        return Math.min(direct, DAY_MS - direct);
     };
 
-    const normalize = (d: Dayjs) => {
-        const utcD = new Date(d.toISOString());
-        return dayjs(utcD.setFullYear(2001, 1, 1));
-    };
-    const desiredTime = normalize(findDate);
+    const desiredTimeMs = timeOfDayMs(findDate);
     let closest = readings[0];
+    let closestDiffMs = circularClockDiffMs(timeOfDayMs(closest.date), desiredTimeMs);
 
-    let curTime;
-    let closestTime;
-
-    for (const r of readings) {
-        curTime = normalize(r.date);
-        closestTime = normalize(closest.date);
-
-        if (Math.abs(diffMs(curTime, desiredTime)) < Math.abs(diffMs(closestTime, desiredTime))) {
+    for (const r of readings.slice(1)) {
+        const currentDiffMs = circularClockDiffMs(timeOfDayMs(r.date), desiredTimeMs);
+        if (currentDiffMs < closestDiffMs) {
             closest = r;
+            closestDiffMs = currentDiffMs;
         }
     }
     // console.log(`findNearestReadingToTime(findDate: ${dayjsToStr(findDate)} ...)`);
-    // console.log(
-    //     `Math.abs(diffMs(curTime=${dayjsToStr(curTime as any)}, desiredTime=${dayjsToStr(
-    //         desiredTime
-    //     )})) < Math.abs(diffMs(closestTime=${dayjsToStr(closestTime as any)}, desiredTime))`
-    // );
-    // console.log(
-    //     `${Math.abs(diffMs(curTime as any, desiredTime))} < ${Math.abs(diffMs(closestTime as any, desiredTime))}`
-    // );
     return closest;
 }

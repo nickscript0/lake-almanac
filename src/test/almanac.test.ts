@@ -55,7 +55,15 @@ describe('almanac', () => {
     });
 
     function toDjs(d: { date: string; value: number }) {
-        return { date: dayjs(d.date), value: d.value };
+        let cleanDate = d.date;
+        // Legacy fixtures sometimes include both an offset and trailing Z (e.g. -08:00Z).
+        // Normalize before parsing so behavior is stable across host timezones.
+        if (cleanDate.match(/[+-]\d{2}:\d{2}Z$/)) {
+            cleanDate = cleanDate.slice(0, -1);
+        }
+        // Normalize to an ISO-like shape so offset parsing is consistent.
+        cleanDate = cleanDate.replace(' ', 'T');
+        return { date: dayjs(cleanDate), value: d.value };
     }
 
     const testDay = [
@@ -226,11 +234,11 @@ describe('almanac', () => {
 
         const noon = dayjs('2001-01-01 12:00:00-08:00Z');
         const nearestNoon = findNearestReadingToTime(noon, testDay.map(toDjs));
-        expect(nearestNoon.date.toISOString()).toBe('2021-01-02T12:00:59.000Z');
+        expect(nearestNoon.date.toISOString()).toBe('2021-01-02T12:00:16.000Z');
 
         const midnight = dayjs('2001-01-01 00:00:00-08:00Z');
         const nearestMidnight = findNearestReadingToTime(midnight, testDayMidnightBug.map(toDjs));
-        expect(nearestMidnight.date.toISOString()).toBe('2021-01-02T23:53:06.000Z');
+        expect(nearestMidnight.date.toISOString()).toBe('2021-01-03T07:53:06.000Z');
     });
 
     test('Minimal ADT bug', () => {

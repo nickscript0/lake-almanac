@@ -11,6 +11,8 @@ on:
 jobs:
   testing_job:
     runs-on: ubuntu-latest
+    env:
+      TZ: UTC
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
