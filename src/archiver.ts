@@ -46,7 +46,6 @@ async function main() {
             await processDayFailure(dayString, err);
         }
     }
-    Deno.exit(0);
 }
 
 function parseArgs(): { start: Dayjs; end: Dayjs; saveResponses: boolean; useLocalArchive: boolean; force: boolean } {
