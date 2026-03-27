@@ -1,0 +1,74 @@
+name: DB smoke test (temporary)
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_backfill:
+        description: "Run one-day backfill write test from archive"
+        type: boolean
+        required: false
+        default: false
+      backfill_date:
+        description: "Optional date to backfill (YYYY-MM-DD). Leave blank to auto-use 2 days ago UTC."
+        type: string
+        required: false
+        default: ""
+
+jobs:
+  db_smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate DATABASE_URL secret presence
+        run: |
+          if [ -z "${DATABASE_URL:-}" ]; then
+            echo "::error::DATABASE_URL secret is missing"
+            exit 1
+          fi
+          echo "DATABASE_URL is set (value masked by Actions)."
+
+      - name: Test DB connection (SELECT 1)
+        run: |
+          node - <<'NODE'
+          const { Client } = require('pg');
+
+          (async () => {
+            const client = new Client({ connectionString: process.env.DATABASE_URL });
+            await client.connect();
+            const result = await client.query('SELECT 1 AS ok');
+            console.log('DB connectivity check result:', result.rows[0]);
+            await client.end();
+          })().catch(async (error) => {
+            console.error('DB connectivity check failed:', error.message);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Optional DB write-path test (backfill one day)
+        if: ${{ inputs.run_backfill }}
+        id: resolve_date
+        run: |
+          if [ -n "${{ inputs.backfill_date }}" ]; then
+            echo "date=${{ inputs.backfill_date }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "date=$(date -u -d '2 days ago' +%F)" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Using backfill date: $(cat "$GITHUB_OUTPUT" | cut -d= -f2)"
+
+      - name: Optional DB write-path test (backfill one day)
+        if: ${{ inputs.run_backfill }}
+        run: npm run backfill-database -- -s "${{ steps.resolve_date.outputs.date }}"
