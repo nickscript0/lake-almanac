@@ -1,6 +1,6 @@
 # lake-almanac
 
-## Run Archiver
+## Usage
 
 ```bash
 # With date range and response saving
@@ -14,23 +14,15 @@ npm run archiver
 
 # How to re-generate lake-almanac.json if say we added new stats / fields
 rm output/lake-almanac.json
-npm run archiver -- --use-local-archive 2018-10-06 <today's date>
+npm run archiver -- --use-local-archive 2018-10-06 2026-05-09 # Up to today's date
+
+# Run tests
+npm test
 ```
 
-## Legacy Operational Notes (from main)
+## Use Cases and Scripts
 
-- Nov 8, 2022: Actions started failing on Sep 12 and then hanging for ~6h on Oct 4, 2022. A fix was added by explicitly exiting the archiver process at completion.
-- Nov 9, 2022: After the Nov 8 fix, a data gap was backfilled from a dev box by running:
-
-```bash
-./scripts/archiver.sh --save-responses 2022-09-04 2022-11-08
-git add output/responses-archive/
-git push
-```
-
-
-
-## Archiver Modes
+### Archiver Modes
 
 1. **API Mode (default)**: Fetches data from ThingSpeak API and optionally saves responses
 
@@ -52,8 +44,6 @@ git push
     ```bash
     npm run archiver
     ```
-
-## Use Cases and Scripts
 
 ### Retry Missed Days
 
@@ -169,11 +159,6 @@ The database backfill utility will:
 - **Recommended**: Use `npm run backfill-database` when you have archived data and just need to fill database gaps
 - **Alternative**: Use `npm run retry-missed-days` when you need to fetch new data from the API and update almanac metadata
 
-## Run Tests
-
-```bash
-npm test
-```
 
 ## Neon Database (start integrating Jul 11, 2025)
 
@@ -196,6 +181,8 @@ FROM 'export-to-2025-07-19.csv' WITH (FORMAT CSV, HEADER);"
 ### Latest Status - Mar 26, 2026
 
 Completed migration to nodejs, it is now on main (we are no longer running both simultaneously). Also the weather-list-nextjs app is updated to only use the current new version.
+
+Moved scripts/migrate-archive-structure.sh and DENO_TO_NODE_MIGRATION.md to archived-docs as they were only relevant for the migration process.
 
 ### Latest Status - Jul 3, 2025
 
@@ -237,6 +224,17 @@ Github Issue: Timezone conversion is broken when not using DST Time ... ok (4ms)
 - I have created dayjs-test.ts to attempt to test the bugs found in the issue tracker. One is failing.
 - I have created date-fns-test.ts to attempt to tell if date-fns can handle the problematic tz issues, thereby I could switch out to using it.
 - Conclusion: Currently waiting on day.js to fix bugs, or switch to date-fns (seems to not have any issues due to using the builtin TZ functionality, but still need to confirm it has all the functionality we need) / Luxon (though no TS support and nodejs??)
+
+### LatestStatus - Nov 8, 2022
+
+- Nov 8, 2022: Actions started failing on Sep 12 and then hanging for ~6h on Oct 4, 2022. A fix was added by explicitly exiting the archiver process at completion.
+- Nov 9, 2022: After the Nov 8 fix, a data gap was backfilled from a dev box by running:
+
+```bash
+./scripts/archiver.sh --save-responses 2022-09-04 2022-11-08
+git add output/responses-archive/
+git push
+```
 
 ## TODOs
 
