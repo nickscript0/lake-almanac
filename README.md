@@ -28,7 +28,9 @@ git add output/responses-archive/
 git push
 ```
 
-### Archiver Modes
+
+
+## Archiver Modes
 
 1. **API Mode (default)**: Fetches data from ThingSpeak API and optionally saves responses
 
@@ -51,7 +53,9 @@ git push
     npm run archiver
     ```
 
-## Retry Missed Days
+## Use Cases and Scripts
+
+### Retry Missed Days
 
 The system automatically tracks days when data collection fails. Use the retry utility to attempt fetching missed days:
 
@@ -74,7 +78,7 @@ The retry utility will:
 - Remove successfully retrieved days from the missed days list
 - Optionally save API responses to the archive for future local processing
 
-## Export Data to CSV
+### Export Data to CSV
 
 Export archived temperature data to CSV format for PostgreSQL database import:
 
@@ -103,7 +107,7 @@ COPY temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, c
 FROM '/path/to/lake-data-export.csv' WITH (FORMAT CSV, HEADER);
 ```
 
-## Check Database Gaps
+### Check Database Gaps
 
 Check for missing dates in the PostgreSQL database temperature readings:
 
@@ -132,7 +136,7 @@ The gap checker will:
 - Support checking recent periods or specific date ranges
 - Require `DATABASE_URL` environment variable to be set
 
-## Backfill Database from Archive
+### Backfill Database from Archive
 
 Backfill missing database entries using existing archived JSON files (recommended approach for filling database gaps):
 
@@ -187,24 +191,26 @@ psql 'postgresql://neondb_owner:redacted@ep-polished-bird-ad1ybvh5-pooler.c-2.us
 FROM 'export-to-2025-07-19.csv' WITH (FORMAT CSV, HEADER);"
 ```
 
-## Latest Status - Mar 26, 2026
+## Status Updates
+
+### Latest Status - Mar 26, 2026
 
 Completed migration to nodejs, it is now on main (we are no longer running both simultaneously). Also the weather-list-nextjs app is updated to only use the current new version.
 
-## Latest Status - Jul 3, 2025
+### Latest Status - Jul 3, 2025
 
 I migrated to nodejs, some of those dayjs tests still fail, they are currently commented out with xtest.
 
 Future project migrate to luxon as I need in weather-list app as it is modern and maintained and should resolve all the tz bugs issues.
 
-## Latest Status - Sept 24, 2023
+### Latest Status - Sept 24, 2023
 
 - Fixed 2 of 3 failing tests
     - Upgraded from dayjs@1.10.6 to dayjs@1.11.10 resolved the Minimal ADT bug failure
     - Fixed 'Timezone conversion is broken when not using DST Time test' as far as I can tell it was expecting the wrong value I have now fixed it with confirmations using https://www.timeanddate.com/worldclock/converter.html?iso=20211130T224200&p1=286&p2=1440&p3=195
 - This workaround https://github.com/iamkun/dayjs/issues/1805#issuecomment-1464953487 may be a fix for the final failing 'Github Issue: tz func with valueOf bug' test, TODO investigate further also see my updated comment in said test
 
-### Before
+#### Before
 
 ````bash
 ```bash
@@ -213,7 +219,7 @@ Minimal ADT bug ... FAILED (4ms)
 Github Issue: Timezone conversion is broken when not using DST Time ... FAILED (3ms)
 ````
 
-### After
+#### After
 
 ```bash
 Github Issue: tz func with valueOf bug ... FAILED (6ms)
@@ -223,7 +229,7 @@ Github Issue: Timezone conversion is broken when not using DST Time ... ok (4ms)
 
 - I'm guessing it was this fix https://github.com/iamkun/dayjs/pull/2420
 
-## Latest Status - Nov 12, 2022
+### Latest Status - Nov 12, 2022
 
 - Continue to work on the new-metrics-avgs branch but the main branch is working fine as is so no rush
 - Currently in Atlantic Standard Time the almanac-test.ts passes, but it will fail again when we are in Daylight time (yes confirmed 'Minimal ADT bug' fails on Aug 27, 2023).
@@ -265,17 +271,6 @@ console.log(dayjs.tz("2021-01-02 17:07:54", 'America/Vancouver').isAfter(dayjs.t
 ```
 
 ## Notes
-
-### Deno
-
-- The current version of the dayjs package does not export modules using the ESM standard deno expects (as seen if you go to `https://cdn.skypack.dev/dayjs@1.10.6`). The new version of [Dayjs 2.0 plans to support in their roadmap here](https://github.com/iamkun/dayjs/issues/1281). Here is my current workaround:
-    ```typescript
-    import dayjs from 'https://cdn.skypack.dev/dayjs@1.10.6';
-    import dayjsTypes from 'https://deno.land/x/dayjs@v1.10.6/types/index.d.ts';
-    ```
-- Deno seems to work well but there are other options:
-    - Use nodejs via https://github.com/vercel/ncc
-    - See discussion with Github team on running postprocessing stage with Python (and other possibilities) instead of requiring Deno https://github.com/githubocto/flat/issues/12#issuecomment-844300624
 
 ### Github Repo Storage limits
 
