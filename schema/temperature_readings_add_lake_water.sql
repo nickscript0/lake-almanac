@@ -13,3 +13,8 @@ ALTER TABLE lake_temperature_readings
 ALTER TABLE lake_temperature_readings
     ADD CONSTRAINT lake_temperature_readings_pkey
     PRIMARY KEY (channel_id, entry_id, date_recorded);
+
+DROP INDEX IF EXISTS lake_temperature_readings_date_idx;
+
+CREATE INDEX IF NOT EXISTS lake_temperature_readings_channel_date_idx
+    ON lake_temperature_readings (channel_id, date_recorded DESC);

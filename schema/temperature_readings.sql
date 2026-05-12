@@ -13,11 +13,10 @@ CREATE TABLE lake_temperature_readings (
     PRIMARY KEY   (channel_id, entry_id, date_recorded)
 );
 
--- optional: keep a helper index purely on the time column for very long
--- range scans.  If you create the PK as above you may drop this, the
--- benefit is marginal.
-CREATE INDEX lake_temperature_readings_date_idx
-          ON lake_temperature_readings (date_recorded DESC);
+-- optional: keep a helper index aligned to the main sensor-scoped read
+-- patterns used by gap checks and recent-history lookups.
+CREATE INDEX lake_temperature_readings_channel_date_idx
+          ON lake_temperature_readings (channel_id, date_recorded DESC);
 
 -- turn it into a hypertable
 SELECT create_hypertable('lake_temperature_readings', 'date_recorded');
