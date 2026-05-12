@@ -1,0 +1,2045 @@
+{
+  "deepWater": {
+    "2026": {
+      "Year": {
+        "HottestDays": [
+          {
+            "date": "2026-05-09 19:08:38Z",
+            "value": 14.4
+          },
+          {
+            "date": "2026-05-10 21:28:35Z",
+            "value": 15.6
+          },
+          {
+            "date": "2026-05-06 05:48:48Z",
+            "value": 15.8
+          },
+          {
+            "date": "2026-05-11 20:28:32Z",
+            "value": 16
+          },
+          {
+            "date": "2026-05-07 19:48:43Z",
+            "value": 16.2
+          }
+        ],
+        "ColdestDays": [
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 7.6
+          },
+          {
+            "date": "2026-05-04 22:48:51Z",
+            "value": 8.5
+          },
+          {
+            "date": "2026-05-04 02:28:54Z",
+            "value": 9
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 9.6
+          },
+          {
+            "date": "2026-05-11 09:08:34Z",
+            "value": 9.9
+          }
+        ],
+        "HottestNightime": [
+          {
+            "date": "2026-05-04 08:48:53Z",
+            "value": 14
+          },
+          {
+            "date": "2026-05-08 04:28:42Z",
+            "value": 14
+          },
+          {
+            "date": "2026-05-10 05:48:37Z",
+            "value": 14.3
+          },
+          {
+            "date": "2026-05-10 09:48:36Z",
+            "value": 15.5
+          },
+          {
+            "date": "2026-05-06 05:48:48Z",
+            "value": 15.8
+          }
+        ],
+        "ColdestNighttime": [
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 7.6
+          },
+          {
+            "date": "2026-05-04 02:28:54Z",
+            "value": 9
+          },
+          {
+            "date": "2026-05-11 09:08:34Z",
+            "value": 9.9
+          },
+          {
+            "date": "2026-05-06 03:08:48Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-07 01:28:45Z",
+            "value": 10.5
+          }
+        ],
+        "HottestDaytime": [
+          {
+            "date": "2026-05-08 23:08:40Z",
+            "value": 14.2
+          },
+          {
+            "date": "2026-05-09 19:08:38Z",
+            "value": 14.4
+          },
+          {
+            "date": "2026-05-10 21:28:35Z",
+            "value": 15.6
+          },
+          {
+            "date": "2026-05-11 20:28:32Z",
+            "value": 16
+          },
+          {
+            "date": "2026-05-07 19:48:43Z",
+            "value": 16.2
+          }
+        ],
+        "ColdestDaytime": [
+          {
+            "date": "2026-05-04 22:48:51Z",
+            "value": 8.5
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 9.6
+          },
+          {
+            "date": "2026-05-04 00:28:54Z",
+            "value": 10
+          },
+          {
+            "date": "2026-05-12 00:48:32Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-07 15:28:44Z",
+            "value": 11.4
+          }
+        ],
+        "Average": {
+          "average": 12.624632352941177,
+          "n": 544
+        },
+        "AverageNighttime": {
+          "average": 12.233457249070636,
+          "n": 269
+        },
+        "AverageDaytime": {
+          "average": 13.00727272727273,
+          "n": 275
+        },
+        "AverageNoon": {
+          "average": 13.066666666666666,
+          "n": 9
+        },
+        "AverageMidnight": {
+          "average": 12.92222222222222,
+          "n": 9
+        }
+      },
+      "Spring": {
+        "HottestDays": [
+          {
+            "date": "2026-05-09 19:08:38Z",
+            "value": 14.4
+          },
+          {
+            "date": "2026-05-10 21:28:35Z",
+            "value": 15.6
+          },
+          {
+            "date": "2026-05-06 05:48:48Z",
+            "value": 15.8
+          },
+          {
+            "date": "2026-05-11 20:28:32Z",
+            "value": 16
+          },
+          {
+            "date": "2026-05-07 19:48:43Z",
+            "value": 16.2
+          }
+        ],
+        "ColdestDays": [
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 7.6
+          },
+          {
+            "date": "2026-05-04 22:48:51Z",
+            "value": 8.5
+          },
+          {
+            "date": "2026-05-04 02:28:54Z",
+            "value": 9
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 9.6
+          },
+          {
+            "date": "2026-05-11 09:08:34Z",
+            "value": 9.9
+          }
+        ],
+        "HottestNightime": [
+          {
+            "date": "2026-05-04 08:48:53Z",
+            "value": 14
+          },
+          {
+            "date": "2026-05-08 04:28:42Z",
+            "value": 14
+          },
+          {
+            "date": "2026-05-10 05:48:37Z",
+            "value": 14.3
+          },
+          {
+            "date": "2026-05-10 09:48:36Z",
+            "value": 15.5
+          },
+          {
+            "date": "2026-05-06 05:48:48Z",
+            "value": 15.8
+          }
+        ],
+        "ColdestNighttime": [
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 7.6
+          },
+          {
+            "date": "2026-05-04 02:28:54Z",
+            "value": 9
+          },
+          {
+            "date": "2026-05-11 09:08:34Z",
+            "value": 9.9
+          },
+          {
+            "date": "2026-05-06 03:08:48Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-07 01:28:45Z",
+            "value": 10.5
+          }
+        ],
+        "HottestDaytime": [
+          {
+            "date": "2026-05-08 23:08:40Z",
+            "value": 14.2
+          },
+          {
+            "date": "2026-05-09 19:08:38Z",
+            "value": 14.4
+          },
+          {
+            "date": "2026-05-10 21:28:35Z",
+            "value": 15.6
+          },
+          {
+            "date": "2026-05-11 20:28:32Z",
+            "value": 16
+          },
+          {
+            "date": "2026-05-07 19:48:43Z",
+            "value": 16.2
+          }
+        ],
+        "ColdestDaytime": [
+          {
+            "date": "2026-05-04 22:48:51Z",
+            "value": 8.5
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 9.6
+          },
+          {
+            "date": "2026-05-04 00:28:54Z",
+            "value": 10
+          },
+          {
+            "date": "2026-05-12 00:48:32Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-07 15:28:44Z",
+            "value": 11.4
+          }
+        ],
+        "Average": {
+          "average": 12.624632352941177,
+          "n": 544
+        },
+        "AverageNighttime": {
+          "average": 12.233457249070636,
+          "n": 269
+        },
+        "AverageDaytime": {
+          "average": 13.00727272727273,
+          "n": 275
+        },
+        "AverageNoon": {
+          "average": 13.066666666666666,
+          "n": 9
+        },
+        "AverageMidnight": {
+          "average": 12.92222222222222,
+          "n": 9
+        }
+      },
+      "Summer": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "Fall": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "Winter": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "FirstFreezesAfterSummer": [],
+      "FirstFreezesBeforeSummer": [],
+      "LastFreezesBeforeSummer": []
+    },
+    "All": {
+      "Year": {
+        "HottestDays": [
+          {
+            "date": "2026-05-09 19:08:38Z",
+            "value": 14.4
+          },
+          {
+            "date": "2026-05-10 21:28:35Z",
+            "value": 15.6
+          },
+          {
+            "date": "2026-05-06 05:48:48Z",
+            "value": 15.8
+          },
+          {
+            "date": "2026-05-11 20:28:32Z",
+            "value": 16
+          },
+          {
+            "date": "2026-05-07 19:48:43Z",
+            "value": 16.2
+          }
+        ],
+        "ColdestDays": [
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 7.6
+          },
+          {
+            "date": "2026-05-04 22:48:51Z",
+            "value": 8.5
+          },
+          {
+            "date": "2026-05-04 02:28:54Z",
+            "value": 9
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 9.6
+          },
+          {
+            "date": "2026-05-11 09:08:34Z",
+            "value": 9.9
+          }
+        ],
+        "HottestNightime": [
+          {
+            "date": "2026-05-04 08:48:53Z",
+            "value": 14
+          },
+          {
+            "date": "2026-05-08 04:28:42Z",
+            "value": 14
+          },
+          {
+            "date": "2026-05-10 05:48:37Z",
+            "value": 14.3
+          },
+          {
+            "date": "2026-05-10 09:48:36Z",
+            "value": 15.5
+          },
+          {
+            "date": "2026-05-06 05:48:48Z",
+            "value": 15.8
+          }
+        ],
+        "ColdestNighttime": [
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 7.6
+          },
+          {
+            "date": "2026-05-04 02:28:54Z",
+            "value": 9
+          },
+          {
+            "date": "2026-05-11 09:08:34Z",
+            "value": 9.9
+          },
+          {
+            "date": "2026-05-06 03:08:48Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-07 01:28:45Z",
+            "value": 10.5
+          }
+        ],
+        "HottestDaytime": [
+          {
+            "date": "2026-05-08 23:08:40Z",
+            "value": 14.2
+          },
+          {
+            "date": "2026-05-09 19:08:38Z",
+            "value": 14.4
+          },
+          {
+            "date": "2026-05-10 21:28:35Z",
+            "value": 15.6
+          },
+          {
+            "date": "2026-05-11 20:28:32Z",
+            "value": 16
+          },
+          {
+            "date": "2026-05-07 19:48:43Z",
+            "value": 16.2
+          }
+        ],
+        "ColdestDaytime": [
+          {
+            "date": "2026-05-04 22:48:51Z",
+            "value": 8.5
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 9.6
+          },
+          {
+            "date": "2026-05-04 00:28:54Z",
+            "value": 10
+          },
+          {
+            "date": "2026-05-12 00:48:32Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-07 15:28:44Z",
+            "value": 11.4
+          }
+        ],
+        "Average": {
+          "average": 12.624632352941177,
+          "n": 544
+        },
+        "AverageNighttime": {
+          "average": 12.233457249070636,
+          "n": 269
+        },
+        "AverageDaytime": {
+          "average": 13.00727272727273,
+          "n": 275
+        },
+        "AverageNoon": {
+          "average": 13.066666666666666,
+          "n": 9
+        },
+        "AverageMidnight": {
+          "average": 12.92222222222222,
+          "n": 9
+        }
+      },
+      "Spring": {
+        "HottestDays": [
+          {
+            "date": "2026-05-09 19:08:38Z",
+            "value": 14.4
+          },
+          {
+            "date": "2026-05-10 21:28:35Z",
+            "value": 15.6
+          },
+          {
+            "date": "2026-05-06 05:48:48Z",
+            "value": 15.8
+          },
+          {
+            "date": "2026-05-11 20:28:32Z",
+            "value": 16
+          },
+          {
+            "date": "2026-05-07 19:48:43Z",
+            "value": 16.2
+          }
+        ],
+        "ColdestDays": [
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 7.6
+          },
+          {
+            "date": "2026-05-04 22:48:51Z",
+            "value": 8.5
+          },
+          {
+            "date": "2026-05-04 02:28:54Z",
+            "value": 9
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 9.6
+          },
+          {
+            "date": "2026-05-11 09:08:34Z",
+            "value": 9.9
+          }
+        ],
+        "HottestNightime": [
+          {
+            "date": "2026-05-04 08:48:53Z",
+            "value": 14
+          },
+          {
+            "date": "2026-05-08 04:28:42Z",
+            "value": 14
+          },
+          {
+            "date": "2026-05-10 05:48:37Z",
+            "value": 14.3
+          },
+          {
+            "date": "2026-05-10 09:48:36Z",
+            "value": 15.5
+          },
+          {
+            "date": "2026-05-06 05:48:48Z",
+            "value": 15.8
+          }
+        ],
+        "ColdestNighttime": [
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 7.6
+          },
+          {
+            "date": "2026-05-04 02:28:54Z",
+            "value": 9
+          },
+          {
+            "date": "2026-05-11 09:08:34Z",
+            "value": 9.9
+          },
+          {
+            "date": "2026-05-06 03:08:48Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-07 01:28:45Z",
+            "value": 10.5
+          }
+        ],
+        "HottestDaytime": [
+          {
+            "date": "2026-05-08 23:08:40Z",
+            "value": 14.2
+          },
+          {
+            "date": "2026-05-09 19:08:38Z",
+            "value": 14.4
+          },
+          {
+            "date": "2026-05-10 21:28:35Z",
+            "value": 15.6
+          },
+          {
+            "date": "2026-05-11 20:28:32Z",
+            "value": 16
+          },
+          {
+            "date": "2026-05-07 19:48:43Z",
+            "value": 16.2
+          }
+        ],
+        "ColdestDaytime": [
+          {
+            "date": "2026-05-04 22:48:51Z",
+            "value": 8.5
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 9.6
+          },
+          {
+            "date": "2026-05-04 00:28:54Z",
+            "value": 10
+          },
+          {
+            "date": "2026-05-12 00:48:32Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-07 15:28:44Z",
+            "value": 11.4
+          }
+        ],
+        "Average": {
+          "average": 12.624632352941177,
+          "n": 544
+        },
+        "AverageNighttime": {
+          "average": 12.233457249070636,
+          "n": 269
+        },
+        "AverageDaytime": {
+          "average": 13.00727272727273,
+          "n": 275
+        },
+        "AverageNoon": {
+          "average": 13.066666666666666,
+          "n": 9
+        },
+        "AverageMidnight": {
+          "average": 12.92222222222222,
+          "n": 9
+        }
+      },
+      "Summer": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "Fall": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "Winter": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "FirstFreezesAfterSummer": [],
+      "FirstFreezesBeforeSummer": [],
+      "LastFreezesBeforeSummer": []
+    },
+    "_metadata": {
+      "missedDays": [],
+      "startDate": "2026-05-03",
+      "endDate": "2026-05-11"
+    }
+  },
+  "lakeAir": {
+    "2026": {
+      "Year": {
+        "HottestDays": [
+          {
+            "date": "2026-05-07 23:48:43Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-09 22:28:38Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 22.2
+          },
+          {
+            "date": "2026-05-05 23:08:49Z",
+            "value": 22.5
+          },
+          {
+            "date": "2026-05-04 23:08:51Z",
+            "value": 22.9
+          }
+        ],
+        "ColdestDays": [
+          {
+            "date": "2026-05-11 11:28:33Z",
+            "value": 8
+          },
+          {
+            "date": "2026-05-05 12:28:50Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-09 11:28:39Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-06 12:28:47Z",
+            "value": 9.5
+          },
+          {
+            "date": "2026-05-04 12:08:53Z",
+            "value": 9.8
+          }
+        ],
+        "HottestNightime": [
+          {
+            "date": "2026-05-04 01:08:54Z",
+            "value": 18.6
+          },
+          {
+            "date": "2026-05-07 01:28:45Z",
+            "value": 18.7
+          },
+          {
+            "date": "2026-05-06 01:08:48Z",
+            "value": 18.9
+          },
+          {
+            "date": "2026-05-10 01:08:37Z",
+            "value": 19.1
+          },
+          {
+            "date": "2026-05-05 01:08:51Z",
+            "value": 19.4
+          }
+        ],
+        "ColdestNighttime": [
+          {
+            "date": "2026-05-11 11:28:33Z",
+            "value": 8
+          },
+          {
+            "date": "2026-05-05 12:28:50Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-09 11:28:39Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-06 12:28:47Z",
+            "value": 9.5
+          },
+          {
+            "date": "2026-05-04 12:08:53Z",
+            "value": 9.8
+          }
+        ],
+        "HottestDaytime": [
+          {
+            "date": "2026-05-07 23:48:43Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-09 22:28:38Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 22.2
+          },
+          {
+            "date": "2026-05-05 23:08:49Z",
+            "value": 22.5
+          },
+          {
+            "date": "2026-05-04 23:08:51Z",
+            "value": 22.9
+          }
+        ],
+        "ColdestDaytime": [
+          {
+            "date": "2026-05-09 13:08:39Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-04 13:08:53Z",
+            "value": 10.9
+          },
+          {
+            "date": "2026-05-11 13:28:33Z",
+            "value": 11.6
+          },
+          {
+            "date": "2026-05-05 15:08:50Z",
+            "value": 12
+          },
+          {
+            "date": "2026-05-10 13:08:36Z",
+            "value": 12.1
+          }
+        ],
+        "Average": {
+          "average": 15.097610294117644,
+          "n": 544
+        },
+        "AverageNighttime": {
+          "average": 12.726022304832716,
+          "n": 269
+        },
+        "AverageDaytime": {
+          "average": 17.41745454545455,
+          "n": 275
+        },
+        "AverageNoon": {
+          "average": 18.333333333333332,
+          "n": 9
+        },
+        "AverageMidnight": {
+          "average": 12.322222222222221,
+          "n": 9
+        }
+      },
+      "Spring": {
+        "HottestDays": [
+          {
+            "date": "2026-05-07 23:48:43Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-09 22:28:38Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 22.2
+          },
+          {
+            "date": "2026-05-05 23:08:49Z",
+            "value": 22.5
+          },
+          {
+            "date": "2026-05-04 23:08:51Z",
+            "value": 22.9
+          }
+        ],
+        "ColdestDays": [
+          {
+            "date": "2026-05-11 11:28:33Z",
+            "value": 8
+          },
+          {
+            "date": "2026-05-05 12:28:50Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-09 11:28:39Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-06 12:28:47Z",
+            "value": 9.5
+          },
+          {
+            "date": "2026-05-04 12:08:53Z",
+            "value": 9.8
+          }
+        ],
+        "HottestNightime": [
+          {
+            "date": "2026-05-04 01:08:54Z",
+            "value": 18.6
+          },
+          {
+            "date": "2026-05-07 01:28:45Z",
+            "value": 18.7
+          },
+          {
+            "date": "2026-05-06 01:08:48Z",
+            "value": 18.9
+          },
+          {
+            "date": "2026-05-10 01:08:37Z",
+            "value": 19.1
+          },
+          {
+            "date": "2026-05-05 01:08:51Z",
+            "value": 19.4
+          }
+        ],
+        "ColdestNighttime": [
+          {
+            "date": "2026-05-11 11:28:33Z",
+            "value": 8
+          },
+          {
+            "date": "2026-05-05 12:28:50Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-09 11:28:39Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-06 12:28:47Z",
+            "value": 9.5
+          },
+          {
+            "date": "2026-05-04 12:08:53Z",
+            "value": 9.8
+          }
+        ],
+        "HottestDaytime": [
+          {
+            "date": "2026-05-07 23:48:43Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-09 22:28:38Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 22.2
+          },
+          {
+            "date": "2026-05-05 23:08:49Z",
+            "value": 22.5
+          },
+          {
+            "date": "2026-05-04 23:08:51Z",
+            "value": 22.9
+          }
+        ],
+        "ColdestDaytime": [
+          {
+            "date": "2026-05-09 13:08:39Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-04 13:08:53Z",
+            "value": 10.9
+          },
+          {
+            "date": "2026-05-11 13:28:33Z",
+            "value": 11.6
+          },
+          {
+            "date": "2026-05-05 15:08:50Z",
+            "value": 12
+          },
+          {
+            "date": "2026-05-10 13:08:36Z",
+            "value": 12.1
+          }
+        ],
+        "Average": {
+          "average": 15.097610294117644,
+          "n": 544
+        },
+        "AverageNighttime": {
+          "average": 12.726022304832716,
+          "n": 269
+        },
+        "AverageDaytime": {
+          "average": 17.41745454545455,
+          "n": 275
+        },
+        "AverageNoon": {
+          "average": 18.333333333333332,
+          "n": 9
+        },
+        "AverageMidnight": {
+          "average": 12.322222222222221,
+          "n": 9
+        }
+      },
+      "Summer": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "Fall": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "Winter": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "FirstFreezesAfterSummer": [],
+      "FirstFreezesBeforeSummer": [],
+      "LastFreezesBeforeSummer": []
+    },
+    "All": {
+      "Year": {
+        "HottestDays": [
+          {
+            "date": "2026-05-07 23:48:43Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-09 22:28:38Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 22.2
+          },
+          {
+            "date": "2026-05-05 23:08:49Z",
+            "value": 22.5
+          },
+          {
+            "date": "2026-05-04 23:08:51Z",
+            "value": 22.9
+          }
+        ],
+        "ColdestDays": [
+          {
+            "date": "2026-05-11 11:28:33Z",
+            "value": 8
+          },
+          {
+            "date": "2026-05-05 12:28:50Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-09 11:28:39Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-06 12:28:47Z",
+            "value": 9.5
+          },
+          {
+            "date": "2026-05-04 12:08:53Z",
+            "value": 9.8
+          }
+        ],
+        "HottestNightime": [
+          {
+            "date": "2026-05-04 01:08:54Z",
+            "value": 18.6
+          },
+          {
+            "date": "2026-05-07 01:28:45Z",
+            "value": 18.7
+          },
+          {
+            "date": "2026-05-06 01:08:48Z",
+            "value": 18.9
+          },
+          {
+            "date": "2026-05-10 01:08:37Z",
+            "value": 19.1
+          },
+          {
+            "date": "2026-05-05 01:08:51Z",
+            "value": 19.4
+          }
+        ],
+        "ColdestNighttime": [
+          {
+            "date": "2026-05-11 11:28:33Z",
+            "value": 8
+          },
+          {
+            "date": "2026-05-05 12:28:50Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-09 11:28:39Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-06 12:28:47Z",
+            "value": 9.5
+          },
+          {
+            "date": "2026-05-04 12:08:53Z",
+            "value": 9.8
+          }
+        ],
+        "HottestDaytime": [
+          {
+            "date": "2026-05-07 23:48:43Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-09 22:28:38Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 22.2
+          },
+          {
+            "date": "2026-05-05 23:08:49Z",
+            "value": 22.5
+          },
+          {
+            "date": "2026-05-04 23:08:51Z",
+            "value": 22.9
+          }
+        ],
+        "ColdestDaytime": [
+          {
+            "date": "2026-05-09 13:08:39Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-04 13:08:53Z",
+            "value": 10.9
+          },
+          {
+            "date": "2026-05-11 13:28:33Z",
+            "value": 11.6
+          },
+          {
+            "date": "2026-05-05 15:08:50Z",
+            "value": 12
+          },
+          {
+            "date": "2026-05-10 13:08:36Z",
+            "value": 12.1
+          }
+        ],
+        "Average": {
+          "average": 15.097610294117644,
+          "n": 544
+        },
+        "AverageNighttime": {
+          "average": 12.726022304832716,
+          "n": 269
+        },
+        "AverageDaytime": {
+          "average": 17.41745454545455,
+          "n": 275
+        },
+        "AverageNoon": {
+          "average": 18.333333333333332,
+          "n": 9
+        },
+        "AverageMidnight": {
+          "average": 12.322222222222221,
+          "n": 9
+        }
+      },
+      "Spring": {
+        "HottestDays": [
+          {
+            "date": "2026-05-07 23:48:43Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-09 22:28:38Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 22.2
+          },
+          {
+            "date": "2026-05-05 23:08:49Z",
+            "value": 22.5
+          },
+          {
+            "date": "2026-05-04 23:08:51Z",
+            "value": 22.9
+          }
+        ],
+        "ColdestDays": [
+          {
+            "date": "2026-05-11 11:28:33Z",
+            "value": 8
+          },
+          {
+            "date": "2026-05-05 12:28:50Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-09 11:28:39Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-06 12:28:47Z",
+            "value": 9.5
+          },
+          {
+            "date": "2026-05-04 12:08:53Z",
+            "value": 9.8
+          }
+        ],
+        "HottestNightime": [
+          {
+            "date": "2026-05-04 01:08:54Z",
+            "value": 18.6
+          },
+          {
+            "date": "2026-05-07 01:28:45Z",
+            "value": 18.7
+          },
+          {
+            "date": "2026-05-06 01:08:48Z",
+            "value": 18.9
+          },
+          {
+            "date": "2026-05-10 01:08:37Z",
+            "value": 19.1
+          },
+          {
+            "date": "2026-05-05 01:08:51Z",
+            "value": 19.4
+          }
+        ],
+        "ColdestNighttime": [
+          {
+            "date": "2026-05-11 11:28:33Z",
+            "value": 8
+          },
+          {
+            "date": "2026-05-05 12:28:50Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-09 11:28:39Z",
+            "value": 9.4
+          },
+          {
+            "date": "2026-05-06 12:28:47Z",
+            "value": 9.5
+          },
+          {
+            "date": "2026-05-04 12:08:53Z",
+            "value": 9.8
+          }
+        ],
+        "HottestDaytime": [
+          {
+            "date": "2026-05-07 23:48:43Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-09 22:28:38Z",
+            "value": 21.5
+          },
+          {
+            "date": "2026-05-07 00:08:46Z",
+            "value": 22.2
+          },
+          {
+            "date": "2026-05-05 23:08:49Z",
+            "value": 22.5
+          },
+          {
+            "date": "2026-05-04 23:08:51Z",
+            "value": 22.9
+          }
+        ],
+        "ColdestDaytime": [
+          {
+            "date": "2026-05-09 13:08:39Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-04 13:08:53Z",
+            "value": 10.9
+          },
+          {
+            "date": "2026-05-11 13:28:33Z",
+            "value": 11.6
+          },
+          {
+            "date": "2026-05-05 15:08:50Z",
+            "value": 12
+          },
+          {
+            "date": "2026-05-10 13:08:36Z",
+            "value": 12.1
+          }
+        ],
+        "Average": {
+          "average": 15.097610294117644,
+          "n": 544
+        },
+        "AverageNighttime": {
+          "average": 12.726022304832716,
+          "n": 269
+        },
+        "AverageDaytime": {
+          "average": 17.41745454545455,
+          "n": 275
+        },
+        "AverageNoon": {
+          "average": 18.333333333333332,
+          "n": 9
+        },
+        "AverageMidnight": {
+          "average": 12.322222222222221,
+          "n": 9
+        }
+      },
+      "Summer": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "Fall": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "Winter": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "FirstFreezesAfterSummer": [],
+      "FirstFreezesBeforeSummer": [],
+      "LastFreezesBeforeSummer": []
+    },
+    "_metadata": {
+      "missedDays": [],
+      "startDate": "2026-05-03",
+      "endDate": "2026-05-11"
+    }
+  },
+  "surfaceWater": {
+    "2026": {
+      "Year": {
+        "HottestDays": [
+          {
+            "date": "2026-05-04 21:28:52Z",
+            "value": 17.7
+          },
+          {
+            "date": "2026-05-11 22:28:32Z",
+            "value": 17.8
+          },
+          {
+            "date": "2026-05-05 22:28:50Z",
+            "value": 17.9
+          },
+          {
+            "date": "2026-05-09 21:28:38Z",
+            "value": 18.3
+          },
+          {
+            "date": "2026-05-07 22:28:43Z",
+            "value": 20.3
+          }
+        ],
+        "ColdestDays": [
+          {
+            "date": "2026-05-04 03:08:55Z",
+            "value": 10
+          },
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-11 10:28:34Z",
+            "value": 10.6
+          },
+          {
+            "date": "2026-05-06 10:08:47Z",
+            "value": 11.3
+          },
+          {
+            "date": "2026-05-11 06:48:34Z",
+            "value": 11.3
+          }
+        ],
+        "HottestNightime": [
+          {
+            "date": "2026-05-05 01:08:51Z",
+            "value": 14.8
+          },
+          {
+            "date": "2026-05-08 01:08:43Z",
+            "value": 15.5
+          },
+          {
+            "date": "2026-05-10 09:28:36Z",
+            "value": 15.6
+          },
+          {
+            "date": "2026-05-10 01:08:37Z",
+            "value": 15.7
+          },
+          {
+            "date": "2026-05-06 05:48:48Z",
+            "value": 16.2
+          }
+        ],
+        "ColdestNighttime": [
+          {
+            "date": "2026-05-04 03:08:55Z",
+            "value": 10
+          },
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-11 10:28:34Z",
+            "value": 10.6
+          },
+          {
+            "date": "2026-05-06 10:08:47Z",
+            "value": 11.3
+          },
+          {
+            "date": "2026-05-11 06:48:34Z",
+            "value": 11.3
+          }
+        ],
+        "HottestDaytime": [
+          {
+            "date": "2026-05-04 21:28:52Z",
+            "value": 17.7
+          },
+          {
+            "date": "2026-05-11 22:28:32Z",
+            "value": 17.8
+          },
+          {
+            "date": "2026-05-05 22:28:50Z",
+            "value": 17.9
+          },
+          {
+            "date": "2026-05-09 21:28:38Z",
+            "value": 18.3
+          },
+          {
+            "date": "2026-05-07 22:28:43Z",
+            "value": 20.3
+          }
+        ],
+        "ColdestDaytime": [
+          {
+            "date": "2026-05-11 13:08:33Z",
+            "value": 11.5
+          },
+          {
+            "date": "2026-05-04 00:48:56Z",
+            "value": 11.7
+          },
+          {
+            "date": "2026-05-06 13:08:47Z",
+            "value": 11.8
+          },
+          {
+            "date": "2026-05-07 15:08:44Z",
+            "value": 11.8
+          },
+          {
+            "date": "2026-05-04 14:48:53Z",
+            "value": 12
+          }
+        ],
+        "Average": {
+          "average": 14.01875,
+          "n": 544
+        },
+        "AverageNighttime": {
+          "average": 13.0092936802974,
+          "n": 269
+        },
+        "AverageDaytime": {
+          "average": 15.00618181818182,
+          "n": 275
+        },
+        "AverageNoon": {
+          "average": 15.966666666666665,
+          "n": 9
+        },
+        "AverageMidnight": {
+          "average": 13.38888888888889,
+          "n": 9
+        }
+      },
+      "Spring": {
+        "HottestDays": [
+          {
+            "date": "2026-05-04 21:28:52Z",
+            "value": 17.7
+          },
+          {
+            "date": "2026-05-11 22:28:32Z",
+            "value": 17.8
+          },
+          {
+            "date": "2026-05-05 22:28:50Z",
+            "value": 17.9
+          },
+          {
+            "date": "2026-05-09 21:28:38Z",
+            "value": 18.3
+          },
+          {
+            "date": "2026-05-07 22:28:43Z",
+            "value": 20.3
+          }
+        ],
+        "ColdestDays": [
+          {
+            "date": "2026-05-04 03:08:55Z",
+            "value": 10
+          },
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-11 10:28:34Z",
+            "value": 10.6
+          },
+          {
+            "date": "2026-05-06 10:08:47Z",
+            "value": 11.3
+          },
+          {
+            "date": "2026-05-11 06:48:34Z",
+            "value": 11.3
+          }
+        ],
+        "HottestNightime": [
+          {
+            "date": "2026-05-05 01:08:51Z",
+            "value": 14.8
+          },
+          {
+            "date": "2026-05-08 01:08:43Z",
+            "value": 15.5
+          },
+          {
+            "date": "2026-05-10 09:28:36Z",
+            "value": 15.6
+          },
+          {
+            "date": "2026-05-10 01:08:37Z",
+            "value": 15.7
+          },
+          {
+            "date": "2026-05-06 05:48:48Z",
+            "value": 16.2
+          }
+        ],
+        "ColdestNighttime": [
+          {
+            "date": "2026-05-04 03:08:55Z",
+            "value": 10
+          },
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-11 10:28:34Z",
+            "value": 10.6
+          },
+          {
+            "date": "2026-05-06 10:08:47Z",
+            "value": 11.3
+          },
+          {
+            "date": "2026-05-11 06:48:34Z",
+            "value": 11.3
+          }
+        ],
+        "HottestDaytime": [
+          {
+            "date": "2026-05-04 21:28:52Z",
+            "value": 17.7
+          },
+          {
+            "date": "2026-05-11 22:28:32Z",
+            "value": 17.8
+          },
+          {
+            "date": "2026-05-05 22:28:50Z",
+            "value": 17.9
+          },
+          {
+            "date": "2026-05-09 21:28:38Z",
+            "value": 18.3
+          },
+          {
+            "date": "2026-05-07 22:28:43Z",
+            "value": 20.3
+          }
+        ],
+        "ColdestDaytime": [
+          {
+            "date": "2026-05-11 13:08:33Z",
+            "value": 11.5
+          },
+          {
+            "date": "2026-05-04 00:48:56Z",
+            "value": 11.7
+          },
+          {
+            "date": "2026-05-06 13:08:47Z",
+            "value": 11.8
+          },
+          {
+            "date": "2026-05-07 15:08:44Z",
+            "value": 11.8
+          },
+          {
+            "date": "2026-05-04 14:48:53Z",
+            "value": 12
+          }
+        ],
+        "Average": {
+          "average": 14.01875,
+          "n": 544
+        },
+        "AverageNighttime": {
+          "average": 13.0092936802974,
+          "n": 269
+        },
+        "AverageDaytime": {
+          "average": 15.00618181818182,
+          "n": 275
+        },
+        "AverageNoon": {
+          "average": 15.966666666666665,
+          "n": 9
+        },
+        "AverageMidnight": {
+          "average": 13.38888888888889,
+          "n": 9
+        }
+      },
+      "Summer": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "Fall": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "Winter": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "FirstFreezesAfterSummer": [],
+      "FirstFreezesBeforeSummer": [],
+      "LastFreezesBeforeSummer": []
+    },
+    "All": {
+      "Year": {
+        "HottestDays": [
+          {
+            "date": "2026-05-04 21:28:52Z",
+            "value": 17.7
+          },
+          {
+            "date": "2026-05-11 22:28:32Z",
+            "value": 17.8
+          },
+          {
+            "date": "2026-05-05 22:28:50Z",
+            "value": 17.9
+          },
+          {
+            "date": "2026-05-09 21:28:38Z",
+            "value": 18.3
+          },
+          {
+            "date": "2026-05-07 22:28:43Z",
+            "value": 20.3
+          }
+        ],
+        "ColdestDays": [
+          {
+            "date": "2026-05-04 03:08:55Z",
+            "value": 10
+          },
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-11 10:28:34Z",
+            "value": 10.6
+          },
+          {
+            "date": "2026-05-06 10:08:47Z",
+            "value": 11.3
+          },
+          {
+            "date": "2026-05-11 06:48:34Z",
+            "value": 11.3
+          }
+        ],
+        "HottestNightime": [
+          {
+            "date": "2026-05-05 01:08:51Z",
+            "value": 14.8
+          },
+          {
+            "date": "2026-05-08 01:08:43Z",
+            "value": 15.5
+          },
+          {
+            "date": "2026-05-10 09:28:36Z",
+            "value": 15.6
+          },
+          {
+            "date": "2026-05-10 01:08:37Z",
+            "value": 15.7
+          },
+          {
+            "date": "2026-05-06 05:48:48Z",
+            "value": 16.2
+          }
+        ],
+        "ColdestNighttime": [
+          {
+            "date": "2026-05-04 03:08:55Z",
+            "value": 10
+          },
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-11 10:28:34Z",
+            "value": 10.6
+          },
+          {
+            "date": "2026-05-06 10:08:47Z",
+            "value": 11.3
+          },
+          {
+            "date": "2026-05-11 06:48:34Z",
+            "value": 11.3
+          }
+        ],
+        "HottestDaytime": [
+          {
+            "date": "2026-05-04 21:28:52Z",
+            "value": 17.7
+          },
+          {
+            "date": "2026-05-11 22:28:32Z",
+            "value": 17.8
+          },
+          {
+            "date": "2026-05-05 22:28:50Z",
+            "value": 17.9
+          },
+          {
+            "date": "2026-05-09 21:28:38Z",
+            "value": 18.3
+          },
+          {
+            "date": "2026-05-07 22:28:43Z",
+            "value": 20.3
+          }
+        ],
+        "ColdestDaytime": [
+          {
+            "date": "2026-05-11 13:08:33Z",
+            "value": 11.5
+          },
+          {
+            "date": "2026-05-04 00:48:56Z",
+            "value": 11.7
+          },
+          {
+            "date": "2026-05-06 13:08:47Z",
+            "value": 11.8
+          },
+          {
+            "date": "2026-05-07 15:08:44Z",
+            "value": 11.8
+          },
+          {
+            "date": "2026-05-04 14:48:53Z",
+            "value": 12
+          }
+        ],
+        "Average": {
+          "average": 14.01875,
+          "n": 544
+        },
+        "AverageNighttime": {
+          "average": 13.0092936802974,
+          "n": 269
+        },
+        "AverageDaytime": {
+          "average": 15.00618181818182,
+          "n": 275
+        },
+        "AverageNoon": {
+          "average": 15.966666666666665,
+          "n": 9
+        },
+        "AverageMidnight": {
+          "average": 13.38888888888889,
+          "n": 9
+        }
+      },
+      "Spring": {
+        "HottestDays": [
+          {
+            "date": "2026-05-04 21:28:52Z",
+            "value": 17.7
+          },
+          {
+            "date": "2026-05-11 22:28:32Z",
+            "value": 17.8
+          },
+          {
+            "date": "2026-05-05 22:28:50Z",
+            "value": 17.9
+          },
+          {
+            "date": "2026-05-09 21:28:38Z",
+            "value": 18.3
+          },
+          {
+            "date": "2026-05-07 22:28:43Z",
+            "value": 20.3
+          }
+        ],
+        "ColdestDays": [
+          {
+            "date": "2026-05-04 03:08:55Z",
+            "value": 10
+          },
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-11 10:28:34Z",
+            "value": 10.6
+          },
+          {
+            "date": "2026-05-06 10:08:47Z",
+            "value": 11.3
+          },
+          {
+            "date": "2026-05-11 06:48:34Z",
+            "value": 11.3
+          }
+        ],
+        "HottestNightime": [
+          {
+            "date": "2026-05-05 01:08:51Z",
+            "value": 14.8
+          },
+          {
+            "date": "2026-05-08 01:08:43Z",
+            "value": 15.5
+          },
+          {
+            "date": "2026-05-10 09:28:36Z",
+            "value": 15.6
+          },
+          {
+            "date": "2026-05-10 01:08:37Z",
+            "value": 15.7
+          },
+          {
+            "date": "2026-05-06 05:48:48Z",
+            "value": 16.2
+          }
+        ],
+        "ColdestNighttime": [
+          {
+            "date": "2026-05-04 03:08:55Z",
+            "value": 10
+          },
+          {
+            "date": "2026-05-09 04:48:39Z",
+            "value": 10.5
+          },
+          {
+            "date": "2026-05-11 10:28:34Z",
+            "value": 10.6
+          },
+          {
+            "date": "2026-05-06 10:08:47Z",
+            "value": 11.3
+          },
+          {
+            "date": "2026-05-11 06:48:34Z",
+            "value": 11.3
+          }
+        ],
+        "HottestDaytime": [
+          {
+            "date": "2026-05-04 21:28:52Z",
+            "value": 17.7
+          },
+          {
+            "date": "2026-05-11 22:28:32Z",
+            "value": 17.8
+          },
+          {
+            "date": "2026-05-05 22:28:50Z",
+            "value": 17.9
+          },
+          {
+            "date": "2026-05-09 21:28:38Z",
+            "value": 18.3
+          },
+          {
+            "date": "2026-05-07 22:28:43Z",
+            "value": 20.3
+          }
+        ],
+        "ColdestDaytime": [
+          {
+            "date": "2026-05-11 13:08:33Z",
+            "value": 11.5
+          },
+          {
+            "date": "2026-05-04 00:48:56Z",
+            "value": 11.7
+          },
+          {
+            "date": "2026-05-06 13:08:47Z",
+            "value": 11.8
+          },
+          {
+            "date": "2026-05-07 15:08:44Z",
+            "value": 11.8
+          },
+          {
+            "date": "2026-05-04 14:48:53Z",
+            "value": 12
+          }
+        ],
+        "Average": {
+          "average": 14.01875,
+          "n": 544
+        },
+        "AverageNighttime": {
+          "average": 13.0092936802974,
+          "n": 269
+        },
+        "AverageDaytime": {
+          "average": 15.00618181818182,
+          "n": 275
+        },
+        "AverageNoon": {
+          "average": 15.966666666666665,
+          "n": 9
+        },
+        "AverageMidnight": {
+          "average": 13.38888888888889,
+          "n": 9
+        }
+      },
+      "Summer": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "Fall": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "Winter": {
+        "HottestDays": [],
+        "ColdestDays": [],
+        "HottestNightime": [],
+        "ColdestNighttime": [],
+        "HottestDaytime": [],
+        "ColdestDaytime": []
+      },
+      "FirstFreezesAfterSummer": [],
+      "FirstFreezesBeforeSummer": [],
+      "LastFreezesBeforeSummer": []
+    },
+    "_metadata": {
+      "missedDays": [],
+      "startDate": "2026-05-03",
+      "endDate": "2026-05-11"
+    }
+  }
+}
