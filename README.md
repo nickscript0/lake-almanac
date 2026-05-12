@@ -203,7 +203,7 @@ FROM 'export-to-2025-07-19.csv' WITH (FORMAT CSV, HEADER);"
 
 ## Status Updates
 
-### Latest Status - May 9, 2026
+### Latest Status - May 12, 2026
 
 We added support for a new `lake-water` sensor on ThingSpeak channel `3367153`, which now produces a grouped `output/lake-water-almanac.json` with `deepWater`, `lakeAir`, and `surfaceWater` alongside separate archived responses for that channel. We also extended database storage for those three lake-water readings, so the steps below cover the required one-time migration and historical catch-up before the normal daily archiver run takes over.
 
@@ -216,23 +216,23 @@ Lake-water sensor go-live checklist:
    `.github/workflows/fetch-yesterday.yml` already runs `npm run archiver`, so no workflow change is needed.
 4. Confirm the `DATABASE_URL` secret points at the migrated database before the next scheduled run.
 5. Run the one-time lake-water catch-up from ThingSpeak with response archiving enabled:
-   `npm run archiver -- --save-responses --sensor lake-water 2026-05-03 2026-05-09`
-6. Treat that command as a safe backfill of completed lake days `2026-05-03` through `2026-05-08`.
-   The repo's date-range processing is end-exclusive, so this intentionally avoids ingesting the in-progress `2026-05-09` lake day.
+   `npm run archiver -- --save-responses --sensor lake-water 2026-05-03 2026-05-12`
+6. Treat that command as a safe backfill of completed lake days `2026-05-03` through `2026-05-11`.
+   The repo's date-range processing is end-exclusive, so this intentionally avoids ingesting the in-progress `2026-05-12` lake day.
 7. After cutover, let the scheduled job pick up the next completed lake-water day automatically.
 
 Verification:
 
 - Confirm `output/lake-water-almanac.json` was created.
 - Confirm lake-water archives now exist under `output/responses-archive/lake-water/2026/YYYY-MM-DD.zip`.
-- Run `npm run check-db-gaps -- --sensor lake-water -s 2026-05-03 -e 2026-05-08`.
+- Run `npm run check-db-gaps -- --sensor lake-water -s 2026-05-03 -e 2026-05-11`.
 
 Recovery / fallback:
 
 - If ThingSpeak fetch/archive missed days, run:
   `npm run retry-missed-days -- --sensor lake-water --save-responses`
 - If archives exist but database rows are still missing, run:
-  `npm run backfill-database -- --sensor lake-water -s 2026-05-03 -e 2026-05-08`
+  `npm run backfill-database -- --sensor lake-water -s 2026-05-03 -e 2026-05-11`
 
 ### Latest Status - Mar 26, 2026
 
