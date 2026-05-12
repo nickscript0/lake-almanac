@@ -1,0 +1,53 @@
+{
+  "channel": {
+    "id": 3367153,
+    "name": "Lake Water Sensor",
+    "latitude": "0.0",
+    "longitude": "0.0",
+    "field1": "Temp_Black",
+    "field2": "Temp_White",
+    "field3": "Temp_Red",
+    "field4": "Battery_Percent",
+    "field5": "RSSI",
+    "field6": "SNR",
+    "field7": "BatV",
+    "created_at": "2026-05-03T20:22:43Z",
+    "updated_at": "2026-05-03T20:25:12Z",
+    "last_entry_id": 352
+  },
+  "feeds": [
+    {
+      "created_at": "2026-05-09T10:48:39Z",
+      "entry_id": 350,
+      "field1": "13",
+      "field2": "9.7",
+      "field3": "13",
+      "field4": "100",
+      "field5": null,
+      "field6": null,
+      "field7": "3.667"
+    },
+    {
+      "created_at": "2026-05-09T11:08:39Z",
+      "entry_id": 351,
+      "field1": "13.2",
+      "field2": "9.5",
+      "field3": "13.3",
+      "field4": "100",
+      "field5": null,
+      "field6": null,
+      "field7": "3.667"
+    },
+    {
+      "created_at": "2026-05-09T11:28:39Z",
+      "entry_id": 352,
+      "field1": "13.2",
+      "field2": "9.4",
+      "field3": "13.3",
+      "field4": "100",
+      "field5": null,
+      "field6": null,
+      "field7": "3.667"
+    }
+  ]
+}

@@ -6,8 +6,11 @@ CREATE TABLE lake_temperature_readings (
     entry_id      INTEGER      NOT NULL,
     indoor_temp   NUMERIC(6,3),
     outdoor_temp  NUMERIC(6,3),
+    deep_water_temp NUMERIC(6,3),
+    lake_air_temp NUMERIC(6,3),
+    surface_water_temp NUMERIC(6,3),
     channel_id    INTEGER      NOT NULL,
-    PRIMARY KEY   (entry_id, date_recorded)   -- optimal PK
+    PRIMARY KEY   (channel_id, entry_id, date_recorded)
 );
 
 -- optional: keep a helper index purely on the time column for very long

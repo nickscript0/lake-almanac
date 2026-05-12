@@ -23,6 +23,9 @@ import {
     seasons,
     AlmanacWithMetadata,
     AlmanacMetadata,
+    LakeWaterAlmanacFile,
+    LakeWaterAlmanacMetricKey,
+    ThingSpeakFieldKey,
 } from './types';
 
 export type {
@@ -33,6 +36,7 @@ export type {
     Reading,
     AlmanacWithMetadata,
     AlmanacMetadata,
+    LakeWaterAlmanacFile,
 } from './types';
 
 /**
@@ -43,16 +47,18 @@ const TIMEZONE = 'America/Vancouver';
 // This doesn't seem to do anything???
 // dayjs.tz.setDefault(TIMEZONE);
 
-import { access } from 'fs/promises';
-import { readFile, writeFile } from 'fs/promises';
+import { access, readFile, writeFile } from 'fs/promises';
 
 import { NumericValue, FieldResponse, DayResponse } from './thingspeak-sensor-api';
 import { saveDayToDatabase } from './database';
+import { LakeWaterSensorConfig, SensorConfig, getSensorConfig } from './sensor-config';
 
-const ALMANAC_PATH = 'output/lake-almanac.json';
 // The size of metric sequences to store e.g., top N coldest days
 const SEQUENCE_SIZE = 5;
-const OUTDOOR_TEMP_FIELD = 'field2';
+
+export interface AlmanacMetricUpdateResult {
+    status: 'skipped' | 'updated' | 'missed';
+}
 
 /**
  * Almanac Metrics:
@@ -61,17 +67,29 @@ const OUTDOOR_TEMP_FIELD = 'field2';
  * - All dates are in sensor time, Pacific Time
  */
 
-export function frToOutdoorReadingDay(fr: FieldResponse): TemperatureReading[] {
-    return fr.feeds.map((f) => {
-        const v = f[OUTDOOR_TEMP_FIELD];
-        const value = v ? parseFloat(v) : NaN;
-        // NO
-        // return { date: dayjs.tz(f.created_at, TIMEZONE), value };
+export function fieldResponseToTemperatureReadings(
+    fieldResponse: FieldResponse,
+    fieldKey: ThingSpeakFieldKey
+): TemperatureReading[] {
+    return fieldResponse.feeds.flatMap((feed) => {
+        const rawValue = feed[fieldKey];
+        if (rawValue === undefined || rawValue === null || rawValue === '') {
+            return [];
+        }
+
+        const value = parseFloat(rawValue);
+        if (Number.isNaN(value)) {
+            return [];
+        }
+
         // Do not set dayjs.tz here (it will cause incorrect dates).
         // The data from the server is already in TIMEZONE thanks to the timezone=America/Vancouver in the req
-        return { date: dayjs(f.created_at), value };
-        // return {}.toLocaleString("en-US", {timeZone: "Pacific/Honolulu"});
+        return [{ date: dayjs(feed.created_at), value }];
     });
+}
+
+export function frToOutdoorReadingDay(fr: FieldResponse): TemperatureReading[] {
+    return fieldResponseToTemperatureReadings(fr, 'field2');
 }
 
 const EmptyAlmanacYear: AlmanacYear = {
@@ -128,46 +146,42 @@ const AlmanacPropertyDesc: Record<keyof AlmanacSeason, ReadingType> = {
 const last = <T>(arr: T[]) => arr[arr.length - 1];
 const first = <T>(arr: T[]) => arr[0];
 
-export async function processDay(response: DayResponse, force: boolean = false) {
-    const alm = await getAlmanac();
-
-    // Check if day is already processed (unless force flag is set)
-    if (!force && isDayAlreadyProcessed(response.day, alm._metadata)) {
-        console.log(`Day ${response.day} already processed, skipping. Use --force to reprocess.`);
-        return;
-    }
-
-    const temperatureDay = { readings: frToOutdoorReadingDay(response.json), day: response.day };
-    // await Deno.writeTextFile('src/test/res/response-2021-01-02.json', JSON.stringify(response, null, 2));
-    // console.log(`Wrote src/test/res/response-2021-01-02.json`)
-    updateAlmanac(alm, temperatureDay);
-    updateMetadataForSuccessfulDay(alm, response.day);
-    await writeFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2), 'utf8');
-    console.log(`Wrote`, ALMANAC_PATH, `for date`, temperatureDay.day);
-
-    // Save to database
-    try {
-        await saveDayToDatabase(response.json);
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        console.warn(`Warning: Failed to save day ${response.day} to database: ${errorMessage}`);
-    }
+function createEmptyLakeWaterAlmanacFile(): LakeWaterAlmanacFile {
+    return {
+        deepWater: {},
+        lakeAir: {},
+        surfaceWater: {},
+    };
 }
 
-export async function processDayFailure(day: string, error: Error) {
-    const alm = await getAlmanac();
-    addMissedDay(alm, day);
-    await writeFile(ALMANAC_PATH, JSON.stringify(alm, undefined, 2), 'utf8');
-    console.log(`Recorded missed day ${day} in almanac due to error:`, error.message);
-}
-
-async function getAlmanac(): Promise<AlmanacWithMetadata> {
+async function getAlmanacFromPath(almanacPath: string): Promise<AlmanacWithMetadata> {
     try {
-        await access(ALMANAC_PATH);
-        return JSON.parse(await readFile(ALMANAC_PATH, 'utf8'));
+        await access(almanacPath);
+        return JSON.parse(await readFile(almanacPath, 'utf8'));
     } catch {
         return {};
     }
+}
+
+async function getLakeWaterAlmanacFile(almanacPath: string): Promise<LakeWaterAlmanacFile> {
+    try {
+        await access(almanacPath);
+        const lakeWaterAlmanac: Partial<LakeWaterAlmanacFile> = JSON.parse(await readFile(almanacPath, 'utf8'));
+        return {
+            deepWater: lakeWaterAlmanac.deepWater ?? {},
+            lakeAir: lakeWaterAlmanac.lakeAir ?? {},
+            surfaceWater: lakeWaterAlmanac.surfaceWater ?? {},
+        };
+    } catch {
+        return createEmptyLakeWaterAlmanacFile();
+    }
+}
+
+function getLakeWaterMetricAlmanac(
+    lakeWaterAlmanac: LakeWaterAlmanacFile,
+    metricKey: LakeWaterAlmanacMetricKey
+): AlmanacWithMetadata {
+    return lakeWaterAlmanac[metricKey];
 }
 
 function initializeMetadata(almanac: AlmanacWithMetadata): void {
@@ -215,6 +229,148 @@ function addMissedDay(almanac: AlmanacWithMetadata, day: string): void {
         metadata.missedDays.push(day);
         metadata.missedDays.sort(); // Keep sorted for easier reading
     }
+}
+
+export function applyFieldResponseToAlmanac(
+    almanac: AlmanacWithMetadata,
+    fieldResponse: FieldResponse,
+    day: string,
+    fieldKey: ThingSpeakFieldKey,
+    force: boolean = false
+): AlmanacMetricUpdateResult {
+    if (!force && isDayAlreadyProcessed(day, almanac._metadata)) {
+        return { status: 'skipped' };
+    }
+
+    const readings = fieldResponseToTemperatureReadings(fieldResponse, fieldKey);
+    if (readings.length === 0) {
+        addMissedDay(almanac, day);
+        return { status: 'missed' };
+    }
+
+    updateAlmanac(almanac, { readings, day });
+    updateMetadataForSuccessfulDay(almanac, day);
+    return { status: 'updated' };
+}
+
+async function writeJsonFile(filePath: string, value: unknown): Promise<void> {
+    await writeFile(filePath, JSON.stringify(value, undefined, 2), 'utf8');
+}
+
+async function processSingleMetricSensorDay(
+    sensor: SensorConfig,
+    response: DayResponse,
+    force: boolean
+): Promise<AlmanacMetricUpdateResult> {
+    const almanac = await getAlmanacFromPath(sensor.outputPath);
+    const metric = sensor.metrics[0];
+    const result = applyFieldResponseToAlmanac(almanac, response.json, response.day, metric.field, force);
+
+    if (result.status === 'skipped') {
+        console.log(`Day ${response.day} already processed for sensor ${sensor.key}, skipping.`);
+        return result;
+    }
+
+    await writeJsonFile(sensor.outputPath, almanac);
+    console.log(`Wrote ${sensor.outputPath} for date ${response.day}`);
+    return result;
+}
+
+async function processGroupedSensorDay(
+    sensor: LakeWaterSensorConfig,
+    response: DayResponse,
+    force: boolean
+): Promise<AlmanacMetricUpdateResult[]> {
+    const lakeWaterAlmanac = await getLakeWaterAlmanacFile(sensor.outputPath);
+    const results = sensor.metrics.map((metric) => {
+        const result = applyFieldResponseToAlmanac(
+            getLakeWaterMetricAlmanac(lakeWaterAlmanac, metric.key),
+            response.json,
+            response.day,
+            metric.field,
+            force
+        );
+
+        if (result.status === 'skipped') {
+            console.log(`Day ${response.day} already processed for ${metric.key}, skipping.`);
+        } else if (result.status === 'missed') {
+            console.log(`No valid ${metric.label.toLowerCase()} readings for ${response.day}, marked as missed.`);
+        } else {
+            console.log(`Updated ${metric.label.toLowerCase()} almanac for ${response.day}.`);
+        }
+
+        return result;
+    });
+
+    if (results.some((result) => result.status !== 'skipped')) {
+        await writeJsonFile(sensor.outputPath, lakeWaterAlmanac);
+        console.log(`Wrote ${sensor.outputPath} for date ${response.day}`);
+    }
+
+    return results;
+}
+
+export async function processSensorDay(
+    sensor: SensorConfig,
+    response: DayResponse,
+    force: boolean = false
+): Promise<void> {
+    const results =
+        sensor.kind === 'single'
+            ? [await processSingleMetricSensorDay(sensor, response, force)]
+            : await processGroupedSensorDay(sensor, response, force);
+
+    if (results.every((result) => result.status === 'skipped')) {
+        return;
+    }
+
+    try {
+        await saveDayToDatabase(response.json);
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.warn(`Warning: Failed to save day ${response.day} to database: ${errorMessage}`);
+    }
+}
+
+export async function processSensorDayFailure(sensor: SensorConfig, day: string, error: Error): Promise<void> {
+    if (sensor.kind === 'single') {
+        const almanac = await getAlmanacFromPath(sensor.outputPath);
+        addMissedDay(almanac, day);
+        await writeJsonFile(sensor.outputPath, almanac);
+    } else {
+        const lakeWaterAlmanac = await getLakeWaterAlmanacFile(sensor.outputPath);
+        sensor.metrics.forEach((metric) => {
+            addMissedDay(getLakeWaterMetricAlmanac(lakeWaterAlmanac, metric.key), day);
+        });
+        await writeJsonFile(sensor.outputPath, lakeWaterAlmanac);
+    }
+
+    console.log(`Recorded missed day ${day} for sensor ${sensor.key} due to error:`, error.message);
+}
+
+export async function getMissedDaysForSensor(sensor: SensorConfig): Promise<string[]> {
+    if (sensor.kind === 'single') {
+        const almanac = await getAlmanacFromPath(sensor.outputPath);
+        return almanac._metadata?.missedDays ?? [];
+    }
+
+    const lakeWaterAlmanac = await getLakeWaterAlmanacFile(sensor.outputPath);
+    const missedDays = new Set<string>();
+
+    sensor.metrics.forEach((metric) => {
+        const metricMissedDays = getLakeWaterMetricAlmanac(lakeWaterAlmanac, metric.key)._metadata?.missedDays ?? [];
+        metricMissedDays.forEach((day) => missedDays.add(day));
+    });
+
+    return Array.from(missedDays).sort();
+}
+
+export async function processDay(response: DayResponse, force: boolean = false): Promise<void> {
+    await processSensorDay(getSensorConfig('outdoor-air'), response, force);
+}
+
+export async function processDayFailure(day: string, error: Error): Promise<void> {
+    await processSensorDayFailure(getSensorConfig('outdoor-air'), day, error);
 }
 
 export function updateAlmanac(almanac: AlmanacWithMetadata, temperatureDay: TemperatureDay) {
@@ -609,7 +765,7 @@ export function findNearestReadingToTime(findDate: Dayjs, readings: TemperatureR
     const timeOfDayMs = (d: Dayjs) => {
         const inSensorTz = d.tz(TIMEZONE);
         return (
-            (((inSensorTz.hour() * 60 + inSensorTz.minute()) * 60 + inSensorTz.second()) * 1000) +
+            ((inSensorTz.hour() * 60 + inSensorTz.minute()) * 60 + inSensorTz.second()) * 1000 +
             inSensorTz.millisecond()
         );
     };

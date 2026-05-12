@@ -4,88 +4,68 @@
  */
 import dotenv from 'dotenv';
 import { Command } from 'commander';
-import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
-import JSZip from 'jszip';
 import dayjs from 'dayjs';
-import { FieldResponse } from '../src/thingspeak-sensor-api';
+import { loadArchivedDay } from '../src/archive-storage';
 import { saveDayToDatabase, closeDatabase } from '../src/database';
+import { SensorConfig, resolveSensorConfigs, supportsSensorDay } from '../src/sensor-config';
 
 // Load environment variables from .env.local (and .env as fallback)
 dotenv.config({ path: '.env.local' });
 dotenv.config(); // fallback to .env
 
-const ARCHIVE_BASE_PATH = 'output/responses-archive';
-
 interface BackfillResult {
     date: string;
+    sensor: string;
     status: 'success' | 'missing' | 'error';
     message?: string;
     recordCount?: number;
 }
 
-async function getArchiveFilePath(date: string): Promise<string> {
-    const dayObj = dayjs(date);
-    const year = dayObj.year();
-    const filename = `${date}.zip`;
-    return `${ARCHIVE_BASE_PATH}/${year}/${filename}`;
+function getArchiveFilePath(sensor: SensorConfig, date: string): string {
+    const year = dayjs(date).year();
+    return `${sensor.archiveRoot}/${year}/${date}.zip`;
 }
 
-async function readArchivedDay(date: string): Promise<FieldResponse | null> {
-    const archivePath = await getArchiveFilePath(date);
+async function backfillDate(sensor: SensorConfig, date: string): Promise<BackfillResult> {
+    if (!supportsSensorDay(sensor, date)) {
+        return {
+            date,
+            sensor: sensor.key,
+            status: 'missing',
+            message: 'Date is before sensor start date',
+        };
+    }
+
+    const archivePath = getArchiveFilePath(sensor, date);
 
     if (!existsSync(archivePath)) {
-        return null;
+        return {
+            date,
+            sensor: sensor.key,
+            status: 'missing',
+            message: 'Archive file not found',
+        };
     }
 
     try {
-        const zipData = await readFile(archivePath);
-        const zip = new JSZip();
-        const zipContents = await zip.loadAsync(zipData);
+        console.log(`Processing ${sensor.key} ${date}...`);
 
-        const jsonFilename = `${date}.json`;
-        const jsonFile = zipContents.file(jsonFilename);
-
-        if (!jsonFile) {
-            throw new Error(`JSON file ${jsonFilename} not found in archive`);
-        }
-
-        const jsonContent = await jsonFile.async('text');
-        const response: FieldResponse = JSON.parse(jsonContent);
-
-        return response;
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        throw new Error(`Failed to read archive for ${date}: ${errorMessage}`);
-    }
-}
-
-async function backfillDate(date: string): Promise<BackfillResult> {
-    try {
-        console.log(`Processing ${date}...`);
-
-        const response = await readArchivedDay(date);
-
-        if (!response) {
-            return {
-                date,
-                status: 'missing',
-                message: 'Archive file not found',
-            };
-        }
-
-        await saveDayToDatabase(response);
+        const response = await loadArchivedDay(sensor, date);
+        await saveDayToDatabase(response.json);
 
         return {
             date,
+            sensor: sensor.key,
             status: 'success',
-            recordCount: response.feeds.length,
-            message: `Successfully inserted ${response.feeds.length} temperature readings`,
+            recordCount: response.json.feeds.length,
+            message: `Successfully inserted ${response.json.feeds.length} temperature readings`,
         };
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         return {
             date,
+            sensor: sensor.key,
             status: 'error',
             message: errorMessage,
         };
@@ -111,6 +91,7 @@ async function main() {
         .option('-s, --start-date <date>', 'Start date for backfill (YYYY-MM-DD)')
         .option('-e, --end-date <date>', 'End date for backfill (YYYY-MM-DD)')
         .option('-d, --dates <dates>', 'Comma-separated list of specific dates (YYYY-MM-DD)')
+        .option('--sensor <sensor>', 'Backfill only one sensor (outdoor-air or lake-water)')
         .option('--dry-run', 'Show what would be processed without making database changes')
         .option('-h, --help', 'Show help')
         .parse();
@@ -128,15 +109,16 @@ Options:
   -s, --start-date <date>  Start date for backfill (YYYY-MM-DD)
   -e, --end-date <date>    End date for backfill (YYYY-MM-DD)
   -d, --dates <dates>      Comma-separated list of specific dates (YYYY-MM-DD)
+  --sensor <sensor>        Backfill only one sensor (outdoor-air or lake-water)
   --dry-run               Show what would be processed without making database changes
   -h, --help              Show this help message
 
 Examples:
-  backfill-database-from-archive.ts -s 2024-01-01 -e 2024-01-31    # Backfill January 2024
-  backfill-database-from-archive.ts -d 2024-01-15,2024-02-20       # Backfill specific dates
-  backfill-database-from-archive.ts --dry-run -s 2024-01-01 -e 2024-01-07  # Preview what would be processed
+  backfill-database-from-archive.ts -s 2024-01-01 -e 2024-01-31
+  backfill-database-from-archive.ts --sensor lake-water -d 2026-05-09
+  backfill-database-from-archive.ts --dry-run -s 2024-01-01 -e 2024-01-07
 
-Note: This script only processes dates that have archived JSON files in output/responses-archive/
+Note: This script only processes dates that have archived JSON files.
 `);
         process.exit(0);
     }
@@ -145,20 +127,16 @@ Note: This script only processes dates that have archived JSON files in output/r
         let datesToProcess: string[] = [];
 
         if (options.dates) {
-            // Process specific dates
             datesToProcess = options.dates.split(',').map((date: string) => date.trim());
         } else if (options.startDate && options.endDate) {
-            // Process date range
             datesToProcess = generateDateRange(options.startDate, options.endDate);
         } else if (options.startDate) {
-            // Process single date
             datesToProcess = [options.startDate];
         } else {
             console.error('Error: Must specify either --dates, or --start-date (with optional --end-date)');
             process.exit(1);
         }
 
-        // Validate dates
         for (const date of datesToProcess) {
             if (!dayjs(date).isValid()) {
                 console.error(`Error: Invalid date format: ${date}. Use YYYY-MM-DD format.`);
@@ -166,8 +144,12 @@ Note: This script only processes dates that have archived JSON files in output/r
             }
         }
 
+        const sensors = resolveSensorConfigs(options.sensor);
+
         console.log(`📊 Database Backfill from Archive`);
-        console.log(`Processing ${datesToProcess.length} date(s)${options.dryRun ? ' (DRY RUN)' : ''}`);
+        console.log(
+            `Processing ${datesToProcess.length} date(s) across ${sensors.length} sensor(s)${options.dryRun ? ' (DRY RUN)' : ''}`
+        );
         console.log(`Date range: ${datesToProcess[0]} to ${datesToProcess[datesToProcess.length - 1]}`);
         console.log('');
 
@@ -177,31 +159,39 @@ Note: This script only processes dates that have archived JSON files in output/r
         let errorCount = 0;
         let totalRecords = 0;
 
-        for (const date of datesToProcess) {
-            if (options.dryRun) {
-                const archivePath = await getArchiveFilePath(date);
-                const exists = existsSync(archivePath);
-                console.log(`${exists ? '✓' : '✗'} ${date} - Archive ${exists ? 'exists' : 'missing'}`);
-                if (exists) successCount++;
-                else missingCount++;
-            } else {
-                const result = await backfillDate(date);
-                results.push(result);
+        for (const sensor of sensors) {
+            for (const date of datesToProcess) {
+                if (!supportsSensorDay(sensor, date)) {
+                    continue;
+                }
 
-                switch (result.status) {
-                    case 'success':
-                        console.log(`✓ ${result.date} - ${result.message}`);
-                        successCount++;
-                        totalRecords += result.recordCount || 0;
-                        break;
-                    case 'missing':
-                        console.log(`⚠ ${result.date} - ${result.message}`);
-                        missingCount++;
-                        break;
-                    case 'error':
-                        console.log(`✗ ${result.date} - ${result.message}`);
-                        errorCount++;
-                        break;
+                if (options.dryRun) {
+                    const archivePath = getArchiveFilePath(sensor, date);
+                    const exists = existsSync(archivePath);
+                    console.log(
+                        `${exists ? '✓' : '✗'} ${sensor.key} ${date} - Archive ${exists ? 'exists' : 'missing'}`
+                    );
+                    if (exists) successCount++;
+                    else missingCount++;
+                } else {
+                    const result = await backfillDate(sensor, date);
+                    results.push(result);
+
+                    switch (result.status) {
+                        case 'success':
+                            console.log(`✓ ${result.sensor} ${result.date} - ${result.message}`);
+                            successCount++;
+                            totalRecords += result.recordCount || 0;
+                            break;
+                        case 'missing':
+                            console.log(`⚠ ${result.sensor} ${result.date} - ${result.message}`);
+                            missingCount++;
+                            break;
+                        case 'error':
+                            console.log(`✗ ${result.sensor} ${result.date} - ${result.message}`);
+                            errorCount++;
+                            break;
+                    }
                 }
             }
         }
@@ -218,12 +208,14 @@ Note: This script only processes dates that have archived JSON files in output/r
 
         if (errorCount > 0) {
             console.log('\n❌ Errors occurred during processing:');
-            results.filter((r) => r.status === 'error').forEach((r) => console.log(`  ${r.date}: ${r.message}`));
+            results
+                .filter((r) => r.status === 'error')
+                .forEach((r) => console.log(`  ${r.sensor} ${r.date}: ${r.message}`));
         }
 
         if (missingCount > 0) {
             console.log('\n📁 Missing archive files:');
-            results.filter((r) => r.status === 'missing').forEach((r) => console.log(`  ${r.date}`));
+            results.filter((r) => r.status === 'missing').forEach((r) => console.log(`  ${r.sensor} ${r.date}`));
             console.log('\nNote: Missing archives may need to be fetched using "npm run retry-missed-days"');
         }
 

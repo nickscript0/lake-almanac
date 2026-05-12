@@ -5,62 +5,69 @@
  */
 import { Command } from 'commander';
 import dayjs, { Dayjs } from 'dayjs';
-import { readFile } from 'fs/promises';
-import JSZip from 'jszip';
 
-import { fetchLakeDay, EARLIEST_RECORD, FieldResponse, DayResponse } from './thingspeak-sensor-api';
-import { processDay, processDayFailure } from './almanac';
-import { writeZippedStringToFile } from './writer';
+import { fetchThingSpeakDay, DayResponse } from './thingspeak-sensor-api';
+import { processSensorDay, processSensorDayFailure } from './almanac';
+import { loadArchivedDay, saveArchivedDay } from './archive-storage';
+import { SensorConfig, resolveSensorConfigs, supportsSensorDay } from './sensor-config';
 
 async function main() {
     const range = parseArgs();
 
-    const numDays = range.end.diff(range.start, 'day');
-    for (let i = 0; i < numDays; i++) {
-        const curDay = range.start.add(i, 'day');
-        const dayString = curDay.format('YYYY-MM-DD');
-        let response: DayResponse;
+    for (const sensor of range.sensors) {
+        const numDays = range.end.diff(range.start, 'day');
+        for (let i = 0; i < numDays; i++) {
+            const curDay = range.start.add(i, 'day');
+            const dayString = curDay.format('YYYY-MM-DD');
 
-        try {
-            if (range.useLocalArchive) {
-                const archivedResponse = await loadArchivedDay(dayString);
-                if (!archivedResponse) {
-                    await processDayFailure(dayString, new Error('No archived data available'));
-                    continue;
-                }
-                response = archivedResponse;
-            } else {
-                response = await fetchLakeDay(dayString);
-                if (range.saveResponses) {
-                    await writeZippedStringToFile(
-                        `output/responses-archive/${curDay.year()}`,
-                        response.day,
-                        JSON.stringify(response.json)
-                    );
-                }
+            if (!supportsSensorDay(sensor, dayString)) {
+                continue;
             }
-            await processDay(response, range.force);
-        } catch (error) {
-            const err = error instanceof Error ? error : new Error(String(error));
-            console.error(`Failed to process day ${dayString}:`, err.message);
-            await processDayFailure(dayString, err);
+
+            let response: DayResponse;
+
+            try {
+                if (range.useLocalArchive) {
+                    response = await loadArchivedDay(sensor, dayString);
+                } else {
+                    response = await fetchThingSpeakDay(dayString, {
+                        channelId: sensor.channelId,
+                        earliestRecord: sensor.earliestRecord,
+                    });
+                    if (range.saveResponses) {
+                        await saveArchivedDay(sensor, response);
+                    }
+                }
+                await processSensorDay(sensor, response, range.force);
+            } catch (error) {
+                const err = error instanceof Error ? error : new Error(String(error));
+                console.error(`Failed to process ${sensor.key} day ${dayString}:`, err.message);
+                await processSensorDayFailure(sensor, dayString, err);
+            }
         }
     }
 }
 
-function parseArgs(): { start: Dayjs; end: Dayjs; saveResponses: boolean; useLocalArchive: boolean; force: boolean } {
+function parseArgs(): {
+    start: Dayjs;
+    end: Dayjs;
+    saveResponses: boolean;
+    useLocalArchive: boolean;
+    force: boolean;
+    sensors: SensorConfig[];
+} {
     function exitWithUsage(errMessage: string) {
         console.log(
             `Error: ${errMessage}.
 Usage:
- 1. archiver.ts [--${SAVE_RESPONSES_FLAG}] [--${FORCE_FLAG}] <start-date> <end-date>
- 2. archiver.ts --${USE_LOCAL_ARCHIVE_FLAG} [--${FORCE_FLAG}] <start-date> <end-date>
- 3. archiver.ts [--${FORCE_FLAG}] (For github-actions, run with no arguments, or 1 argument it will ignore, 
+ 1. archiver.ts [--${SAVE_RESPONSES_FLAG}] [--sensor <sensor>] [--${FORCE_FLAG}] <start-date> <end-date>
+ 2. archiver.ts --${USE_LOCAL_ARCHIVE_FLAG} [--sensor <sensor>] [--${FORCE_FLAG}] <start-date> <end-date>
+ 3. archiver.ts [--sensor <sensor>] [--${FORCE_FLAG}] (For github-actions, run with no arguments, or 1 argument it will ignore, 
     to only process yesterday and with --${SAVE_RESPONSES_FLAG} enabled)
 Examples:
- archiver.ts ${EARLIEST_RECORD} 2020-09-01
- archiver.ts --${USE_LOCAL_ARCHIVE_FLAG} 2020-01-01 2020-01-31
- archiver.ts --${FORCE_FLAG} 2025-01-01 2025-01-02
+ archiver.ts 2018-10-06 2020-09-01
+ archiver.ts --sensor lake-water --${USE_LOCAL_ARCHIVE_FLAG} 2026-05-03 2026-05-09
+ archiver.ts --sensor lake-water --${FORCE_FLAG} 2026-05-03 2026-05-09
  archiver.ts
 `
         );
@@ -76,6 +83,7 @@ Examples:
         .option(`--${SAVE_RESPONSES_FLAG}`, 'Save API responses to archive')
         .option(`--${USE_LOCAL_ARCHIVE_FLAG}`, 'Use local archive instead of fetching from API')
         .option(`--${FORCE_FLAG}`, 'Force reprocessing of already processed days')
+        .option('--sensor <sensor>', 'Process only one sensor (outdoor-air or lake-water)')
         .option('-h, --help', 'Show help')
         .parse();
 
@@ -88,7 +96,14 @@ Examples:
         // Treat yesterday as 2 days ago to eliminate any issues with running this when UTC is past midnight
         const end = dayjs(now.subtract(1, 'day').format('YYYY-MM-DD'));
         const start = dayjs(now.subtract(2, 'day').format('YYYY-MM-DD'));
-        return { start, end, saveResponses: true, useLocalArchive: false, force: !!options.force };
+        return {
+            start,
+            end,
+            saveResponses: true,
+            useLocalArchive: false,
+            force: !!options.force,
+            sensors: resolveSensorConfigs(options.sensor),
+        };
     } else if (args.length !== 2) {
         exitWithUsage(`Invalid number of args ${args.length}`);
     }
@@ -109,41 +124,8 @@ Examples:
         saveResponses: !!options.saveResponses,
         useLocalArchive: !!options.useLocalArchive,
         force: !!options.force,
+        sensors: resolveSensorConfigs(options.sensor),
     };
-}
-
-async function loadArchivedDay(day: string): Promise<DayResponse | null> {
-    const dayjs_day = dayjs(day);
-    if (!dayjs_day.isValid()) {
-        throw new Error(`Invalid day requested ${day}`);
-    }
-
-    const year = dayjs_day.year();
-    const archivePath = `output/responses-archive/${year}/${day}.zip`;
-
-    try {
-        const zipBuffer = await readFile(archivePath);
-        const zip = await JSZip.loadAsync(zipBuffer);
-        const jsonFile = zip.file(`${day}.json`);
-
-        if (!jsonFile) {
-            throw new Error(`JSON file not found in archive: ${day}.json`);
-        }
-
-        const jsonContent = await jsonFile.async('text');
-        const json: FieldResponse = JSON.parse(jsonContent);
-
-        // Validate that we got meaningful data
-        if (!json.feeds || json.feeds.length === 0) {
-            throw new Error(`No data feeds in archived file for day ${day}`);
-        }
-
-        return { json, day };
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        console.warn(`Warning: Failed to load archived day ${day}: ${errorMessage}`);
-        throw error; // Re-throw to be handled by caller
-    }
 }
 
 main();

@@ -9,8 +9,10 @@ dotenv.config({ path: '.env.local' });
 dotenv.config(); // fallback to .env
 import { Pool } from 'pg';
 import dayjs from 'dayjs';
+import { SensorConfig, resolveSensorConfigs } from '../src/sensor-config';
 
 interface DatabaseGapResult {
+    sensor: string;
     latestDate: string | null;
     missingDates: string[];
     totalGaps: number;
@@ -34,15 +36,19 @@ function getPool(): Pool {
     return pool;
 }
 
-async function getLatestDatabaseDate(): Promise<string | null> {
+async function getLatestDatabaseDate(sensor: SensorConfig): Promise<string | null> {
     const pool = getPool();
     const client = await pool.connect();
 
     try {
-        const result = await client.query(`
+        const result = await client.query(
+            `
             SELECT MAX(DATE(date_recorded)) as latest_date 
             FROM lake_temperature_readings
-        `);
+            WHERE channel_id = $1
+        `,
+            [Number(sensor.channelId)]
+        );
 
         return result.rows[0]?.latest_date || null;
     } finally {
@@ -50,7 +56,7 @@ async function getLatestDatabaseDate(): Promise<string | null> {
     }
 }
 
-async function getExistingDates(startDate: string, endDate: string): Promise<Set<string>> {
+async function getExistingDates(sensor: SensorConfig, startDate: string, endDate: string): Promise<Set<string>> {
     const pool = getPool();
     const client = await pool.connect();
 
@@ -59,10 +65,11 @@ async function getExistingDates(startDate: string, endDate: string): Promise<Set
             `
             SELECT DISTINCT DATE(date_recorded) as date_recorded
             FROM lake_temperature_readings
-            WHERE DATE(date_recorded) BETWEEN $1 AND $2
+            WHERE channel_id = $1
+            AND DATE(date_recorded) BETWEEN $2 AND $3
             ORDER BY date_recorded
         `,
-            [startDate, endDate]
+            [Number(sensor.channelId), startDate, endDate]
         );
 
         return new Set(result.rows.map((row) => dayjs(row.date_recorded).format('YYYY-MM-DD')));
@@ -84,11 +91,16 @@ function generateDateRange(startDate: string, endDate: string): string[] {
     return dates;
 }
 
-async function findDatabaseGaps(startDate?: string, endDate?: string): Promise<DatabaseGapResult> {
-    const latestDate = await getLatestDatabaseDate();
+async function findDatabaseGaps(
+    sensor: SensorConfig,
+    startDate?: string,
+    endDate?: string
+): Promise<DatabaseGapResult> {
+    const latestDate = await getLatestDatabaseDate(sensor);
 
     if (!latestDate) {
         return {
+            sensor: sensor.key,
             latestDate: null,
             missingDates: [],
             totalGaps: 0,
@@ -96,21 +108,22 @@ async function findDatabaseGaps(startDate?: string, endDate?: string): Promise<D
     }
 
     // Default range: from project start (2018-10-06) to yesterday
-    const defaultStartDate = '2018-10-06';
+    const defaultStartDate = sensor.earliestRecord;
     const defaultEndDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
 
     const rangeStart = startDate || defaultStartDate;
     const rangeEnd = endDate || defaultEndDate;
 
-    console.log(`Checking database gaps from ${rangeStart} to ${rangeEnd}`);
-    console.log(`Latest date in database: ${latestDate}`);
+    console.log(`Checking database gaps for ${sensor.key} from ${rangeStart} to ${rangeEnd}`);
+    console.log(`Latest date in database for ${sensor.key}: ${latestDate}`);
 
     const expectedDates = generateDateRange(rangeStart, rangeEnd);
-    const existingDates = await getExistingDates(rangeStart, rangeEnd);
+    const existingDates = await getExistingDates(sensor, rangeStart, rangeEnd);
 
     const missingDates = expectedDates.filter((date) => !existingDates.has(date));
 
     return {
+        sensor: sensor.key,
         latestDate,
         missingDates,
         totalGaps: missingDates.length,
@@ -129,6 +142,7 @@ async function main() {
     program
         .option('-s, --start-date <date>', 'Start date for gap checking (YYYY-MM-DD)')
         .option('-e, --end-date <date>', 'End date for gap checking (YYYY-MM-DD)')
+        .option('--sensor <sensor>', 'Check gaps for only one sensor (outdoor-air or lake-water)')
         .option('--recent <days>', 'Check only the last N days', parseInt)
         .option('--list-missing', 'List all missing dates')
         .option('-h, --help', 'Show help')
@@ -145,12 +159,14 @@ Checks for gaps in the database temperature readings and identifies missing date
 Options:
   -s, --start-date <date>  Start date for gap checking (YYYY-MM-DD)
   -e, --end-date <date>    End date for gap checking (YYYY-MM-DD)
+  --sensor <sensor>        Check only one sensor (outdoor-air or lake-water)
   --recent <days>          Check only the last N days
   --list-missing           List all missing dates
   -h, --help              Show this help message
 
 Examples:
   check-database-gaps.ts                           # Check all gaps from project start
+  check-database-gaps.ts --sensor lake-water       # Check only lake-water gaps
   check-database-gaps.ts --recent 30               # Check last 30 days
   check-database-gaps.ts -s 2024-01-01 -e 2024-12-31  # Check specific date range
   check-database-gaps.ts --list-missing             # Show all missing dates
@@ -167,20 +183,23 @@ Examples:
             startDate = dayjs().subtract(options.recent, 'days').format('YYYY-MM-DD');
         }
 
-        const result = await findDatabaseGaps(startDate, endDate);
+        for (const sensor of resolveSensorConfigs(options.sensor)) {
+            const result = await findDatabaseGaps(sensor, startDate, endDate);
 
-        if (!result.latestDate) {
-            console.log('❌ No data found in database');
-            return;
-        }
+            if (!result.latestDate) {
+                console.log(`❌ No data found in database for ${result.sensor}`);
+                continue;
+            }
 
-        console.log(`\n📊 Database Gap Analysis:`);
-        console.log(`Latest date in database: ${result.latestDate}`);
-        console.log(`Total missing dates: ${result.totalGaps}`);
+            console.log(`\n📊 Database Gap Analysis (${result.sensor}):`);
+            console.log(`Latest date in database: ${result.latestDate}`);
+            console.log(`Total missing dates: ${result.totalGaps}`);
 
-        if (result.totalGaps === 0) {
-            console.log('✅ No gaps found - database is complete for the specified range');
-        } else {
+            if (result.totalGaps === 0) {
+                console.log('✅ No gaps found - database is complete for the specified range');
+                continue;
+            }
+
             console.log(`⚠️  Found ${result.totalGaps} missing dates`);
 
             if (options.listMissing && result.missingDates.length > 0) {
@@ -196,9 +215,9 @@ Examples:
             }
 
             console.log(`\n💡 To backfill missing data, you have two options:`);
-            console.log(`   1. From existing archives: npm run backfill-database`);
+            console.log(`   1. From existing archives: npm run backfill-database -- --sensor ${result.sensor}`);
             console.log(`      (Recommended: Uses archived data, database-only update)`);
-            console.log(`   2. Fetch new data: npm run retry-missed-days`);
+            console.log(`   2. Fetch new data: npm run retry-missed-days -- --sensor ${result.sensor}`);
             console.log(`      (Requires dates to be in almanac metadata, fetches from API)`);
         }
     } catch (error) {

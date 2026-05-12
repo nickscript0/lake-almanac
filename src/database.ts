@@ -1,11 +1,17 @@
 import { Pool, PoolClient } from 'pg';
-import { FieldResponse, FieldFeed } from './thingspeak-sensor-api';
+
+import { FieldFeed, FieldResponse } from './thingspeak-sensor-api';
+import { getSensorConfigByChannelId } from './sensor-config';
+import { ThingSpeakFieldKey } from './types';
 
 export interface TemperatureReading {
     date_recorded: Date;
     entry_id: number;
     indoor_temp: number | null;
     outdoor_temp: number | null;
+    deep_water_temp: number | null;
+    lake_air_temp: number | null;
+    surface_water_temp: number | null;
     channel_id: number;
 }
 
@@ -27,51 +33,90 @@ function getPool(): Pool {
     return pool;
 }
 
+function parseTemperatureValue(value: string | null | undefined): number | null {
+    if (value === undefined || value === null || value === '') {
+        return null;
+    }
+
+    const parsedValue = parseFloat(value);
+    return Number.isNaN(parsedValue) ? null : parsedValue;
+}
+
 export function transformFieldResponseToReadings(response: FieldResponse): TemperatureReading[] {
     const { channel, feeds } = response;
+    const sensor = getSensorConfigByChannelId(channel.id);
+
+    if (!sensor) {
+        throw new Error(`Unsupported sensor channel id ${channel.id}`);
+    }
 
     return feeds.map((feed: FieldFeed): TemperatureReading => {
-        const indoor_temp = feed.field1 ? parseFloat(feed.field1) : null;
-        const outdoor_temp = feed.field2 ? parseFloat(feed.field2) : null;
-
-        return {
+        const reading: TemperatureReading = {
             date_recorded: new Date(feed.created_at),
             entry_id: feed.entry_id,
-            indoor_temp: indoor_temp && !isNaN(indoor_temp) ? indoor_temp : null,
-            outdoor_temp: outdoor_temp && !isNaN(outdoor_temp) ? outdoor_temp : null,
+            indoor_temp: null,
+            outdoor_temp: null,
+            deep_water_temp: null,
+            lake_air_temp: null,
+            surface_water_temp: null,
             channel_id: channel.id,
         };
+
+        const databaseFieldEntries = Object.entries(sensor.databaseFieldMap) as Array<
+            [
+                keyof Omit<TemperatureReading, 'date_recorded' | 'entry_id' | 'channel_id'>,
+                ThingSpeakFieldKey | undefined,
+            ]
+        >;
+
+        for (const [columnName, fieldName] of databaseFieldEntries) {
+            if (!fieldName) {
+                continue;
+            }
+
+            reading[columnName] = parseTemperatureValue(feed[fieldName]);
+        }
+
+        return reading;
     });
 }
 
 const MAX_BATCH_SIZE = 2000;
 
-function buildMultiRowInsertQuery(batchSize: number): string {
+export function buildMultiRowInsertQuery(batchSize: number): string {
     const valuesClauses = [];
     for (let i = 0; i < batchSize; i++) {
-        const offset = i * 5;
-        valuesClauses.push(`($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4}, $${offset + 5})`);
+        const offset = i * 8;
+        valuesClauses.push(
+            `($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4}, $${offset + 5}, $${offset + 6}, $${offset + 7}, $${offset + 8})`
+        );
     }
 
     return `
         INSERT INTO lake_temperature_readings 
-        (date_recorded, entry_id, indoor_temp, outdoor_temp, channel_id)
+        (date_recorded, entry_id, indoor_temp, outdoor_temp, deep_water_temp, lake_air_temp, surface_water_temp, channel_id)
         VALUES ${valuesClauses.join(', ')}
-        ON CONFLICT (entry_id, date_recorded) DO UPDATE SET
+        ON CONFLICT (channel_id, entry_id, date_recorded) DO UPDATE SET
             date_recorded = EXCLUDED.date_recorded,
             indoor_temp = EXCLUDED.indoor_temp,
-            outdoor_temp = EXCLUDED.outdoor_temp
+            outdoor_temp = EXCLUDED.outdoor_temp,
+            deep_water_temp = EXCLUDED.deep_water_temp,
+            lake_air_temp = EXCLUDED.lake_air_temp,
+            surface_water_temp = EXCLUDED.surface_water_temp
     `;
 }
 
-function buildParameterArray(readings: TemperatureReading[]): any[] {
-    const parameters = [];
+function buildParameterArray(readings: TemperatureReading[]): unknown[] {
+    const parameters: unknown[] = [];
     for (const reading of readings) {
         parameters.push(
             reading.date_recorded,
             reading.entry_id,
             reading.indoor_temp,
             reading.outdoor_temp,
+            reading.deep_water_temp,
+            reading.lake_air_temp,
+            reading.surface_water_temp,
             reading.channel_id
         );
     }
@@ -96,7 +141,6 @@ export async function insertTemperatureReadings(readings: TemperatureReading[]):
     try {
         await client.query('BEGIN');
 
-        // Process readings in batches of MAX_BATCH_SIZE
         for (let i = 0; i < readings.length; i += MAX_BATCH_SIZE) {
             const batch = readings.slice(i, i + MAX_BATCH_SIZE);
             await insertBatch(client, batch);

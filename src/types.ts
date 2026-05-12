@@ -5,6 +5,8 @@ export type Year = string;
 export const ALL = 'All';
 export const seasons = ['Spring', 'Summer', 'Fall', 'Winter'] as const;
 export type Season = (typeof seasons)[number];
+export type ThingSpeakFieldKey = 'field1' | 'field2' | 'field3' | 'field4' | 'field5' | 'field6' | 'field7' | 'field8';
+export type LakeWaterAlmanacMetricKey = 'deepWater' | 'lakeAir' | 'surfaceWater';
 
 export interface AlmanacMetadata {
     startDate?: string; // First day with data (YYYY-MM-DD)
@@ -17,6 +19,12 @@ export type Almanac = Record<Year, AlmanacYear>;
 export interface AlmanacWithMetadata {
     _metadata?: AlmanacMetadata;
     [year: string]: AlmanacYear | AlmanacMetadata | undefined;
+}
+
+export interface LakeWaterAlmanacFile {
+    deepWater: AlmanacWithMetadata;
+    lakeAir: AlmanacWithMetadata;
+    surfaceWater: AlmanacWithMetadata;
 }
 
 export interface AlmanacYear {

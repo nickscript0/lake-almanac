@@ -6,17 +6,20 @@
  */
 import { Command } from 'commander';
 import dayjs, { Dayjs } from 'dayjs';
-import { readFile } from 'fs/promises';
-import JSZip from 'jszip';
 import { createWriteStream } from 'fs';
 
-import { FieldResponse } from '../src/thingspeak-sensor-api';
+import { loadArchivedDay } from '../src/archive-storage';
+import { transformFieldResponseToReadings } from '../src/database';
+import { SensorConfig, resolveSensorConfigs, supportsSensorDay } from '../src/sensor-config';
 
 interface CsvRow {
     date_recorded: string;
     entry_id: number;
-    indoor_temp: string | null;
-    outdoor_temp: string | null;
+    indoor_temp: number | null;
+    outdoor_temp: number | null;
+    deep_water_temp: number | null;
+    lake_air_temp: number | null;
+    surface_water_temp: number | null;
     channel_id: number;
 }
 
@@ -34,46 +37,48 @@ async function main() {
     const allRows: CsvRow[] = [];
     const seenKeys = new Set<string>();
 
-    // Collect all rows first
-    for (let i = 0; i < numDays; i++) {
-        const curDay = config.start.add(i, 'day');
-        const dayString = curDay.format('YYYY-MM-DD');
+    for (const sensor of config.sensors) {
+        console.log(`Processing sensor: ${sensor.key}`);
 
-        try {
-            const response = await loadArchivedDay(dayString);
-            if (response) {
-                const rows = convertToCSVRows(response);
+        for (let i = 0; i < numDays; i++) {
+            const curDay = config.start.add(i, 'day');
+            const dayString = curDay.format('YYYY-MM-DD');
+
+            if (!supportsSensorDay(sensor, dayString)) {
+                continue;
+            }
+
+            try {
+                const response = await loadArchivedDay(sensor, dayString);
+                const rows = convertToCSVRows(response.json);
                 for (const row of rows) {
-                    allTimestamps.push({ timestamp: row.date_recorded, dayFile: dayString });
+                    allTimestamps.push({ timestamp: row.date_recorded, dayFile: `${sensor.key}:${dayString}` });
                     totalRowsBeforeDedup++;
 
-                    // Create composite key for duplicate detection (entry_id + date_recorded)
-                    const key = `${row.entry_id}|${row.date_recorded}`;
+                    const key = `${row.channel_id}|${row.entry_id}|${row.date_recorded}`;
                     if (!seenKeys.has(key)) {
                         seenKeys.add(key);
                         allRows.push(row);
                     }
                 }
                 processedDays++;
-            } else {
-                console.warn(`No data found for ${dayString}`);
+            } catch (error) {
+                const err = error instanceof Error ? error : new Error(String(error));
+                console.warn(`Failed to process ${sensor.key} ${dayString}: ${err.message}`);
                 skippedDays++;
             }
-        } catch (error) {
-            const err = error instanceof Error ? error : new Error(String(error));
-            console.warn(`Failed to process ${dayString}: ${err.message}`);
-            skippedDays++;
-        }
 
-        // Progress update every 30 days
-        if ((i + 1) % 30 === 0 || i === numDays - 1) {
-            console.log(`Progress: ${i + 1}/${numDays} days processed, ${totalRowsBeforeDedup} rows collected`);
+            if ((i + 1) % 30 === 0 || i === numDays - 1) {
+                console.log(
+                    `Progress for ${sensor.key}: ${i + 1}/${numDays} day slots scanned, ${totalRowsBeforeDedup} rows collected`
+                );
+            }
         }
     }
 
-    // Write deduplicated data to CSV
     const writeStream = createWriteStream(config.outputFile);
-    const header = 'date_recorded,entry_id,indoor_temp,outdoor_temp,channel_id\n';
+    const header =
+        'date_recorded,entry_id,indoor_temp,outdoor_temp,deep_water_temp,lake_air_temp,surface_water_temp,channel_id\n';
     writeStream.write(header);
 
     for (const row of allRows) {
@@ -114,16 +119,19 @@ async function main() {
     }
 
     console.log(`\nPostgreSQL COPY command:`);
-    console.log(`COPY lake_temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, channel_id)`);
+    console.log(
+        `COPY lake_temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, deep_water_temp, lake_air_temp, surface_water_temp, channel_id)`
+    );
     console.log(`FROM '${config.outputFile}' WITH (FORMAT CSV, HEADER);`);
 }
 
-function parseArgs(): { start: Dayjs; end: Dayjs; outputFile: string } {
+function parseArgs(): { start: Dayjs; end: Dayjs; outputFile: string; sensors: SensorConfig[] } {
     const program = new Command();
     program
-        .argument('<start-date>', 'Start date (YYYY-MM-DD)')
-        .argument('<end-date>', 'End date (YYYY-MM-DD)')
+        .argument('[start-date]', 'Start date (YYYY-MM-DD)')
+        .argument('[end-date]', 'End date (YYYY-MM-DD)')
         .argument('[output-file]', 'Output CSV file path', 'lake-data-export.csv')
+        .option('--sensor <sensor>', 'Export data for only one sensor (outdoor-air or lake-water)')
         .option('-h, --help', 'Show help')
         .parse();
 
@@ -136,6 +144,7 @@ Usage: csv-exporter.ts <start-date> <end-date> [output-file]
 
 Examples:
   csv-exporter.ts 2020-01-01 2020-12-31
+  csv-exporter.ts --sensor lake-water 2026-05-03 2026-05-09 lake-water-export.csv
   csv-exporter.ts 2018-10-06 2025-01-01 full-dataset.csv
 
 The script will create a CSV file suitable for PostgreSQL COPY command.
@@ -163,70 +172,31 @@ The script will create a CSV file suitable for PostgreSQL COPY command.
         process.exit(1);
     }
 
-    return { start, end, outputFile };
+    return { start, end, outputFile, sensors: resolveSensorConfigs(options.sensor) };
 }
 
-async function loadArchivedDay(day: string): Promise<FieldResponse | null> {
-    const dayjs_day = dayjs(day);
-    if (!dayjs_day.isValid()) {
-        throw new Error(`Invalid day requested ${day}`);
-    }
-
-    const year = dayjs_day.year();
-    const archivePath = `output/responses-archive/${year}/${day}.zip`;
-
-    try {
-        const zipBuffer = await readFile(archivePath);
-        const zip = await JSZip.loadAsync(zipBuffer);
-        const jsonFile = zip.file(`${day}.json`);
-
-        if (!jsonFile) {
-            throw new Error(`JSON file not found in archive: ${day}.json`);
-        }
-
-        const jsonContent = await jsonFile.async('text');
-        const json: FieldResponse = JSON.parse(jsonContent);
-
-        // Validate that we got meaningful data
-        if (!json.feeds || json.feeds.length === 0) {
-            throw new Error(`No data feeds in archived file for day ${day}`);
-        }
-
-        return json;
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        throw new Error(`Failed to load archived day ${day}: ${errorMessage}`);
-    }
-}
-
-function convertToCSVRows(response: FieldResponse): CsvRow[] {
-    const rows: CsvRow[] = [];
-
-    for (const feed of response.feeds) {
-        // Skip feeds with no temperature data
-        if (!feed.field1 && !feed.field2) {
-            continue;
-        }
-
-        rows.push({
-            date_recorded: feed.created_at,
-            entry_id: feed.entry_id,
-            indoor_temp: feed.field1 || null,
-            outdoor_temp: feed.field2 || null,
-            channel_id: response.channel.id,
-        });
-    }
-
-    return rows;
+function convertToCSVRows(response: Parameters<typeof transformFieldResponseToReadings>[0]): CsvRow[] {
+    return transformFieldResponseToReadings(response).map((reading) => ({
+        date_recorded: reading.date_recorded.toISOString(),
+        entry_id: reading.entry_id,
+        indoor_temp: reading.indoor_temp,
+        outdoor_temp: reading.outdoor_temp,
+        deep_water_temp: reading.deep_water_temp,
+        lake_air_temp: reading.lake_air_temp,
+        surface_water_temp: reading.surface_water_temp,
+        channel_id: reading.channel_id,
+    }));
 }
 
 function formatCSVRow(row: CsvRow): string {
-    // Escape and format each field for CSV
     const fields = [
         escapeCSVField(row.date_recorded),
         row.entry_id.toString(),
-        row.indoor_temp || '',
-        row.outdoor_temp || '',
+        row.indoor_temp?.toString() ?? '',
+        row.outdoor_temp?.toString() ?? '',
+        row.deep_water_temp?.toString() ?? '',
+        row.lake_air_temp?.toString() ?? '',
+        row.surface_water_temp?.toString() ?? '',
         row.channel_id.toString(),
     ];
 
@@ -234,7 +204,6 @@ function formatCSVRow(row: CsvRow): string {
 }
 
 function escapeCSVField(value: string): string {
-    // If field contains comma, quote, or newline, wrap in quotes and escape internal quotes
     if (value.includes(',') || value.includes('"') || value.includes('\n') || value.includes('\r')) {
         return '"' + value.replace(/"/g, '""') + '"';
     }

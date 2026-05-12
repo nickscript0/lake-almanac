@@ -12,13 +12,25 @@ npm run archiver -- --use-local-archive 2020-01-01 2020-01-31
 # Process yesterday only (this is what the daily Github Action runs)
 npm run archiver
 
-# How to re-generate lake-almanac.json if say we added new stats / fields
+# Process only the lake-water sensor
+npm run archiver -- --sensor lake-water 2026-05-03 2026-05-09
+
+# How to re-generate both almanac output files if say we added new stats / fields
 rm output/lake-almanac.json
+rm output/lake-water-almanac.json
 npm run archiver -- --use-local-archive 2018-10-06 2026-05-09 # Up to today's date
 
 # Run tests
 npm test
 ```
+
+## Output Files
+
+- `output/lake-almanac.json`: existing outdoor-air almanac from channel `581842`
+- `output/lake-water-almanac.json`: grouped lake-water almanacs from channel `3367153`
+    - `deepWater` from `field1`
+    - `lakeAir` from `field2`
+    - `surfaceWater` from `field3`
 
 ## Use Cases and Scripts
 
@@ -27,20 +39,21 @@ npm test
 1. **API Mode (default)**: Fetches data from ThingSpeak API and optionally saves responses
 
     ```bash
-    npm run archiver -- [--save-responses] <start-date> <end-date>
+    npm run archiver -- [--save-responses] [--sensor <sensor>] <start-date> <end-date>
     ```
 
 2. **Local Archive Mode**: Uses locally stored response files instead of fetching from API
 
     ```bash
-    npm run archiver -- --use-local-archive <start-date> <end-date>
+    npm run archiver -- --use-local-archive [--sensor <sensor>] <start-date> <end-date>
     ```
 
-    - Reads from `output/responses-archive/YYYY/YYYY-MM-DD.zip` files
+    - Outdoor-air reads from `output/responses-archive/YYYY/YYYY-MM-DD.zip`
+    - Lake-water reads from `output/responses-archive/lake-water/YYYY/YYYY-MM-DD.zip`
     - Useful for rebuilding almanac data from historical responses
     - Requires archive files to exist for the specified date range
 
-3. **Daily Mode**: Processes yesterday's data (used by GitHub Actions)
+3. **Daily Mode**: Processes all configured sensors for the daily window (used by GitHub Actions)
     ```bash
     npm run archiver
     ```
@@ -53,6 +66,9 @@ The system automatically tracks days when data collection fails. Use the retry u
 # Retry all missed days from the almanac
 npm run retry-missed-days
 
+# Retry only lake-water missed days
+npm run retry-missed-days -- --sensor lake-water
+
 # Retry missed days and save API responses to archive
 npm run retry-missed-days -- --save-responses
 
@@ -62,7 +78,7 @@ npm run retry-missed-days -- --help
 
 The retry utility will:
 
-- Read the current almanac to find all missed days
+- Read the current almanac output file(s) to find all missed days
 - Attempt to fetch data for each missed day from the ThingSpeak API
 - Update the almanac with successful retrievals
 - Remove successfully retrieved days from the missed days list
@@ -76,6 +92,9 @@ Export archived temperature data to CSV format for PostgreSQL database import:
 # Export data for a specific date range
 npm run csv-export 2020-01-01 2020-12-31
 
+# Export only lake-water rows
+npm run csv-export -- --sensor lake-water 2026-05-03 2026-05-09 lake-water-export.csv
+
 # Export with custom output filename
 npm run csv-export 2018-10-06 2025-01-01 full-dataset.csv
 
@@ -85,15 +104,15 @@ npm run csv-export 2024-01-01 2024-12-31 lake-data-2024.csv
 
 The CSV export utility will:
 
-- Read archived data from `output/responses-archive/YYYY/YYYY-MM-DD.zip` files
-- Generate a CSV file with columns: `date_recorded`, `entry_id`, `indoor_temp`, `outdoor_temp`, `channel_id`, `day_date`
+- Read archived data from the sensor-specific archive folders
+- Generate a CSV file with columns: `date_recorded`, `entry_id`, `indoor_temp`, `outdoor_temp`, `deep_water_temp`, `lake_air_temp`, `surface_water_temp`, `channel_id`
 - Provide a PostgreSQL COPY command for easy database import
 - Handle missing days gracefully and show progress for large date ranges
 
 **PostgreSQL Import Example:**
 
 ```sql
-COPY temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, channel_id, day_date)
+COPY lake_temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, deep_water_temp, lake_air_temp, surface_water_temp, channel_id)
 FROM '/path/to/lake-data-export.csv' WITH (FORMAT CSV, HEADER);
 ```
 
@@ -104,6 +123,9 @@ Check for missing dates in the PostgreSQL database temperature readings:
 ```bash
 # Check all gaps from project start to yesterday
 npm run check-db-gaps
+
+# Check only lake-water gaps
+npm run check-db-gaps -- --sensor lake-water
 
 # Check last 30 days for gaps
 npm run check-db-gaps -- --recent 30
@@ -120,8 +142,8 @@ npm run check-db-gaps -- --help
 
 The gap checker will:
 
-- Identify missing dates in the database temperature readings table
-- Show the latest date with data in the database
+- Identify missing dates in the database temperature readings table per sensor/channel
+- Show the latest date with data in the database for each sensor checked
 - Provide suggestions for backfilling missing data using existing tools
 - Support checking recent periods or specific date ranges
 - Require `DATABASE_URL` environment variable to be set
@@ -133,6 +155,9 @@ Backfill missing database entries using existing archived JSON files (recommende
 ```bash
 # Backfill a specific date range
 npm run backfill-database -- -s 2024-01-01 -e 2024-01-31
+
+# Backfill only lake-water rows
+npm run backfill-database -- --sensor lake-water -d 2026-05-09
 
 # Backfill specific dates
 npm run backfill-database -- -d 2024-01-15,2024-02-20,2024-03-10
@@ -146,7 +171,7 @@ npm run backfill-database -- --help
 
 The database backfill utility will:
 
-- Read archived data from `output/responses-archive/YYYY/YYYY-MM-DD.zip` files
+- Read archived data from the sensor-specific archive folders
 - Extract temperature readings and insert into PostgreSQL database
 - **Database-only operation**: Does NOT update almanac metadata or store new files
 - Use upsert logic to safely handle duplicate entries
@@ -159,11 +184,11 @@ The database backfill utility will:
 - **Recommended**: Use `npm run backfill-database` when you have archived data and just need to fill database gaps
 - **Alternative**: Use `npm run retry-missed-days` when you need to fetch new data from the API and update almanac metadata
 
-
 ## Neon Database (start integrating Jul 11, 2025)
 
 - https://vercel.com/ns0s-projects/~/stores/integration/neon/store_xu5iln4FGQCUuKPA/guides
 - https://console.neon.tech/app/org-still-band-62770543/projects -- Login is same as vercel github auth
+- Before running the lake-water ingest against an existing database, apply `schema/temperature_readings_add_lake_water.sql`. The full create-table definition lives in `schema/temperature_readings.sql`.
 
 ### SQL Manual loads
 
@@ -172,11 +197,42 @@ Using the conn string from https://console.neon.tech/app/projects/dry-thunder-38
 ```shell
 npm run csv-export 2018-10-06 2025-07-20 export-to-2025-07-19.csv
 
-psql 'postgresql://neondb_owner:redacted@ep-polished-bird-ad1ybvh5-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require' -c "\COPY lake_temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, channel_id)
+psql 'postgresql://neondb_owner:redacted@ep-polished-bird-ad1ybvh5-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require' -c "\COPY lake_temperature_readings (date_recorded, entry_id, indoor_temp, outdoor_temp, deep_water_temp, lake_air_temp, surface_water_temp, channel_id)
 FROM 'export-to-2025-07-19.csv' WITH (FORMAT CSV, HEADER);"
 ```
 
 ## Status Updates
+
+### Latest Status - May 9, 2026
+
+We added support for a new `lake-water` sensor on ThingSpeak channel `3367153`, which now produces a grouped `output/lake-water-almanac.json` with `deepWater`, `lakeAir`, and `surfaceWater` alongside separate archived responses for that channel. We also extended database storage for those three lake-water readings, so the steps below cover the required one-time migration and historical catch-up before the normal daily archiver run takes over.
+
+Lake-water sensor go-live checklist:
+
+1. Apply the database migration before any live lake-water ingest:
+   `schema/temperature_readings_add_lake_water.sql`
+2. Merge and push the lake-water sensor changes to `main`.
+3. Confirm GitHub Actions is already sufficient for daily ingest:
+   `.github/workflows/fetch-yesterday.yml` already runs `npm run archiver`, so no workflow change is needed.
+4. Confirm the `DATABASE_URL` secret points at the migrated database before the next scheduled run.
+5. Run the one-time lake-water catch-up from ThingSpeak with response archiving enabled:
+   `npm run archiver -- --save-responses --sensor lake-water 2026-05-03 2026-05-09`
+6. Treat that command as a safe backfill of completed lake days `2026-05-03` through `2026-05-08`.
+   The repo's date-range processing is end-exclusive, so this intentionally avoids ingesting the in-progress `2026-05-09` lake day.
+7. After cutover, let the scheduled job pick up the next completed lake-water day automatically.
+
+Verification:
+
+- Confirm `output/lake-water-almanac.json` was created.
+- Confirm lake-water archives now exist under `output/responses-archive/lake-water/2026/YYYY-MM-DD.zip`.
+- Run `npm run check-db-gaps -- --sensor lake-water -s 2026-05-03 -e 2026-05-08`.
+
+Recovery / fallback:
+
+- If ThingSpeak fetch/archive missed days, run:
+  `npm run retry-missed-days -- --sensor lake-water --save-responses`
+- If archives exist but database rows are still missing, run:
+  `npm run backfill-database -- --sensor lake-water -s 2026-05-03 -e 2026-05-08`
 
 ### Latest Status - Mar 26, 2026
 
