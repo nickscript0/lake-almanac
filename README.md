@@ -217,6 +217,8 @@ Lake-water sensor go-live checklist:
 4. Confirm the `DATABASE_URL` secret points at the migrated database before the next scheduled run.
 5. Run the one-time lake-water catch-up from ThingSpeak with response archiving enabled:
    `npm run archiver -- --save-responses --sensor lake-water 2026-05-03 2026-05-12`
+   You can run this locally on your dev box if you cannot run the one-time catch-up in GitHub Actions. This command updates `output/lake-water-almanac.json`, saves the lake-water response archives, and also attempts to backfill the database during the same run if `DATABASE_URL` is set in your shell environment and points at the migrated database.
+   The archiver does not load `.env` or `.env.local` by itself, so for a local run you must export `DATABASE_URL` before running step 5 if you want the database inserts to happen. If you skip `DATABASE_URL`, the almanac and archives will still be created locally, and you can backfill the database afterward with `npm run backfill-database -- --sensor lake-water -s 2026-05-03 -e 2026-05-11` using `.env.local` or `.env`.
 6. Treat that command as a safe backfill of completed lake days `2026-05-03` through `2026-05-11`.
    The repo's date-range processing is end-exclusive, so this intentionally avoids ingesting the in-progress `2026-05-12` lake day.
 7. After cutover, let the scheduled job pick up the next completed lake-water day automatically.
