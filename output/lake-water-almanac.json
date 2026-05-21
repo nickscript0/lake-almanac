@@ -135,24 +135,24 @@
           }
         ],
         "Average": {
-          "average": 11.871896053897979,
-          "n": 1039
+          "average": 11.83060306030603,
+          "n": 1111
         },
         "AverageNighttime": {
-          "average": 11.467378640776701,
-          "n": 515
+          "average": 11.451179673321235,
+          "n": 551
         },
         "AverageDaytime": {
-          "average": 12.269465648854963,
-          "n": 524
+          "average": 12.203928571428573,
+          "n": 560
         },
         "AverageNoon": {
-          "average": 12.54375,
-          "n": 16
+          "average": 12.435294117647057,
+          "n": 17
         },
         "AverageMidnight": {
-          "average": 11.81875,
-          "n": 16
+          "average": 11.811764705882352,
+          "n": 17
         }
       },
       "Spring": {
@@ -289,24 +289,24 @@
           }
         ],
         "Average": {
-          "average": 11.871896053897979,
-          "n": 1039
+          "average": 11.83060306030603,
+          "n": 1111
         },
         "AverageNighttime": {
-          "average": 11.467378640776701,
-          "n": 515
+          "average": 11.451179673321235,
+          "n": 551
         },
         "AverageDaytime": {
-          "average": 12.269465648854963,
-          "n": 524
+          "average": 12.203928571428573,
+          "n": 560
         },
         "AverageNoon": {
-          "average": 12.54375,
-          "n": 16
+          "average": 12.435294117647057,
+          "n": 17
         },
         "AverageMidnight": {
-          "average": 11.81875,
-          "n": 16
+          "average": 11.811764705882352,
+          "n": 17
         }
       },
       "Summer": {
@@ -472,24 +472,24 @@
           }
         ],
         "Average": {
-          "average": 11.871896053897979,
-          "n": 1039
+          "average": 11.83060306030603,
+          "n": 1111
         },
         "AverageNighttime": {
-          "average": 11.467378640776701,
-          "n": 515
+          "average": 11.451179673321235,
+          "n": 551
         },
         "AverageDaytime": {
-          "average": 12.269465648854963,
-          "n": 524
+          "average": 12.203928571428573,
+          "n": 560
         },
         "AverageNoon": {
-          "average": 12.54375,
-          "n": 16
+          "average": 12.435294117647057,
+          "n": 17
         },
         "AverageMidnight": {
-          "average": 11.81875,
-          "n": 16
+          "average": 11.811764705882352,
+          "n": 17
         }
       },
       "Spring": {
@@ -626,24 +626,24 @@
           }
         ],
         "Average": {
-          "average": 11.871896053897979,
-          "n": 1039
+          "average": 11.83060306030603,
+          "n": 1111
         },
         "AverageNighttime": {
-          "average": 11.467378640776701,
-          "n": 515
+          "average": 11.451179673321235,
+          "n": 551
         },
         "AverageDaytime": {
-          "average": 12.269465648854963,
-          "n": 524
+          "average": 12.203928571428573,
+          "n": 560
         },
         "AverageNoon": {
-          "average": 12.54375,
-          "n": 16
+          "average": 12.435294117647057,
+          "n": 17
         },
         "AverageMidnight": {
-          "average": 11.81875,
-          "n": 16
+          "average": 11.811764705882352,
+          "n": 17
         }
       },
       "Summer": {
@@ -677,7 +677,7 @@
     "_metadata": {
       "missedDays": [],
       "startDate": "2026-05-03",
-      "endDate": "2026-05-18"
+      "endDate": "2026-05-19"
     }
   },
   "lakeAir": {
@@ -816,24 +816,24 @@
           }
         ],
         "Average": {
-          "average": 13.413378248315686,
-          "n": 1039
+          "average": 13.29027902790279,
+          "n": 1111
         },
         "AverageNighttime": {
-          "average": 11.450873786407769,
-          "n": 515
+          "average": 11.375317604355718,
+          "n": 551
         },
         "AverageDaytime": {
-          "average": 15.34217557251909,
-          "n": 524
+          "average": 15.17446428571429,
+          "n": 560
         },
         "AverageNoon": {
-          "average": 16.787499999999998,
-          "n": 16
+          "average": 16.61176470588235,
+          "n": 17
         },
         "AverageMidnight": {
-          "average": 11.1375,
-          "n": 16
+          "average": 11.158823529411764,
+          "n": 17
         }
       },
       "Spring": {
@@ -970,24 +970,24 @@
           }
         ],
         "Average": {
-          "average": 13.413378248315686,
-          "n": 1039
+          "average": 13.29027902790279,
+          "n": 1111
         },
         "AverageNighttime": {
-          "average": 11.450873786407769,
-          "n": 515
+          "average": 11.375317604355718,
+          "n": 551
         },
         "AverageDaytime": {
-          "average": 15.34217557251909,
-          "n": 524
+          "average": 15.17446428571429,
+          "n": 560
         },
         "AverageNoon": {
-          "average": 16.787499999999998,
-          "n": 16
+          "average": 16.61176470588235,
+          "n": 17
         },
         "AverageMidnight": {
-          "average": 11.1375,
-          "n": 16
+          "average": 11.158823529411764,
+          "n": 17
         }
       },
       "Summer": {
@@ -1153,24 +1153,24 @@
           }
         ],
         "Average": {
-          "average": 13.413378248315686,
-          "n": 1039
+          "average": 13.29027902790279,
+          "n": 1111
         },
         "AverageNighttime": {
-          "average": 11.450873786407769,
-          "n": 515
+          "average": 11.375317604355718,
+          "n": 551
         },
         "AverageDaytime": {
-          "average": 15.34217557251909,
-          "n": 524
+          "average": 15.17446428571429,
+          "n": 560
         },
         "AverageNoon": {
-          "average": 16.787499999999998,
-          "n": 16
+          "average": 16.61176470588235,
+          "n": 17
         },
         "AverageMidnight": {
-          "average": 11.1375,
-          "n": 16
+          "average": 11.158823529411764,
+          "n": 17
         }
       },
       "Spring": {
@@ -1307,24 +1307,24 @@
           }
         ],
         "Average": {
-          "average": 13.413378248315686,
-          "n": 1039
+          "average": 13.29027902790279,
+          "n": 1111
         },
         "AverageNighttime": {
-          "average": 11.450873786407769,
-          "n": 515
+          "average": 11.375317604355718,
+          "n": 551
         },
         "AverageDaytime": {
-          "average": 15.34217557251909,
-          "n": 524
+          "average": 15.17446428571429,
+          "n": 560
         },
         "AverageNoon": {
-          "average": 16.787499999999998,
-          "n": 16
+          "average": 16.61176470588235,
+          "n": 17
         },
         "AverageMidnight": {
-          "average": 11.1375,
-          "n": 16
+          "average": 11.158823529411764,
+          "n": 17
         }
       },
       "Summer": {
@@ -1358,7 +1358,7 @@
     "_metadata": {
       "missedDays": [],
       "startDate": "2026-05-03",
-      "endDate": "2026-05-18"
+      "endDate": "2026-05-19"
     }
   },
   "surfaceWater": {
@@ -1497,24 +1497,24 @@
           }
         ],
         "Average": {
-          "average": 12.823965351299329,
-          "n": 1039
+          "average": 12.746624662466248,
+          "n": 1111
         },
         "AverageNighttime": {
-          "average": 11.97242718446602,
-          "n": 515
+          "average": 11.943194192377497,
+          "n": 551
         },
         "AverageDaytime": {
-          "average": 13.66087786259542,
-          "n": 524
+          "average": 13.537142857142857,
+          "n": 560
         },
         "AverageNoon": {
-          "average": 14.6375,
-          "n": 16
+          "average": 14.470588235294118,
+          "n": 17
         },
         "AverageMidnight": {
-          "average": 12.16875,
-          "n": 16
+          "average": 12.147058823529411,
+          "n": 17
         }
       },
       "Spring": {
@@ -1651,24 +1651,24 @@
           }
         ],
         "Average": {
-          "average": 12.823965351299329,
-          "n": 1039
+          "average": 12.746624662466248,
+          "n": 1111
         },
         "AverageNighttime": {
-          "average": 11.97242718446602,
-          "n": 515
+          "average": 11.943194192377497,
+          "n": 551
         },
         "AverageDaytime": {
-          "average": 13.66087786259542,
-          "n": 524
+          "average": 13.537142857142857,
+          "n": 560
         },
         "AverageNoon": {
-          "average": 14.6375,
-          "n": 16
+          "average": 14.470588235294118,
+          "n": 17
         },
         "AverageMidnight": {
-          "average": 12.16875,
-          "n": 16
+          "average": 12.147058823529411,
+          "n": 17
         }
       },
       "Summer": {
@@ -1834,24 +1834,24 @@
           }
         ],
         "Average": {
-          "average": 12.823965351299329,
-          "n": 1039
+          "average": 12.746624662466248,
+          "n": 1111
         },
         "AverageNighttime": {
-          "average": 11.97242718446602,
-          "n": 515
+          "average": 11.943194192377497,
+          "n": 551
         },
         "AverageDaytime": {
-          "average": 13.66087786259542,
-          "n": 524
+          "average": 13.537142857142857,
+          "n": 560
         },
         "AverageNoon": {
-          "average": 14.6375,
-          "n": 16
+          "average": 14.470588235294118,
+          "n": 17
         },
         "AverageMidnight": {
-          "average": 12.16875,
-          "n": 16
+          "average": 12.147058823529411,
+          "n": 17
         }
       },
       "Spring": {
@@ -1988,24 +1988,24 @@
           }
         ],
         "Average": {
-          "average": 12.823965351299329,
-          "n": 1039
+          "average": 12.746624662466248,
+          "n": 1111
         },
         "AverageNighttime": {
-          "average": 11.97242718446602,
-          "n": 515
+          "average": 11.943194192377497,
+          "n": 551
         },
         "AverageDaytime": {
-          "average": 13.66087786259542,
-          "n": 524
+          "average": 13.537142857142857,
+          "n": 560
         },
         "AverageNoon": {
-          "average": 14.6375,
-          "n": 16
+          "average": 14.470588235294118,
+          "n": 17
         },
         "AverageMidnight": {
-          "average": 12.16875,
-          "n": 16
+          "average": 12.147058823529411,
+          "n": 17
         }
       },
       "Summer": {
@@ -2039,7 +2039,7 @@
     "_metadata": {
       "missedDays": [],
       "startDate": "2026-05-03",
-      "endDate": "2026-05-18"
+      "endDate": "2026-05-19"
     }
   }
 }
