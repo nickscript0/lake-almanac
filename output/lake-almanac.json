@@ -6504,24 +6504,24 @@
         }
       ],
       "Average": {
-        "average": 10.971778506624055,
-        "n": 38798
+        "average": 10.983569016869081,
+        "n": 38947
       },
       "AverageNighttime": {
-        "average": 10.12063101177923,
-        "n": 19441
+        "average": 10.132923392262363,
+        "n": 19515
       },
       "AverageDaytime": {
-        "average": 11.826619569148113,
-        "n": 19357
+        "average": 11.837848008439689,
+        "n": 19432
       },
       "AverageNoon": {
-        "average": 12.331912878787884,
-        "n": 264
+        "average": 12.340801886792457,
+        "n": 265
       },
       "AverageMidnight": {
-        "average": 9.841382575757576,
-        "n": 264
+        "average": 9.856839622641509,
+        "n": 265
       }
     },
     "Spring": {
@@ -6833,12 +6833,62 @@
       }
     },
     "Fall": {
-      "HottestDays": [],
-      "ColdestDays": [],
-      "HottestNightime": [],
-      "ColdestNighttime": [],
-      "HottestDaytime": [],
-      "ColdestDaytime": []
+      "HottestDays": [
+        {
+          "date": "2026-09-23 22:41:10Z",
+          "value": 18.125
+        }
+      ],
+      "ColdestDays": [
+        {
+          "date": "2026-09-23 13:51:45Z",
+          "value": 9.6875
+        }
+      ],
+      "HottestNightime": [
+        {
+          "date": "2026-09-24 01:05:30Z",
+          "value": 17.25
+        }
+      ],
+      "ColdestNighttime": [
+        {
+          "date": "2026-09-23 12:34:45Z",
+          "value": 10.3125
+        }
+      ],
+      "HottestDaytime": [
+        {
+          "date": "2026-09-23 22:41:10Z",
+          "value": 18.125
+        }
+      ],
+      "ColdestDaytime": [
+        {
+          "date": "2026-09-23 13:51:45Z",
+          "value": 9.6875
+        }
+      ],
+      "Average": {
+        "average": 14.053691275167786,
+        "n": 149
+      },
+      "AverageNighttime": {
+        "average": 13.36233108108108,
+        "n": 74
+      },
+      "AverageDaytime": {
+        "average": 14.735833333333334,
+        "n": 75
+      },
+      "AverageNoon": {
+        "average": 14.6875,
+        "n": 1
+      },
+      "AverageMidnight": {
+        "average": 13.9375,
+        "n": 1
+      }
     },
     "Winter": {
       "HottestDays": [
@@ -7175,24 +7225,24 @@
         }
       ],
       "Average": {
-        "average": 3.90110826374858,
-        "n": 424662
+        "average": 3.9046692234899743,
+        "n": 424811
       },
       "AverageNighttime": {
-        "average": 3.5605467462447584,
-        "n": 212370
+        "average": 3.5639609732447104,
+        "n": 212444
       },
       "AverageDaytime": {
-        "average": 4.242368350361935,
-        "n": 212192
+        "average": 4.246075991557801,
+        "n": 212267
       },
       "AverageNoon": {
-        "average": 6.728274120515505,
-        "n": 2871
+        "average": 6.7310454387186684,
+        "n": 2872
       },
       "AverageMidnight": {
-        "average": 3.474442702890981,
-        "n": 2871
+        "average": 3.47808582869081,
+        "n": 2872
       }
     },
     "Spring": {
@@ -7637,24 +7687,24 @@
         }
       ],
       "Average": {
-        "average": 4.0824028896139515,
-        "n": 100221
+        "average": 4.097205340241106,
+        "n": 100370
       },
       "AverageNighttime": {
-        "average": 3.6151290869218493,
-        "n": 50160
+        "average": 3.629487747342437,
+        "n": 50234
       },
       "AverageDaytime": {
-        "average": 4.550075233448647,
-        "n": 50011
+        "average": 4.565327636465285,
+        "n": 50086
       },
       "AverageNoon": {
-        "average": 5.198361561119288,
-        "n": 679
+        "average": 5.212316176470583,
+        "n": 680
       },
       "AverageMidnight": {
-        "average": 3.532860824742268,
-        "n": 679
+        "average": 3.5481617647058825,
+        "n": 680
       }
     },
     "Winter": {
@@ -7856,6 +7906,6 @@
       "2023-06-13"
     ],
     "startDate": "2018-10-06",
-    "endDate": "2026-09-22"
+    "endDate": "2026-09-23"
   }
 }
