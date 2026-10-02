@@ -1259,7 +1259,9 @@
       "LastFreezesBeforeSummer": []
     },
     "_metadata": {
-      "missedDays": [],
+      "missedDays": [
+        "2026-09-30"
+      ],
       "startDate": "2026-05-03",
       "endDate": "2026-09-29"
     }
@@ -2524,7 +2526,9 @@
       "LastFreezesBeforeSummer": []
     },
     "_metadata": {
-      "missedDays": [],
+      "missedDays": [
+        "2026-09-30"
+      ],
       "startDate": "2026-05-03",
       "endDate": "2026-09-29"
     }
@@ -3789,7 +3793,9 @@
       "LastFreezesBeforeSummer": []
     },
     "_metadata": {
-      "missedDays": [],
+      "missedDays": [
+        "2026-09-30"
+      ],
       "startDate": "2026-05-03",
       "endDate": "2026-09-29"
     }
